@@ -1,4 +1,4 @@
-package dk.dtu.ait.chess.at.figures;
+package dk.dtu.ait.chess.at.chess.figures;
 
 import dk.dtu.ait.chess.at.Move;
 

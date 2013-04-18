@@ -1,4 +1,4 @@
-package dk.dtu.ait.chess.at;
+package dk.dtu.ait.chess.at.chess;
 
 /**
  * Created with IntelliJ IDEA.
