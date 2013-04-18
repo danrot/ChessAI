@@ -8,4 +8,7 @@ package dk.dtu.ait.chess.at.chess;
  * To change this template use File | Settings | File Templates.
  */
 public class Board {
+    public boolean apply(Move move) {
+        return false; //TODO Implement
+    }
 }
