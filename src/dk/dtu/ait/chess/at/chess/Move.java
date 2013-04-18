@@ -31,21 +31,7 @@ public class Move {
      */
     private Figure newFigure;
 
-    /**
-     *
-     * @param oldField The field on which the move starts
-     * @param newField The field on which the move ends
-     * @param oldFigure The figure standing on the starting (old) field
-     * @param newFigure The figure standing on the ending (new) field
-     * @param special Indicates if this instance is a special move
-     */
-    public Move(int oldField, int newField, Figure oldFigure, Figure newFigure, boolean special) {
-        this.oldField = oldField;
-        this.newField = newField;
-        this.special = special;
-        this.oldFigure = oldFigure;
-        this.newFigure = newFigure;
-    }
+
 
     /**
      * Returns the field on which the move starts
@@ -85,5 +71,25 @@ public class Move {
      */
     public Figure getNewFigure() {
         return newFigure;
+    }
+
+    public void setNewField(int newField) {
+        this.newField = newField;
+    }
+
+    public void setNewFigure(Figure newFigure) {
+        this.newFigure = newFigure;
+    }
+
+    public void setOldField(int oldField) {
+        this.oldField = oldField;
+    }
+
+    public void setOldFigure(Figure oldFigure) {
+        this.oldFigure = oldFigure;
+    }
+
+    public void setSpecial(boolean special) {
+        this.special = special;
     }
 }
