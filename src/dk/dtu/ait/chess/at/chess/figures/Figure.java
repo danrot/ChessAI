@@ -1,6 +1,6 @@
 package dk.dtu.ait.chess.at.chess.figures;
 
-import dk.dtu.ait.chess.at.Move;
+import dk.dtu.ait.chess.at.chess.Move;
 
 import java.util.List;
 
