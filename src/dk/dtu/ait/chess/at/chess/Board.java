@@ -1,5 +1,7 @@
 package dk.dtu.ait.chess.at.chess;
 
+import dk.dtu.ait.chess.at.chess.figures.Figure;
+
 /**
  * Created with IntelliJ IDEA.
  * User: daniel
@@ -8,6 +10,8 @@ package dk.dtu.ait.chess.at.chess;
  * To change this template use File | Settings | File Templates.
  */
 public class Board {
+    private Figure[] board = new Figure[128];
+
     public boolean apply(Move move) {
         return false; //TODO Implement
     }
