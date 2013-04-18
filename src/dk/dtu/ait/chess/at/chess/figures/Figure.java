@@ -14,7 +14,10 @@ import java.util.List;
 public abstract class Figure {
 
     private int position;
-    public int getPosition(){return position;}
+
+    public int getPosition() {
+        return position;
+    }
 
     public abstract List<Move> getMoves();
 
