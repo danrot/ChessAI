@@ -1,8 +1,10 @@
 package dk.dtu.ait.chess.at.chess.figures;
 
 
+import dk.dtu.ait.chess.at.chess.Board;
 import dk.dtu.ait.chess.at.chess.Move;
 
+import java.awt.*;
 import java.util.List;
 
 /**
@@ -13,8 +15,12 @@ import java.util.List;
  * To change this template use File | Settings | File Templates.
  */
 public class King extends Figure {
+    public King(int position, Color color) {
+        super(position, color);
+    }
+
     @Override
-    public List<Move> getMoves() {
+    public List<Move> getMoves(Board board) {
         return null; //TODO implement
     }
 }

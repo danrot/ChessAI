@@ -1,5 +1,6 @@
 package dk.dtu.ait.chess.at.chess.figures;
 
+import dk.dtu.ait.chess.at.chess.Board;
 import dk.dtu.ait.chess.at.chess.Move;
 
 import java.awt.*;
@@ -43,7 +44,7 @@ public abstract class Figure {
      * This function is used to get all the Moves the figure can execute.
      * @return a list with all the possible moves inside.
      */
-    public abstract List<Move> getMoves();
+    public abstract List<Move> getMoves(Board board);
 
 
     /**

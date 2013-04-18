@@ -11,4 +11,8 @@ public class Board {
     public boolean apply(Move move) {
         return false; //TODO Implement
     }
+
+    public boolean check(Move move) {
+        return true; //TODO Implement
+    }
 }
