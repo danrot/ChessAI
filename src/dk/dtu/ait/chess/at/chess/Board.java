@@ -72,7 +72,13 @@ public class Board {
         } else if (figure == "Rook") {
 
         } else if (figure == "Pawn") {
-
+            //Pawns are only allowed to move forward, except they can capture another figure
+            if (!(newField - 0x10 == oldField ||
+                    ((newField - 0x09 == oldField || newField - 0x11 == oldField) && move.getNewFigure().getColor() != move.getOldFigure().getColor()) ||
+                    (newField - 0x20 == oldField && move.getOldFigure().hasMoved())
+            )) {
+                return false;
+            }
         }
 
         move.setNewFigure(board[move.getNewField()]);
