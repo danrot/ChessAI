@@ -4,6 +4,7 @@ import dk.dtu.ait.chess.at.chess.Board;
 import dk.dtu.ait.chess.at.chess.Move;
 
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -13,8 +14,11 @@ import java.util.List;
  */
 public abstract class Figure {
 
-    private int position;
+    protected int position;
     private Color color;
+    protected ArrayList<Integer> possibleMoves = new ArrayList<Integer>(50);
+    protected boolean hasMoved;
+
 
     public Figure(int position, Color color)
     {
@@ -39,7 +43,10 @@ public abstract class Figure {
         return color;
     }
 
-
+    public boolean hasMoved()
+    {
+       return hasMoved;
+    }
     /**
      * This function is used to get all the Moves the figure can execute.
      * @return a list with all the possible moves inside.
