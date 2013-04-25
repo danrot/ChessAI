@@ -49,6 +49,7 @@ public class Board {
         String figure = move.getOldFigure().getName();
         int newField = move.getNewField();
         int oldField = move.getOldField();
+
         if (figure == "King") {
             //King is only allowed to move one field
             if (!(newField + 0x11 == oldField &&
@@ -62,6 +63,16 @@ public class Board {
             )) {
                 return false;
             }
+        } else if (figure == "Queen") {
+
+        } else if (figure == "Bishop") {
+
+        } else if (figure == "Knight") {
+
+        } else if (figure == "Rook") {
+
+        } else if (figure == "Pawn") {
+
         }
 
         move.setNewFigure(board[move.getNewField()]);
