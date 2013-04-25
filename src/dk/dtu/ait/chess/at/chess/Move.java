@@ -31,8 +31,6 @@ public class Move {
      */
     private Figure newFigure;
 
-
-
     /**
      * Returns the field on which the move starts
      * @return The field on which the move starts
@@ -73,22 +71,42 @@ public class Move {
         return newFigure;
     }
 
+    /**
+     * Sets the field on which the move ends
+     * @param newField The field on which the move ends
+     */
     public void setNewField(int newField) {
         this.newField = newField;
     }
 
+    /**
+     * Sets the figure standing on the ending field
+     * @param newFigure The figure on the ending field
+     */
     public void setNewFigure(Figure newFigure) {
         this.newFigure = newFigure;
     }
 
+    /**
+     * Sets the field on which the move starts
+     * @param oldField The field on which the move starts
+     */
     public void setOldField(int oldField) {
         this.oldField = oldField;
     }
 
+    /**
+     * Sets the figure standing on the starting field
+     * @param oldFigure The figure on the starting field
+     */
     public void setOldFigure(Figure oldFigure) {
         this.oldFigure = oldFigure;
     }
 
+    /**
+     * Sets if the move is a special one
+     * @param special True if the move is a special one, otherwise false
+     */
     public void setSpecial(boolean special) {
         this.special = special;
     }

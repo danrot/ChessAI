@@ -35,10 +35,10 @@ public abstract class Figure {
     }
 
     /**
-     * Returns the color of the figure
-     * @return the color of the figure
+     * Returns the getColor of the figure
+     * @return the getColor of the figure
      */
-    public Color color()
+    public Color getColor()
     {
         return color;
     }
