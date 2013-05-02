@@ -27,7 +27,7 @@ public class Board {
 
     /**
      * Checks if the given move is a legal one.
-     * <p/>
+     *
      * Also sets the new figure in the move, as the move itself is not aware of it.
      * However, this is not done if the move is invalid.
      *
@@ -68,7 +68,17 @@ public class Board {
         } else if (figure == "Bishop") {
 
         } else if (figure == "Knight") {
-
+            if (!(newField - 0x21 == oldField &&
+                    newField - 0x19 == oldField &&
+                    newField - 0x12 == oldField &&
+                    newField - 0x08 == oldField &&
+                    newField + 0x21 == oldField &&
+                    newField + 0x19 == oldField &&
+                    newField + 0x12 == oldField &&
+                    newField + 0x08 == oldField
+            )) {
+                return false;
+            }
         } else if (figure == "Rook") {
 
         } else if (figure == "Pawn") {
