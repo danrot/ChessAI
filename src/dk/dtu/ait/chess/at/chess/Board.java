@@ -27,7 +27,7 @@ public class Board {
 
     /**
      * Checks if the given move is a legal one.
-     * <p/>
+     *
      * Also sets the new figure in the move, as the move itself is not aware of it.
      * However, this is not done if the move is invalid.
      *
@@ -49,6 +49,7 @@ public class Board {
         String figure = move.getOldFigure().getName();
         int newField = move.getNewField();
         int oldField = move.getOldField();
+
         if (figure == "King") {
             //King is only allowed to move one field
             if (!(newField + 0x11 == oldField &&
@@ -59,6 +60,50 @@ public class Board {
                     newField - 0x09 == oldField &&
                     newField - 0x10 == oldField &&
                     newField - 0x11 == oldField
+            )) {
+                return false;
+            }
+        } else if (figure == "Queen") {
+
+        } else if (figure == "Bishop") {
+
+        } else if (figure == "Knight") {
+            if (!(newField - 0x21 == oldField &&
+                    newField - 0x19 == oldField &&
+                    newField - 0x12 == oldField &&
+                    newField - 0x08 == oldField &&
+                    newField + 0x21 == oldField &&
+                    newField + 0x19 == oldField &&
+                    newField + 0x12 == oldField &&
+                    newField + 0x08 == oldField
+            )) {
+                return false;
+            }
+        } else if (figure == "Rook") {
+            //Check if rook has not left his row/column
+            if (!((newField & 0x80) == (oldField & 0x80) &&
+                    (newField & 0x08) == (oldField & 0x08)
+            )) {
+                return false;
+            }
+            //Check if there has been another figure on the way
+            int sign = (newField - oldField) / Math.abs(newField - oldField);
+            int step = 0;
+            if ((newField & 0x80) == (oldField & 0x80)) {
+                step = sign * 0x10;
+            } else {
+                step = sign * 0x01;
+            }
+            for (int i = oldField; i < newField; i += step) {
+                if (getFigure(i) != null) {
+                    return false;
+                }
+            }
+        } else if (figure == "Pawn") {
+            //Pawns are only allowed to move forward, except they can capture another figure
+            if (!(newField - 0x10 == oldField ||
+                    ((newField - 0x09 == oldField || newField - 0x11 == oldField) && move.getNewFigure().getColor() != move.getOldFigure().getColor()) ||
+                    (newField - 0x20 == oldField && move.getOldFigure().hasMoved())
             )) {
                 return false;
             }
