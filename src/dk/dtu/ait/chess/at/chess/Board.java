@@ -1,6 +1,11 @@
 package dk.dtu.ait.chess.at.chess;
 
 import dk.dtu.ait.chess.at.chess.figures.Figure;
+import dk.dtu.ait.chess.at.chess.figures.Queen;
+
+import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Holds all the figures on the board and is responsible for any operation including the board itself.
@@ -111,5 +116,13 @@ public class Board {
 
         move.setNewFigure(board[move.getNewField()]);
         return true;
+    }
+
+    public List<Move> getAllPossibleMoves()
+    {
+        ArrayList<Move> retVal = new ArrayList<Move>(250);
+
+
+        return retVal;
     }
 }
