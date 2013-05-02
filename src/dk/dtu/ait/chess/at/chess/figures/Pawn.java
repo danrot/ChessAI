@@ -25,22 +25,43 @@ public class Pawn extends Figure {
     public List<Move> getMoves(Board board) {
         List<Move> ret = new ArrayList<Move>(2);
 
+        if (getColor() == Color.white) {
+            Move m1 = new Move();
+            m1.setNewField(position + 0x10);
+            m1.setOldField(position);
+            m1.setNewFigure(this);
+            if (board.check(m1))
+                ret.add(m1);
 
-        Move m1 = new Move();
-        m1.setNewField(position + 0x01);
-        m1.setOldField(position);
-        m1.setNewFigure(this);
-        if (board.check(m1))
-            ret.add(m1);
+            if (!hasMoved) {
+                Move m2 = new Move();
+                m2.setNewField(position + 0x20);
+                m2.setOldField(position);
+                m2.setNewFigure(this);
+                if (board.check(m2))
+                    ret.add(m2);
+            }
+        }   else if (getColor() == Color.black)
+        {
+            Move m1 = new Move();
+            m1.setNewField(position - 0x10);
+            m1.setOldField(position);
+            m1.setNewFigure(this);
+            if (board.check(m1))
+                ret.add(m1);
 
-        if (!hasMoved) {
-            Move m2 = new Move();
-            m2.setNewField(position + 0x02);
-            m2.setOldField(position);
-            m2.setNewFigure(this);
-            if (board.check(m2))
-                ret.add(m2);
+            if (!hasMoved) {
+                Move m2 = new Move();
+                m2.setNewField(position - 0x20);
+                m2.setOldField(position);
+                m2.setNewFigure(this);
+                if (board.check(m2))
+                    ret.add(m2);
+            }
         }
+
+
+       //TODO PawnPromotion
         return ret;
 
     }

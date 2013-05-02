@@ -34,7 +34,7 @@ public class Bishop extends Figure {
                 m.setOldFigure(this);
 
                 switch (I) {
-                    case 0:
+                    case 0:   //      Right up
                         switch (i) {
                             case 1:
                                 m.setNewField(position + 0x11);
@@ -59,7 +59,7 @@ public class Bishop extends Figure {
                                 break;
                         }
                         break;
-                    case 1:
+                    case 1:     // left down
                         switch (i) {
                             case 1:
                                 m.setNewField(position - 0x11);
@@ -84,7 +84,7 @@ public class Bishop extends Figure {
                                 break;
                         }
                         break;
-                    case 2:
+                    case 2:                    // left up
                         switch (i) {
                             case 1:
                                 m.setNewField(position - 0x01 + 0x10);
@@ -109,7 +109,7 @@ public class Bishop extends Figure {
                                 break;
                         }
                         break;
-                    case 3:
+                    case 3:                   // right down
                         switch (i) {
                             case 1:
                                 m.setNewField(position + 0x01 - 0x10);
