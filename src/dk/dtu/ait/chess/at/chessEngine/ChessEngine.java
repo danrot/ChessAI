@@ -6,6 +6,7 @@ package dk.dtu.ait.chess.at.chessEngine;
 
 import dk.dtu.ait.chess.at.chess.Board;
 import dk.dtu.ait.chess.at.chess.Move;
+import dk.dtu.ait.chess.at.chess.figures.Queen;
 import dk.dtu.ait.chess.at.chessAi.ChessAI;
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -59,13 +60,39 @@ public class ChessEngine {
             {
                 running = false;
             }
-            else if (nextCmd.matches("([a-h][1-8]){2}"))
+            else if (nextCmd.matches("([a-h][1-8]){2}[q]?"))
             {
-                String newPos = nextCmd.substring(2);
+                //Parse String vom recieved String
+                String newPos = nextCmd.substring(2, 4);
                 String oldPos = nextCmd.substring(0, 2);
-                int indexOld = Integer.parseInt(oldPos, 16);
-                int indexNew = Integer.parseInt(newPos, 16);
-                Move recieved = new Move(indexOld, indexNew, null, null, true); //TODO get Figures from board
+                
+                Integer colOldPos = (int)oldPos.charAt(0)-97;
+                Integer colNewPos = (int)newPos.charAt(0)-97;
+                Integer rowOldPos = (int)oldPos.charAt(1)-49;
+                Integer rowNewPos = (int)newPos.charAt(1)-49;
+                
+                String oldPosParsed = colOldPos.toString() + rowOldPos.toString();
+                String newPosParsed = colNewPos.toString() + rowNewPos.toString();
+                
+                int indexOld = Integer.parseInt(oldPosParsed, 16);
+                int indexNew = Integer.parseInt(newPosParsed, 16);
+                
+                Move recieved = new Move();
+                recieved.setNewField(indexNew);
+                recieved.setOldField(indexOld);
+                recieved.setOldFigure(this.board.getFigure(indexOld));
+                recieved.setNewFigure(this.board.getFigure(indexNew));
+                
+                if(nextCmd.endsWith("q"))
+                {
+                    recieved.setSpecial(true);
+                    recieved.setNewFigure(new Queen(indexNew, recieved.getOldFigure().getColor()));
+                }
+                if(isCastlingMove(nextCmd))
+                {
+                    recieved.setSpecial(true);
+                    recieved.setNewFigure(null);
+                }
                 this.board.apply(recieved);
                 //Move m = doMove(board);
                 System.out.println("Regex true");
@@ -95,8 +122,16 @@ public class ChessEngine {
         builder.append(Integer.toHexString(m.getOldField()));
         builder.append(Integer.toHexString(m.getNewField()));
         
+        if(m.getNewFigure().getName().equals("Queen") && m.getOldFigure().getName().equals("Pawn") && m.getSpecial())
+        {
+            builder.append("q");
+        }
         
         return builder.toString();
+    }
+
+    private boolean isCastlingMove(String nextCmd) {
+        return nextCmd.equals("e1c1") || nextCmd.equals("e1g1") || nextCmd.equals("e8c8") || nextCmd.equals("e8g8");
     }
     
 }
