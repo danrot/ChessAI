@@ -24,10 +24,21 @@ public class Board {
      */
     private final int BOARD_MASK = 0x88;
 
+    /**
+     * Returns the figure which stands on the board on the given position
+     * @param position The desired position
+     * @return
+     */
     public Figure getFigure(int position) {
         return board[position];
     }
 
+    /**
+     * Applies the given move on the board.
+     *
+     * @param move The move to apply
+     * @return True if the move is applied successfully, otherwise false
+     */
     public boolean apply(Move move) {
         if (check(move)) {
             if (!move.getSpecial()) {
@@ -44,6 +55,10 @@ public class Board {
         return false;
     }
 
+    /**
+     * Undo the given move
+     * @param move The move to undo
+     */
     public void undo(Move move) {
         if (!move.getSpecial()) {
             board[move.getNewField()] = move.getNewFigure();
