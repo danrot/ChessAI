@@ -16,9 +16,9 @@ public class ChessAI {
     public Move getMove(Board board) {
         
         Move m = null;
-        for(int i = 0; i < 10; i++)
+        for(int i = 1; i < 10; i++)
         {
-            m = this.move(board, 10);
+            m = this.move(board, i);
         }
         return m;
     }
