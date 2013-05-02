@@ -27,14 +27,15 @@ public class Board {
         if (check(move)) {
             if (!move.getSpecial()) {
                 //Non-special moves
-                board[move.getNewField()] = board[move.getOldField()];
+                board[move.getNewField()] = move.getOldFigure();
                 board[move.getOldField()] = null;
+                move.getOldFigure().setPosition(move.getNewField());
             } else {
                 //TODO special moves
             }
             return true;
         }
-        return false; //TODO Implement
+        return false;
     }
 
     /**
