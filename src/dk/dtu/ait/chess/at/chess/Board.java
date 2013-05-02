@@ -2,6 +2,8 @@ package dk.dtu.ait.chess.at.chess;
 
 import dk.dtu.ait.chess.at.chess.figures.Figure;
 
+import java.awt.*;
+
 /**
  * Holds all the figures on the board and is responsible for any operation including the board itself.
  * <p/>
@@ -50,7 +52,7 @@ public class Board {
         int newField = move.getNewField();
         int oldField = move.getOldField();
 
-        if (figure == "King") {
+        if (figure.equals("King")) {
             //King is only allowed to move one field
             if (!(newField + 0x11 == oldField &&
                     newField + 0x10 == oldField &&
@@ -63,19 +65,37 @@ public class Board {
             )) {
                 return false;
             }
-        } else if (figure == "Queen") {
-
-        } else if (figure == "Bishop") {
-
-        } else if (figure == "Knight") {
-
-        } else if (figure == "Rook") {
-
-        } else if (figure == "Pawn") {
+        } else if (figure.equals("Queen")) {
+            //Valid queen moves are the union of bishop and rook
+            if (!(checkBishopMove(newField, oldField) || checkRookMove(newField, oldField))) {
+                return false;
+            }
+        } else if (figure.equals("Bishop")) {
+            if (checkBishopMove(newField, oldField)) {
+                return false;
+            }
+        } else if (figure.equals("Knight")) {
+            if (!(newField - 0x21 == oldField &&
+                    newField - 0x19 == oldField &&
+                    newField - 0x12 == oldField &&
+                    newField - 0x08 == oldField &&
+                    newField + 0x21 == oldField &&
+                    newField + 0x19 == oldField &&
+                    newField + 0x12 == oldField &&
+                    newField + 0x08 == oldField
+            )) {
+                return false;
+            }
+        } else if (figure.equals("Rook")) {
+            if (checkRookMove(newField, oldField)) {
+                return false;
+            }
+        } else if (figure.equals("Pawn")) {
             //Pawns are only allowed to move forward, except they can capture another figure
-            if (!(newField - 0x10 == oldField ||
-                    ((newField - 0x09 == oldField || newField - 0x11 == oldField) && move.getNewFigure().getColor() != move.getOldFigure().getColor()) ||
-                    (newField - 0x20 == oldField && move.getOldFigure().hasMoved())
+            int sign = (move.getOldFigure().getColor() == Color.BLACK) ? -1 : 1;
+            if (!(newField - 0x10 * sign == oldField ||
+                    ((newField - 0x09 * sign == oldField || newField - 0x11 * sign == oldField) && move.getNewFigure().getColor() != move.getOldFigure().getColor()) ||
+                    (newField - 0x20 * sign == oldField && move.getOldFigure().hasMoved())
             )) {
                 return false;
             }
@@ -83,5 +103,50 @@ public class Board {
 
         move.setNewFigure(board[move.getNewField()]);
         return true;
+    }
+
+    private boolean checkBishopMove(int newField, int oldField) {
+        double step = newField - oldField;
+        //Check if move was diagonal
+        if (!(Math.floor(step / 0x09) == 0 || Math.floor(step / 0x11) == 0)) {
+            return true;
+        }
+        //Check if there has been another figure on the way
+        int sign = (newField - oldField) / Math.abs(newField - oldField);
+        int loop = 0;
+        if (Math.floor(step / 0x09) == 0) {
+            loop = sign * 0x09;
+        } else {
+            loop = sign * 0x11;
+        }
+        for (int i = oldField; i < newField; i += loop) {
+            if (getFigure(i) != null) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean checkRookMove(int newField, int oldField) {
+        //Check if rook has not left his row/column
+        if (!((newField & 0x80) == (oldField & 0x80) &&
+                (newField & 0x08) == (oldField & 0x08)
+        )) {
+            return true;
+        }
+        //Check if there has been another figure on the way
+        int sign = (newField - oldField) / Math.abs(newField - oldField);
+        int loop = 0;
+        if ((newField & 0x80) == (oldField & 0x80)) {
+            loop = sign * 0x10;
+        } else {
+            loop = sign * 0x01;
+        }
+        for (int i = oldField; i < newField; i += loop) {
+            if (getFigure(i) != null) {
+                return true;
+            }
+        }
+        return false;
     }
 }

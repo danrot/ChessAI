@@ -16,7 +16,6 @@ public abstract class Figure {
 
     protected int position;
     private Color color;
-    protected ArrayList<Integer> possibleMoves = new ArrayList<Integer>(50);
     protected boolean hasMoved;
 
 
