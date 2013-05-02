@@ -46,6 +46,9 @@ public class ChessEngine {
         chessEngine.run();
     }
     
+    /**
+     * Running the Chess Engine (Wait for command for XBoard)
+     */
     private void run()
     {
         this.running = true;
@@ -66,33 +69,40 @@ public class ChessEngine {
                 String newPos = nextCmd.substring(2, 4);
                 String oldPos = nextCmd.substring(0, 2);
                 
+                //Convert Row and Colum numbers to Interger Board Position
                 Integer colOldPos = (int)oldPos.charAt(0)-97;
                 Integer colNewPos = (int)newPos.charAt(0)-97;
                 Integer rowOldPos = (int)oldPos.charAt(1)-49;
                 Integer rowNewPos = (int)newPos.charAt(1)-49;
                 
+                //Add Row and Column number to one String
                 String oldPosParsed = colOldPos.toString() + rowOldPos.toString();
                 String newPosParsed = colNewPos.toString() + rowNewPos.toString();
                 
+                //Convert String to hexadecimal Integer
                 int indexOld = Integer.parseInt(oldPosParsed, 16);
                 int indexNew = Integer.parseInt(newPosParsed, 16);
                 
+                //Create Move
                 Move recieved = new Move();
                 recieved.setNewField(indexNew);
                 recieved.setOldField(indexOld);
                 recieved.setOldFigure(this.board.getFigure(indexOld));
                 recieved.setNewFigure(this.board.getFigure(indexNew));
                 
+                //check for special Moves
                 if(nextCmd.endsWith("q"))
                 {
                     recieved.setSpecial(true);
                     recieved.setNewFigure(new Queen(indexNew, recieved.getOldFigure().getColor()));
                 }
-                if(isCastlingMove(nextCmd))
+                else if(isCastlingMove(nextCmd))
                 {
                     recieved.setSpecial(true);
                     recieved.setNewFigure(null);
                 }
+                
+                //Apply move on the board
                 this.board.apply(recieved);
                 //Move m = doMove(board);
                 System.out.println("Regex true");
@@ -100,6 +110,11 @@ public class ChessEngine {
         }
     }
     
+    /**
+     * Finds a new Move from the chessAI applies the move to the board and sends the move to Xboard
+     * @param board the current game board
+     * @return true if a Move was found, false otherwise
+     */
     private boolean doMove(Board board)
     {
         Move move = this.chessAi.getMove(board);
@@ -115,6 +130,11 @@ public class ChessEngine {
 
     }
     
+    /**
+     * Converts a Move to the Protocol used to communicate with xBoard
+     * @param m
+     * @return 
+     */
     private String convert(Move m)
     {
         StringBuilder builder = new StringBuilder();
@@ -130,6 +150,11 @@ public class ChessEngine {
         return builder.toString();
     }
 
+    /**
+     * checks wheter the recieved command is a casteling move
+     * @param nextCmd the recieved command
+     * @return true if recieved Move is a castelling move, otherwise false
+     */
     private boolean isCastlingMove(String nextCmd) {
         return nextCmd.equals("e1c1") || nextCmd.equals("e1g1") || nextCmd.equals("e8c8") || nextCmd.equals("e8g8");
     }
