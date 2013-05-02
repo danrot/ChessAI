@@ -25,6 +25,7 @@ For the board we use the representation called 0x88, using with an array of figu
 
 ### Figures
 There is a base class figure, which all other figures (king, queen, knight, bishop, rook) inherit from. The figures are responsible for returning there valid moves.
+If the figure has the position -1, it means that the figure is not on the board anymore (it has been captured).
 
 ### Move
 Represented as class, containting the new and old fields, the figures on these two fields, and if the move was a special move (castling, pawn promotion).

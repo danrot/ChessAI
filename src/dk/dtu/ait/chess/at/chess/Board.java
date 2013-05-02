@@ -30,12 +30,24 @@ public class Board {
                 board[move.getNewField()] = move.getOldFigure();
                 board[move.getOldField()] = null;
                 move.getOldFigure().setPosition(move.getNewField());
+                move.getNewFigure().setPosition(-1); //Highlight the figure as captured
             } else {
                 //TODO special moves
             }
             return true;
         }
         return false;
+    }
+
+    public void undo(Move move) {
+        if (!move.getSpecial()) {
+            board[move.getNewField()] = move.getNewFigure();
+            board[move.getOldField()] = move.getOldFigure();
+            move.getOldFigure().setPosition(move.getOldField());
+            move.getNewFigure().setPosition(move.getNewField());
+        } else {
+
+        }
     }
 
     /**
