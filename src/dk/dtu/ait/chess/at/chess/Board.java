@@ -52,7 +52,7 @@ public class Board {
         int newField = move.getNewField();
         int oldField = move.getOldField();
 
-        if (figure == "King") {
+        if (figure.equals("King")) {
             //King is only allowed to move one field
             if (!(newField + 0x11 == oldField &&
                     newField + 0x10 == oldField &&
@@ -65,16 +65,16 @@ public class Board {
             )) {
                 return false;
             }
-        } else if (figure == "Queen") {
+        } else if (figure.equals("Queen")) {
             //Valid queen moves are the union of bishop and rook
             if (!(checkBishopMove(newField, oldField) || checkRookMove(newField, oldField))) {
                 return false;
             }
-        } else if (figure == "Bishop") {
+        } else if (figure.equals("Bishop")) {
             if (checkBishopMove(newField, oldField)) {
                 return false;
             }
-        } else if (figure == "Knight") {
+        } else if (figure.equals("Knight")) {
             if (!(newField - 0x21 == oldField &&
                     newField - 0x19 == oldField &&
                     newField - 0x12 == oldField &&
@@ -86,11 +86,11 @@ public class Board {
             )) {
                 return false;
             }
-        } else if (figure == "Rook") {
+        } else if (figure.equals("Rook")) {
             if (checkRookMove(newField, oldField)) {
                 return false;
             }
-        } else if (figure == "Pawn") {
+        } else if (figure.equals("Pawn")) {
             //Pawns are only allowed to move forward, except they can capture another figure
             int sign = (move.getOldFigure().getColor() == Color.BLACK) ? -1 : 1;
             if (!(newField - 0x10 * sign == oldField ||
