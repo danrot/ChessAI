@@ -80,7 +80,25 @@ public class Board {
                 return false;
             }
         } else if (figure == "Rook") {
-
+            //Check if rook has not left his row/column
+            if (!((newField & 0x80) == (oldField & 0x80) &&
+                    (newField & 0x08) == (oldField & 0x08)
+            )) {
+                return false;
+            }
+            //Check if there has been another figure on the way
+            int sign = (newField - oldField) / Math.abs(newField - oldField);
+            int step = 0;
+            if ((newField & 0x80) == (oldField & 0x80)) {
+                step = sign * 0x10;
+            } else {
+                step = sign * 0x01;
+            }
+            for (int i = oldField; i < newField; i += step) {
+                if (getFigure(i) != null) {
+                    return false;
+                }
+            }
         } else if (figure == "Pawn") {
             //Pawns are only allowed to move forward, except they can capture another figure
             if (!(newField - 0x10 == oldField ||
