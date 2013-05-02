@@ -2,6 +2,8 @@ package dk.dtu.ait.chess.at.chess;
 
 import dk.dtu.ait.chess.at.chess.figures.Figure;
 
+import java.awt.*;
+
 /**
  * Holds all the figures on the board and is responsible for any operation including the board itself.
  * <p/>
@@ -90,9 +92,10 @@ public class Board {
             }
         } else if (figure == "Pawn") {
             //Pawns are only allowed to move forward, except they can capture another figure
-            if (!(newField - 0x10 == oldField ||
-                    ((newField - 0x09 == oldField || newField - 0x11 == oldField) && move.getNewFigure().getColor() != move.getOldFigure().getColor()) ||
-                    (newField - 0x20 == oldField && move.getOldFigure().hasMoved())
+            int sign = (move.getOldFigure().getColor() == Color.BLACK) ? -1 : 1;
+            if (!(newField - 0x10 * sign == oldField ||
+                    ((newField - 0x09 * sign == oldField || newField - 0x11 * sign == oldField) && move.getNewFigure().getColor() != move.getOldFigure().getColor()) ||
+                    (newField - 0x20 * sign == oldField && move.getOldFigure().hasMoved())
             )) {
                 return false;
             }
