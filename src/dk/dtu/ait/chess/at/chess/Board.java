@@ -27,7 +27,7 @@ public class Board {
 
     /**
      * Checks if the given move is a legal one.
-     *
+     * <p/>
      * Also sets the new figure in the move, as the move itself is not aware of it.
      * However, this is not done if the move is invalid.
      *
@@ -64,9 +64,14 @@ public class Board {
                 return false;
             }
         } else if (figure == "Queen") {
-
+            //Valid queen moves are the union of bishop and rook
+            if (!(checkBishopMove(newField, oldField) || checkRookMove(newField, oldField))) {
+                return false;
+            }
         } else if (figure == "Bishop") {
-
+            if (checkBishopMove(newField, oldField)) {
+                return false;
+            }
         } else if (figure == "Knight") {
             if (!(newField - 0x21 == oldField &&
                     newField - 0x19 == oldField &&
@@ -80,24 +85,8 @@ public class Board {
                 return false;
             }
         } else if (figure == "Rook") {
-            //Check if rook has not left his row/column
-            if (!((newField & 0x80) == (oldField & 0x80) &&
-                    (newField & 0x08) == (oldField & 0x08)
-            )) {
+            if (checkRookMove(newField, oldField)) {
                 return false;
-            }
-            //Check if there has been another figure on the way
-            int sign = (newField - oldField) / Math.abs(newField - oldField);
-            int step = 0;
-            if ((newField & 0x80) == (oldField & 0x80)) {
-                step = sign * 0x10;
-            } else {
-                step = sign * 0x01;
-            }
-            for (int i = oldField; i < newField; i += step) {
-                if (getFigure(i) != null) {
-                    return false;
-                }
             }
         } else if (figure == "Pawn") {
             //Pawns are only allowed to move forward, except they can capture another figure
@@ -111,5 +100,50 @@ public class Board {
 
         move.setNewFigure(board[move.getNewField()]);
         return true;
+    }
+
+    private boolean checkBishopMove(int newField, int oldField) {
+        double step = newField - oldField;
+        //Check if move was diagonal
+        if (!(Math.floor(step / 0x09) == 0 || Math.floor(step / 0x11) == 0)) {
+            return true;
+        }
+        //Check if there has been another figure on the way
+        int sign = (newField - oldField) / Math.abs(newField - oldField);
+        int loop = 0;
+        if (Math.floor(step / 0x09) == 0) {
+            loop = sign * 0x09;
+        } else {
+            loop = sign * 0x11;
+        }
+        for (int i = oldField; i < newField; i += loop) {
+            if (getFigure(i) != null) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean checkRookMove(int newField, int oldField) {
+        //Check if rook has not left his row/column
+        if (!((newField & 0x80) == (oldField & 0x80) &&
+                (newField & 0x08) == (oldField & 0x08)
+        )) {
+            return true;
+        }
+        //Check if there has been another figure on the way
+        int sign = (newField - oldField) / Math.abs(newField - oldField);
+        int loop = 0;
+        if ((newField & 0x80) == (oldField & 0x80)) {
+            loop = sign * 0x10;
+        } else {
+            loop = sign * 0x01;
+        }
+        for (int i = oldField; i < newField; i += loop) {
+            if (getFigure(i) != null) {
+                return true;
+            }
+        }
+        return false;
     }
 }
