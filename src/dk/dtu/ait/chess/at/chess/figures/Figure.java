@@ -34,6 +34,14 @@ public abstract class Figure {
     }
 
     /**
+     * Sets the position of the figure on the board
+     * @param position The new position of the figure
+     */
+    public void setPosition(int position) {
+        this.position = position;
+    }
+
+    /**
      * Returns the getColor of the figure
      * @return the getColor of the figure
      */

@@ -4,10 +4,12 @@ import dk.dtu.ait.chess.at.chess.figures.Figure;
 import dk.dtu.ait.chess.at.chess.figures.Queen;
 
 import java.awt.*;
+import java.awt.font.NumericShaper;
 import java.util.ArrayList;
 import java.util.List;
 
 import java.awt.*;
+import java.util.Random;
 
 /**
  * Holds all the figures on the board and is responsible for any operation including the board itself.
@@ -24,12 +26,50 @@ public class Board {
      */
     private final int BOARD_MASK = 0x88;
 
+    /**
+     * Returns the figure which stands on the board on the given position
+     * @param position The desired position
+     * @return
+     */
     public Figure getFigure(int position) {
         return board[position];
     }
 
+    /**
+     * Applies the given move on the board.
+     *
+     * @param move The move to apply
+     * @return True if the move is applied successfully, otherwise false
+     */
     public boolean apply(Move move) {
-        return false; //TODO Implement
+        if (check(move)) {
+            if (!move.getSpecial()) {
+                //Non-special moves
+                board[move.getNewField()] = move.getOldFigure();
+                board[move.getOldField()] = null;
+                move.getOldFigure().setPosition(move.getNewField());
+                move.getNewFigure().setPosition(-1); //Highlight the figure as captured
+            } else {
+                //TODO special moves
+            }
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Undo the given move
+     * @param move The move to undo
+     */
+    public void undo(Move move) {
+        if (!move.getSpecial()) {
+            board[move.getNewField()] = move.getNewFigure();
+            board[move.getOldField()] = move.getOldFigure();
+            move.getOldFigure().setPosition(move.getOldField());
+            move.getNewFigure().setPosition(move.getNewField());
+        } else {
+
+        }
     }
 
     /**
@@ -110,14 +150,83 @@ public class Board {
         return true;
     }
 
-    public List<Move> getAllPossibleMoves()
-    {
+    public List<Move> getAllPossibleMoves(Color color) {
         ArrayList<Move> retVal = new ArrayList<Move>(250);
+        for (int i = 0; i < board.length; i++) {
+            if (board[i].getColor() == color) {
 
+                retVal.addAll(board[i].getMoves(this));
+
+                if (board[i].getName().equalsIgnoreCase("pawn")) {
+                    if (board[i].getColor() == Color.white) {
+                        if (board[i].getPosition() >= 0x60) {
+                            Move m = new Move();
+                            Queen q = new Queen(board[i].getPosition() + 0x10, board[i].getColor());
+                            m.setOldField(board[i].getPosition());
+                            m.setNewField(q.getPosition());
+                            m.setNewFigure(q);
+                            m.setOldFigure(board[i]);
+                            m.setSpecial(true);
+                            retVal.add(m);
+
+                        }
+                    } else {
+                        if (board[i].getPosition() <= 0x17) {
+                            Move m = new Move();
+                            Queen q = new Queen(board[i].getPosition() - 0x10, board[i].getColor());
+                            m.setOldField(board[i].getPosition());
+                            m.setNewField(q.getPosition());
+                            m.setNewFigure(q);
+                            m.setOldFigure(board[i]);
+                            m.setSpecial(true);
+                            retVal.add(m);
+                        }
+
+                    }
+                } else if (board[i].getName().equalsIgnoreCase("king")) {
+                    if (!board[i].hasMoved()) {
+                        if (board[i].getColor() == Color.white) {
+                            if (board[0].getName().equalsIgnoreCase("rook") && !board[0].hasMoved()) {          //Queenside casteling white
+                                Move m = new Move();
+                                m.setOldField(board[i].getPosition());
+                                m.setNewField(0x02);
+                                m.setOldFigure(board[i]);
+                                m.setSpecial(true);
+                                retVal.add(m);
+                            } else if (board[7].getName().equalsIgnoreCase("rook") && !board[7].hasMoved()) {     //Kingside casteling white
+                                Move m = new Move();
+                                m.setOldField(board[i].getPosition());
+                                m.setNewField(0x06);
+                                m.setOldFigure(board[i]);
+                                m.setSpecial(true);
+                                retVal.add(m);
+                            }
+                        } else {
+                            if (board[0x70].getName().equalsIgnoreCase("rook") && !board[0x70].hasMoved()) {          //Queenside casteling black
+                                Move m = new Move();
+                                m.setOldField(board[i].getPosition());
+                                m.setNewField(0x72);
+                                m.setOldFigure(board[i]);
+                                m.setSpecial(true);
+                                retVal.add(m);
+                            } else if (board[0x77].getName().equalsIgnoreCase("rook") && !board[0x77].hasMoved()) {     //Kingside casteling black
+                                Move m = new Move();
+                                m.setOldField(board[i].getPosition());
+                                m.setNewField(0x76);
+                                m.setOldFigure(board[i]);
+                                m.setSpecial(true);
+                                retVal.add(m);
+                            }
+                        }
+                    }
+                }
+            }
+        }
 
         return retVal;
 
     }
+
 
     private boolean checkBishopMove(int newField, int oldField) {
         double step = newField - oldField;
@@ -162,5 +271,10 @@ public class Board {
             }
         }
         return false;
+    }
+
+    public int evaluateBoard()
+    {
+        return new Random().nextInt(); //FIXME implement
     }
 }
