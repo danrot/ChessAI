@@ -8,9 +8,7 @@ import dk.dtu.ait.chess.at.chess.Board;
 import dk.dtu.ait.chess.at.chess.Move;
 import dk.dtu.ait.chess.at.chess.figures.Queen;
 import dk.dtu.ait.chess.at.chessAi.ChessAI;
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
+import java.awt.Color;
 import java.util.Scanner;
 
 /**
@@ -57,7 +55,18 @@ public class ChessEngine {
             String nextCmd = scan.next();
             if (nextCmd.equals("go"))
             {
-                boolean result = doMove(board);
+               if(!doMove(board))
+               {
+                   System.out.println("Wrong Move!!!");
+               }
+            }
+            else if(nextCmd.equals("black"))
+            {
+                this.chessAi.setColor(Color.BLACK);
+            }
+            else if(nextCmd.equals("white"))
+            {
+                this.chessAi.setColor(Color.WHITE);
             }
             else if (nextCmd.equals("quit"))
             {
@@ -104,7 +113,10 @@ public class ChessEngine {
                 
                 //Apply move on the board
                 this.board.apply(recieved);
-                //Move m = doMove(board);
+                if (!doMove(board))
+                {
+                    System.out.println("Wrong move!!!");
+                }
                 System.out.println("Regex true");
             }
         }
@@ -118,6 +130,10 @@ public class ChessEngine {
     private boolean doMove(Board board)
     {
         Move move = this.chessAi.getMove(board);
+        if (move == null)
+        {
+            return false;
+        }
         boolean result = this.board.apply(move);
                         
         assert result;
