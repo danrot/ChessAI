@@ -24,6 +24,16 @@ public class Board {
     }
 
     public boolean apply(Move move) {
+        if (check(move)) {
+            if (!move.getSpecial()) {
+                //Non-special moves
+                board[move.getNewField()] = board[move.getOldField()];
+                board[move.getOldField()] = null;
+            } else {
+                //TODO special moves
+            }
+            return true;
+        }
         return false; //TODO Implement
     }
 
