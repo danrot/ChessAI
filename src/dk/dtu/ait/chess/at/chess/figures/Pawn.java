@@ -26,6 +26,21 @@ public class Pawn extends Figure {
         List<Move> ret = new ArrayList<Move>(2);
 
         if (getColor() == Color.white) {
+            Move captureLeft = new Move();
+            captureLeft.setNewField(position + 0x10 - 0x01);
+            captureLeft.setOldField(position);
+            captureLeft.setNewFigure(this);
+            if (board.check(captureLeft))
+                ret.add(captureLeft);
+
+            Move captureRight = new Move();
+            captureRight.setNewField(position + 0x11);
+            captureRight.setOldField(position);
+            captureRight.setNewFigure(this);
+            if (board.check(captureRight))
+                ret.add(captureRight);
+
+
             Move m1 = new Move();
             m1.setNewField(position + 0x10);
             m1.setOldField(position);
@@ -43,6 +58,22 @@ public class Pawn extends Figure {
             }
         }   else if (getColor() == Color.black)
         {
+
+            Move captureLeft = new Move();
+            captureLeft.setNewField(position - 0x10 - 0x01);
+            captureLeft.setOldField(position);
+            captureLeft.setNewFigure(this);
+            if (board.check(captureLeft))
+                ret.add(captureLeft);
+
+            Move captureRight = new Move();
+            captureRight.setNewField(position - 0x11);
+            captureRight.setOldField(position);
+            captureRight.setNewFigure(this);
+            if (board.check(captureRight))
+                ret.add(captureRight);
+
+
             Move m1 = new Move();
             m1.setNewField(position - 0x10);
             m1.setOldField(position);
