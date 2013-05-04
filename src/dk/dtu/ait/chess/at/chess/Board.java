@@ -1,6 +1,7 @@
 package dk.dtu.ait.chess.at.chess;
 
 import dk.dtu.ait.chess.at.chess.figures.Figure;
+import dk.dtu.ait.chess.at.chess.figures.Pawn;
 import dk.dtu.ait.chess.at.chess.figures.Queen;
 
 import java.awt.*;
@@ -28,6 +29,7 @@ public class Board {
 
     /**
      * Returns the figure which stands on the board on the given position
+     *
      * @param position The desired position
      * @return
      */
@@ -43,14 +45,50 @@ public class Board {
      */
     public boolean apply(Move move) {
         if (check(move)) {
-            if (!move.getSpecial()) {
-                //Non-special moves
-                board[move.getNewField()] = move.getOldFigure();
-                board[move.getOldField()] = null;
-                move.getOldFigure().setPosition(move.getNewField());
-                move.getNewFigure().setPosition(-1); //Highlight the figure as captured
-            } else {
-                //TODO special moves
+            //Non-special moves
+            board[move.getNewField()] = move.getOldFigure();
+            board[move.getOldField()] = null;
+            move.getOldFigure().setPosition(move.getNewField());
+            move.getNewFigure().setPosition(-1); //Highlight the figure as captured
+
+            if (move.getSpecial()) {
+                //castling (e1g1 or e1c1 resp. e8g8 or e8c8)
+                if (move.getOldFigure().getName().equals("King")) {
+                    //e1g1
+                    if (move.getOldField() == 0x04 && move.getNewField() == 0x06 &&
+                            board[0x07].getName().equals("Rook")) {
+                        board[0x05] = board[0x07];
+                        board[0x07] = null;
+                        board[0x05].setPosition(0x05);
+                    }
+                    //e1c1
+                    else if (move.getOldField() == 0x04 && move.getNewField() == 0x02 &&
+                            board[0x00].getName().equals("Rook")) {
+                        board[0x03] = board[0x00];
+                        board[0x00] = null;
+                        board[0x03].setPosition(0x03);
+                    }
+                    //e8g8
+                    else if (move.getOldField() == 0x74 && move.getNewField() == 0x76 &&
+                            board[0x77].getName().equals("Rook")) {
+                        board[0x75] = board[0x77];
+                        board[0x77] = null;
+                        board[0x75].setPosition(0x75);
+                    }
+                    //e8c8
+                    else if (move.getOldField() == 0x74 && move.getNewField() == 0x72 &&
+                            board[0x70].getName().equals("Rook")) {
+                        board[0x73] = board[0x70];
+                        board[0x70] = null;
+                        board[0x73].setPosition(0x73);
+                    }
+                }
+                //pawn promotion
+                if (move.getOldFigure().getName().equals("Pawn")) {
+                    if ((move.getNewField() & 0xf0) == 0x70 || (move.getNewField() & 0xf0) == 0x00) {
+                        board[move.getNewField()] = new Queen(move.getNewField(), move.getOldFigure().getColor());
+                    }
+                }
             }
             return true;
         }
@@ -59,16 +97,53 @@ public class Board {
 
     /**
      * Undo the given move
+     *
      * @param move The move to undo
      */
     public void undo(Move move) {
-        if (!move.getSpecial()) {
-            board[move.getNewField()] = move.getNewFigure();
-            board[move.getOldField()] = move.getOldFigure();
-            move.getOldFigure().setPosition(move.getOldField());
-            move.getNewFigure().setPosition(move.getNewField());
-        } else {
+        board[move.getNewField()] = move.getNewFigure();
+        board[move.getOldField()] = move.getOldFigure();
+        move.getOldFigure().setPosition(move.getOldField());
+        move.getNewFigure().setPosition(move.getNewField());
 
+        if (move.getSpecial()) {
+            //castling (e1g1 or e1c1 resp. e8g8 or e8c8)
+            if (move.getOldFigure().getName().equals("King")) {
+                //e1g1
+                if (move.getOldField() == 0x04 && move.getNewField() == 0x06 &&
+                        board[0x05].getName().equals("Rook")) {
+                    board[0x07] = board[0x05];
+                    board[0x05] = null;
+                    board[0x07].setPosition(0x07);
+                }
+                //e1c1
+                else if (move.getOldField() == 0x04 && move.getNewField() == 0x02 &&
+                        board[0x03].getName().equals("Rook")) {
+                    board[0x00] = board[0x03];
+                    board[0x03] = null;
+                    board[0x00].setPosition(0x00);
+                }
+                //e8g8
+                else if (move.getOldField() == 0x74 && move.getNewField() == 0x76 &&
+                        board[0x75].getName().equals("Rook")) {
+                    board[0x77] = board[0x75];
+                    board[0x75] = null;
+                    board[0x77].setPosition(0x77);
+                }
+                //e8c8
+                else if(move.getOldField() == 0x74 && move.getNewField() == 0x72 &&
+                        board[0x73].getName().equals("Rook")) {
+                    board[0x70] = board[0x73];
+                    board[0x73] = null;
+                    board[0x70].setPosition(0x70);
+                }
+            }
+            //pawn promotion
+            if (move.getOldFigure().getName().equals("Pawn")) {
+                if ((move.getNewField() & 0xf0) == 0x70 || (move.getNewField() & 0xf0) == 0x00) {
+                    board[move.getOldField()] = new Pawn(move.getNewField(), move.getOldFigure().getColor());
+                }
+            }
         }
     }
 
@@ -98,6 +173,7 @@ public class Board {
         int oldField = move.getOldField();
 
         if (figure.equals("King")) {
+            //TODO Allow castling
             //King is only allowed to move one field
             if (!(newField + 0x11 == oldField &&
                     newField + 0x10 == oldField &&
@@ -261,7 +337,7 @@ public class Board {
         //Check if there has been another figure on the way
         int sign = (newField - oldField) / Math.abs(newField - oldField);
         int loop = 0;
-        if ((newField & 0x80) == (oldField & 0x80)) {
+        if ((newField & 0xf0) == (oldField & 0xf0)) {
             loop = sign * 0x10;
         } else {
             loop = sign * 0x01;
@@ -274,6 +350,7 @@ public class Board {
         return false;
     }
 
+<<<<<<< HEAD
     public Figure[] getFigures() {
         return board;
     }
@@ -281,5 +358,9 @@ public class Board {
     public boolean isFinished()
     {
 
+=======
+    public int evaluateBoard() {
+        return new Random().nextInt(); //FIXME implement
+>>>>>>> 9fc21c8aeda1ece112ba9d81208f97cd412adef3
     }
 }
