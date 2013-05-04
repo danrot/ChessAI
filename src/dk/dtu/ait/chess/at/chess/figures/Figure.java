@@ -69,7 +69,8 @@ public abstract class Figure {
      */
     public String getName()
     {
-        return this.getClass().getName().split(".")[this.getClass().getName().split(".").length-1];
+        String[] name = this.getClass().getName().split("\\.");
+        return name[name.length - 1];
     }
 
     public abstract FigureType getType();

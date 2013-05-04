@@ -87,8 +87,8 @@ public class ChessEngine {
                 Integer rowNewPos = (int)newPos.charAt(1)-49;
                 
                 //Add Row and Column number to one String
-                String oldPosParsed = colOldPos.toString() + rowOldPos.toString();
-                String newPosParsed = colNewPos.toString() + rowNewPos.toString();
+                String oldPosParsed = rowOldPos.toString() + colOldPos.toString();
+                String newPosParsed = rowNewPos.toString() + colNewPos.toString();
                 
                 //Convert String to hexadecimal Integer
                 int indexOld = Integer.parseInt(oldPosParsed, 16);

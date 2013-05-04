@@ -24,17 +24,16 @@ public class ChessAI {
     private Color color;
     private Strategy strategy;
     
-    public ChessAI(Strategy strategy)
+    public ChessAI(Strategy strategy, int seconds)
     {
         running = false;
         timer = new Timer();
         this.strategy = strategy;
+        this.seconds = seconds;
     }
-    
-    public ChessAI(int seconds)
-    {
-        super();
-        this.seconds = seconds; 
+
+    public ChessAI(Strategy strategy) {
+        this(strategy, 10);
     }
 
     public Color getColor() {
