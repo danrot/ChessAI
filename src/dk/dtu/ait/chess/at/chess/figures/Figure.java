@@ -4,7 +4,6 @@ import dk.dtu.ait.chess.at.chess.Board;
 import dk.dtu.ait.chess.at.chess.Move;
 
 import java.awt.*;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -14,6 +13,9 @@ import java.util.List;
  */
 public abstract class Figure {
 
+    public enum FigureType {
+     QUEEN, KING, BISHOP, KNIGHT, PAWN, ROOK
+    }
     protected int position;
     private Color color;
     protected boolean hasMoved;
@@ -69,5 +71,7 @@ public abstract class Figure {
     {
         return this.getClass().getName().split(".")[this.getClass().getName().split(".").length-1];
     }
+
+    public abstract FigureType getType();
 
 }

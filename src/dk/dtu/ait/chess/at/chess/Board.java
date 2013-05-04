@@ -153,6 +153,7 @@ public class Board {
     public List<Move> getAllPossibleMoves(Color color) {
         ArrayList<Move> retVal = new ArrayList<Move>(250);
         for (int i = 0; i < board.length; i++) {
+            if(board[i] != null)
             if (board[i].getColor() == color) {
 
                 retVal.addAll(board[i].getMoves(this));
@@ -273,8 +274,12 @@ public class Board {
         return false;
     }
 
-    public int evaluateBoard()
+    public Figure[] getFigures() {
+        return board;
+    }
+
+    public boolean isFinished()
     {
-        return new Random().nextInt(); //FIXME implement
+
     }
 }

@@ -96,4 +96,9 @@ public class Pawn extends Figure {
         return ret;
 
     }
+
+    @Override
+    public FigureType getType() {
+        return  FigureType.PAWN;
+    }
 }

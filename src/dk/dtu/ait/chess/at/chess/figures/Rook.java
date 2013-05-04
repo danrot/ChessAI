@@ -185,4 +185,8 @@ public class Rook extends Figure {
         //TODO Casteling!!!!
         return ret;
     }
+    @Override
+    public FigureType getType() {
+        return  FigureType.ROOK;
+    }
 }

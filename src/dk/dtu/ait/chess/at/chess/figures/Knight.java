@@ -88,4 +88,9 @@ public class Knight extends Figure {
             ret.add(tDoR);
         return ret;
     }
+
+    @Override
+    public FigureType getType() {
+        return  FigureType.KNIGHT;
+    }
 }
