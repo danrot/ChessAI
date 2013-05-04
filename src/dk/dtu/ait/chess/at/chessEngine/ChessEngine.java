@@ -8,6 +8,8 @@ import dk.dtu.ait.chess.at.chess.Board;
 import dk.dtu.ait.chess.at.chess.Move;
 import dk.dtu.ait.chess.at.chess.figures.Queen;
 import dk.dtu.ait.chess.at.chessAi.ChessAI;
+import dk.dtu.ait.chess.at.chessAi.strategy.FigureValueStrategy;
+
 import java.awt.Color;
 import java.util.Scanner;
 
@@ -25,7 +27,7 @@ public class ChessEngine {
     public ChessEngine()
     {
         scan = new Scanner(System.in);
-        this.chessAi = new ChessAI();
+        this.chessAi = new ChessAI(new FigureValueStrategy());
         board = new Board();
         running = false;
     }
