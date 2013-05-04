@@ -350,17 +350,12 @@ public class Board {
         return false;
     }
 
-<<<<<<< HEAD
     public Figure[] getFigures() {
         return board;
     }
 
     public boolean isFinished()
     {
-
-=======
-    public int evaluateBoard() {
-        return new Random().nextInt(); //FIXME implement
->>>>>>> 9fc21c8aeda1ece112ba9d81208f97cd412adef3
+        return false;
     }
 }
