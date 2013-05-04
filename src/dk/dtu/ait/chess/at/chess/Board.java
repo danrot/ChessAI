@@ -1,6 +1,7 @@
 package dk.dtu.ait.chess.at.chess;
 
 import dk.dtu.ait.chess.at.chess.figures.Figure;
+import dk.dtu.ait.chess.at.chess.figures.Pawn;
 import dk.dtu.ait.chess.at.chess.figures.Queen;
 
 import java.awt.*;
@@ -84,7 +85,7 @@ public class Board {
                 }
                 //pawn promotion
                 if (move.getOldFigure().getName().equals("Pawn")) {
-                    if ((move.getNewField() & 0x80) == 0x70 || (move.getNewField() & 0x80) == 0x00) {
+                    if ((move.getNewField() & 0xf0) == 0x70 || (move.getNewField() & 0xf0) == 0x00) {
                         board[move.getNewField()] = new Queen(move.getNewField(), move.getOldFigure().getColor());
                     }
                 }
@@ -135,6 +136,12 @@ public class Board {
                     board[0x70] = board[0x73];
                     board[0x73] = null;
                     board[0x70].setPosition(0x70);
+                }
+            }
+            //pawn promotion
+            if (move.getOldFigure().getName().equals("Pawn")) {
+                if ((move.getNewField() & 0xf0) == 0x70 || (move.getNewField() & 0xf0) == 0x00) {
+                    board[move.getOldField()] = new Pawn(move.getNewField(), move.getOldFigure().getColor());
                 }
             }
         }
@@ -329,7 +336,7 @@ public class Board {
         //Check if there has been another figure on the way
         int sign = (newField - oldField) / Math.abs(newField - oldField);
         int loop = 0;
-        if ((newField & 0x80) == (oldField & 0x80)) {
+        if ((newField & 0xf0) == (oldField & 0xf0)) {
             loop = sign * 0x10;
         } else {
             loop = sign * 0x01;
