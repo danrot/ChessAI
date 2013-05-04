@@ -30,6 +30,7 @@ public class ChessAI {
         timer = new Timer();
         this.strategy = strategy;
         this.seconds = seconds;
+        this.color = Color.BLACK;
     }
 
     public ChessAI(Strategy strategy) {
@@ -45,8 +46,8 @@ public class ChessAI {
     }
     
     public Move getMove(Board board) {
-        
         Move m = new Move();
+        running = true;
         int i = 1;
         timer.schedule(new AITimerTask(), seconds*1000 - 50);
         while(running)
@@ -77,18 +78,16 @@ public class ChessAI {
             }
             board.apply(childs.get(0));
             int v = min(board, alpha, beta, searchDepth+1, maxSearchDepth, next);
+            board.undo(childs.get(0));
             
             if (v > alpha)
             {
                 alpha = v;
-                if (searchDepth == 0)
-                {
-                    next.setNewField(childs.get(0).getNewField());
-                    next.setOldField(childs.get(0).getOldField());
-                    next.setNewFigure(childs.get(0).getNewFigure());
-                    next.setOldFigure(childs.get(0).getOldFigure());
-                    next.setSpecial(childs.get(0).getSpecial());
-                }
+                next.setNewField(childs.get(0).getNewField());
+                next.setOldField(childs.get(0).getOldField());
+                next.setNewFigure(childs.get(0).getNewFigure());
+                next.setOldFigure(childs.get(0).getOldFigure());
+                next.setSpecial(childs.get(0).getSpecial());
             }
             childs.remove(0);
         }
@@ -112,17 +111,16 @@ public class ChessAI {
             
             board.apply(childs.get(0));
             int v = max(board, alpha, beta, searchDepth+1, maxSearchDepth, next);
+            board.undo(childs.get(0));
+            
             if (v < beta)
             {
                 beta = v;
-                if (searchDepth == 1)
-                {
-                    next.setNewField(childs.get(0).getNewField());
-                    next.setOldField(childs.get(0).getOldField());
-                    next.setNewFigure(childs.get(0).getNewFigure());
-                    next.setOldFigure(childs.get(0).getOldFigure());
-                    next.setSpecial(childs.get(0).getSpecial());
-                }
+                next.setNewField(childs.get(0).getNewField());
+                next.setOldField(childs.get(0).getOldField());
+                next.setNewFigure(childs.get(0).getNewFigure());
+                next.setOldFigure(childs.get(0).getOldFigure());
+                next.setSpecial(childs.get(0).getSpecial());
             }
             childs.remove(0);
         }
