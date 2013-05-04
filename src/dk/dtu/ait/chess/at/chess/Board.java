@@ -75,7 +75,7 @@ public class Board {
                         board[0x75].setPosition(0x75);
                     }
                     //e8c8
-                    else if(move.getOldField() == 0x74 && move.getNewField() == 0x72 &&
+                    else if (move.getOldField() == 0x74 && move.getNewField() == 0x72 &&
                             board[0x70].getName().equals("Rook")) {
                         board[0x73] = board[0x70];
                         board[0x70] = null;
@@ -94,13 +94,43 @@ public class Board {
      * @param move The move to undo
      */
     public void undo(Move move) {
-        if (!move.getSpecial()) {
-            board[move.getNewField()] = move.getNewFigure();
-            board[move.getOldField()] = move.getOldFigure();
-            move.getOldFigure().setPosition(move.getOldField());
-            move.getNewFigure().setPosition(move.getNewField());
-        } else {
+        board[move.getNewField()] = move.getNewFigure();
+        board[move.getOldField()] = move.getOldFigure();
+        move.getOldFigure().setPosition(move.getOldField());
+        move.getNewFigure().setPosition(move.getNewField());
 
+        if (move.getSpecial()) {
+            //castling (e1g1 or e1c1 resp. e8g8 or e8c8)
+            if (move.getOldFigure().getName().equals("King")) {
+                //e1g1
+                if (move.getOldField() == 0x04 && move.getNewField() == 0x06 &&
+                        board[0x05].getName().equals("Rook")) {
+                    board[0x07] = board[0x05];
+                    board[0x05] = null;
+                    board[0x07].setPosition(0x07);
+                }
+                //e1c1
+                else if (move.getOldField() == 0x04 && move.getNewField() == 0x02 &&
+                        board[0x03].getName().equals("Rook")) {
+                    board[0x00] = board[0x03];
+                    board[0x03] = null;
+                    board[0x00].setPosition(0x00);
+                }
+                //e8g8
+                else if (move.getOldField() == 0x74 && move.getNewField() == 0x76 &&
+                        board[0x75].getName().equals("Rook")) {
+                    board[0x77] = board[0x75];
+                    board[0x75] = null;
+                    board[0x77].setPosition(0x77);
+                }
+                //e8c8
+                else if(move.getOldField() == 0x74 && move.getNewField() == 0x72 &&
+                        board[0x73].getName().equals("Rook")) {
+                    board[0x70] = board[0x73];
+                    board[0x73] = null;
+                    board[0x70].setPosition(0x70);
+                }
+            }
         }
     }
 
