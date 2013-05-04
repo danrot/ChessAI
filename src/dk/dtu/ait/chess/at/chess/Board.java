@@ -1,8 +1,6 @@
 package dk.dtu.ait.chess.at.chess;
 
-import dk.dtu.ait.chess.at.chess.figures.Figure;
-import dk.dtu.ait.chess.at.chess.figures.Pawn;
-import dk.dtu.ait.chess.at.chess.figures.Queen;
+import dk.dtu.ait.chess.at.chess.figures.*;
 
 import java.awt.*;
 import java.awt.font.NumericShaper;
@@ -28,9 +26,32 @@ public class Board {
     private final int BOARD_MASK = 0x88;
 
     public Board() {
+        //white figures
         for (int i = 0x10; i < 0x18; i++) {
             board[i] = new Pawn(i, Color.white);
         }
+        board[0x00] = new Rook(0x00, Color.white);
+        board[0x07] = new Rook(0x07, Color.white);
+        board[0x01] = new Knight(0x01, Color.white);
+        board[0x06] = new Knight(0x06, Color.white);
+        board[0x02] = new Bishop(0x02, Color.white);
+        board[0x05] = new Bishop(0x02, Color.white);
+        board[0x03] = new Queen(0x03, Color.white);
+        board[0x04] = new King(0x04, Color.white);
+
+        //black figures
+        for (int i = 0x60; i < 0x68; i++) {
+            board[i] = new Pawn(i, Color.black);
+        }
+
+        board[0x70] = new Rook(0x70, Color.white);
+        board[0x77] = new Rook(0x77, Color.white);
+        board[0x71] = new Knight(0x71, Color.white);
+        board[0x76] = new Knight(0x76, Color.white);
+        board[0x72] = new Bishop(0x72, Color.white);
+        board[0x75] = new Bishop(0x72, Color.white);
+        board[0x73] = new Queen(0x73, Color.white);
+        board[0x74] = new King(0x74, Color.white);
     }
 
     /**
