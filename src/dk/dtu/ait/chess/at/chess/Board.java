@@ -82,6 +82,12 @@ public class Board {
                         board[0x73].setPosition(0x73);
                     }
                 }
+                //pawn promotion
+                if (move.getOldFigure().getName().equals("Pawn")) {
+                    if ((move.getNewField() & 0x80) == 0x70 || (move.getNewField() & 0x80) == 0x00) {
+                        board[move.getNewField()] = new Queen(move.getNewField(), move.getOldFigure().getColor());
+                    }
+                }
             }
             return true;
         }
