@@ -2,6 +2,8 @@ package dk.dtu.ait.chess.at.chessAi;
 
 import dk.dtu.ait.chess.at.chess.Board;
 import dk.dtu.ait.chess.at.chess.Move;
+import dk.dtu.ait.chess.at.chessAi.strategy.Strategy;
+
 import java.awt.Color;
 import java.util.List;
 import java.util.Timer;
@@ -20,11 +22,13 @@ public class ChessAI {
     private Timer timer;
     private int seconds;
     private Color color;
+    private Strategy strategy;
     
-    public ChessAI()
+    public ChessAI(Strategy strategy)
     {
         running = false;
         timer = new Timer();
+        this.strategy = strategy;
     }
     
     public ChessAI(int seconds)
@@ -58,22 +62,22 @@ public class ChessAI {
         this.max(board, Integer.MIN_VALUE, Integer.MAX_VALUE, 0, searchDepth, next);
     }
     
-    private int max(Board state, int alpha, int beta, int searchDepth, int maxSearchDepth, Move next)
+    private int max(Board board, int alpha, int beta, int searchDepth, int maxSearchDepth, Move next)
     {
-        if(state.isFinished() || searchDepth == maxSearchDepth)
+        if(board.isFinished() || searchDepth == maxSearchDepth)
         {
-            return this.staticEvaluation(state, searchDepth);
+            return strategy.evaluateBoard(board, color);
         }
         
-        List<Move> childs = state.getAllPossibleMoves();
+        List<Move> childs = board.getAllPossibleMoves(color);
         while (alpha < beta && running)
         {
             if (childs.isEmpty())
             {
                 break;
             }
-            state.apply(childs.get(0));
-            int v = min(state, alpha, beta, searchDepth+1, maxSearchDepth, next);
+            board.apply(childs.get(0));
+            int v = min(board, alpha, beta, searchDepth+1, maxSearchDepth, next);
             
             if (v > alpha)
             {
@@ -92,14 +96,14 @@ public class ChessAI {
         return alpha;
     }
     
-    private int min(Board state, int alpha, int beta, int searchDepth, int maxSearchDepth, Move next)
+    private int min(Board board, int alpha, int beta, int searchDepth, int maxSearchDepth, Move next)
     {
-        if(state.isFinished() || searchDepth == maxSearchDepth)
+        if(board.isFinished() || searchDepth == maxSearchDepth)
         {
-            return this.staticEvaluation(state, searchDepth);
+            return strategy.evaluateBoard(board, color);
         }
         
-        List<Move> childs = state.getAllPossibleMoves();
+        List<Move> childs = board.getAllPossibleMoves(color);
         while (alpha < beta && running)
         {
             if (childs.isEmpty())
@@ -107,8 +111,8 @@ public class ChessAI {
                 break;
             }
             
-            state.apply(childs.get(0));
-            int v = max(state, alpha, beta, searchDepth+1, maxSearchDepth, next);
+            board.apply(childs.get(0));
+            int v = max(board, alpha, beta, searchDepth+1, maxSearchDepth, next);
             if (v < beta)
             {
                 beta = v;
