@@ -133,7 +133,9 @@ public class Board {
         board[move.getNewField()] = move.getNewFigure();
         board[move.getOldField()] = move.getOldFigure();
         move.getOldFigure().setPosition(move.getOldField());
-        move.getNewFigure().setPosition(move.getNewField());
+        if (move.getNewFigure() != null) {
+            move.getNewFigure().setPosition(move.getNewField());
+        }
 
         if (move.getSpecial()) {
             //castling (e1g1 or e1c1 resp. e8g8 or e8c8)
@@ -244,9 +246,10 @@ public class Board {
             //Pawns are only allowed to move forward, except they can capture another figure
             int sign = (move.getOldFigure().getColor() == Color.BLACK) ? -1 : 1;
             if (!(newField - 0x10 * sign == oldField ||
-                    ((newField - 0x09 * sign == oldField || newField - 0x11 * sign == oldField) && move.getNewFigure().getColor() != move.getOldFigure().getColor()) ||
+                    ((newField - 0x09 * sign == oldField || newField - 0x11 * sign == oldField) &&
+                    (move.getNewFigure() == null || move.getNewFigure().getColor() != move.getOldFigure().getColor()) ||
                     (newField - 0x20 * sign == oldField && move.getOldFigure().hasMoved())
-            )) {
+            ))) {
                 return false;
             }
         }

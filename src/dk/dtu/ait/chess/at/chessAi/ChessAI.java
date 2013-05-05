@@ -108,7 +108,7 @@ public class ChessAI {
             {
                 break;
             }
-            
+
             board.apply(childs.get(0));
             int v = max(board, alpha, beta, searchDepth+1, maxSearchDepth, next);
             board.undo(childs.get(0));
