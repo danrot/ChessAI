@@ -160,7 +160,8 @@ public class ChessEngine {
         builder.append(Integer.toHexString(m.getOldField()));
         builder.append(Integer.toHexString(m.getNewField()));
         
-        if(m.getNewFigure().getName().equals("Queen") && m.getOldFigure().getName().equals("Pawn") && m.getSpecial())
+        if(m.getNewFigure() != null && m.getNewFigure().getName().equals("Queen") 
+                && m.getOldFigure().getName().equals("Pawn") && m.getSpecial())
         {
             builder.append("q");
         }

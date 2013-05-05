@@ -68,8 +68,8 @@ public class ChessAI {
         {
             return strategy.evaluateBoard(board, color);
         }
-        
-        List<Move> childs = board.getAllPossibleMoves(color);
+        Color c = (color == Color.BLACK ? Color.BLACK : Color.WHITE); 
+        List<Move> childs = board.getAllPossibleMoves(c);
         while (alpha < beta && running)
         {
             if (childs.isEmpty())
@@ -100,8 +100,8 @@ public class ChessAI {
         {
             return strategy.evaluateBoard(board, color);
         }
-        
-        List<Move> childs = board.getAllPossibleMoves(color);
+        Color c = (color == Color.BLACK ? Color.WHITE : Color.BLACK); 
+        List<Move> childs = board.getAllPossibleMoves(c);
         while (alpha < beta && running)
         {
             if (childs.isEmpty())
