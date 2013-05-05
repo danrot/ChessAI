@@ -44,7 +44,7 @@ public class Pawn extends Figure {
             Move m1 = new Move();
             m1.setNewField(position + 0x10);
             m1.setOldField(position);
-            m1.setNewFigure(this);
+            m1.setOldFigure(this);
             if (board.check(m1))
                 ret.add(m1);
 
