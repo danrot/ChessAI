@@ -116,11 +116,6 @@ public class ChessAI {
             if (v < beta)
             {
                 beta = v;
-                next.setNewField(childs.get(0).getNewField());
-                next.setOldField(childs.get(0).getOldField());
-                next.setNewFigure(childs.get(0).getNewFigure());
-                next.setOldFigure(childs.get(0).getOldFigure());
-                next.setSpecial(childs.get(0).getSpecial());
             }
             childs.remove(0);
         }
