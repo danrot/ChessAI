@@ -22,6 +22,7 @@ public class ChessEngine {
     private Board board;
     private ChessAI chessAi;
     private boolean running;
+    private boolean inForceMode;
     
     public ChessEngine()
     {
@@ -29,6 +30,7 @@ public class ChessEngine {
         this.chessAi = new ChessAI(new FigureValueStrategy());
         board = new Board();
         running = false;
+        inForceMode = false;
     }
     
     public ChessEngine(ChessAI ai) 
@@ -56,6 +58,7 @@ public class ChessEngine {
             String nextCmd = scan.next();
             if (nextCmd.equals("go"))
             {
+               inForceMode = false; 
                if(!doMove(board))
                {
                    System.out.println("Wrong Move!!!");
@@ -72,6 +75,10 @@ public class ChessEngine {
             else if (nextCmd.equals("quit"))
             {
                 running = false;
+            }
+            else if(nextCmd.equals("force"))
+            {
+                inForceMode = true;
             }
             else if (nextCmd.matches("([a-h][1-8]){2}[q]?"))
             {
@@ -114,11 +121,14 @@ public class ChessEngine {
                 
                 //Apply move on the board
                 this.board.apply(recieved);
-                if (!doMove(board))
+                
+                if(!inForceMode)
                 {
-                    System.out.println("Wrong move!!!");
+                    if (!doMove(board))
+                    {
+                        System.out.println("Wrong move!!!");
+                    }
                 }
-                System.out.println("Regex true");
             }
         }
     }
@@ -149,15 +159,26 @@ public class ChessEngine {
     
     /**
      * Converts a Move to the Protocol used to communicate with xBoard
-     * @param m
-     * @return 
+     * @param m the move to convert a string to send to xboard
+     * @return the converted string
      */
     private String convert(Move m)
     {
         StringBuilder builder = new StringBuilder();
         builder.append("move ");
-        builder.append(Integer.toHexString(m.getOldField()));
-        builder.append(Integer.toHexString(m.getNewField()));
+        
+        String oldPos = Integer.toHexString(m.getOldField());
+        String newPos = Integer.toHexString(m.getNewField());
+        
+        int colOldPos = (int)oldPos.charAt(1)+49;
+        int colNewPos = (int)newPos.charAt(1)+49;
+        int rowOldPos = (int)oldPos.charAt(0)+1;
+        int rowNewPos = (int)newPos.charAt(0)+1;
+        
+        builder.append((char)colOldPos);
+        builder.append((char)rowOldPos);
+        builder.append((char)colNewPos);
+        builder.append((char)rowNewPos);
         
         if(m.getNewFigure() != null && m.getNewFigure().getName().equals("Queen") 
                 && m.getOldFigure().getName().equals("Pawn") && m.getSpecial())
