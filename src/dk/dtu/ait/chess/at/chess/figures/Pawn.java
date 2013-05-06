@@ -30,75 +30,118 @@ public class Pawn extends Figure {
             captureLeft.setNewField(position + 0x10 - 0x01);
             captureLeft.setOldField(position);
             captureLeft.setOldFigure(this);
-            if (board.check(captureLeft))
+            if (board.check(captureLeft)) {
+                if(position >= 0x60 && position <= 0x67)
+                {
+                    captureLeft.setSpecial(true);
+                    captureLeft.setNewFigure(new Queen(captureLeft.getNewField(),getColor()));
+                }
                 ret.add(captureLeft);
-
+            }
             Move captureRight = new Move();
             captureRight.setNewField(position + 0x11);
             captureRight.setOldField(position);
             captureRight.setOldFigure(this);
-            if (board.check(captureRight))
+            if (board.check(captureRight)) {
+                if(position >= 0x60 && position <= 0x67)
+                {
+                    captureRight.setSpecial(true);
+                    captureRight.setNewFigure(new Queen(captureRight.getNewField(),getColor()));
+                }
                 ret.add(captureRight);
-
-
+            }
             Move m1 = new Move();
             m1.setNewField(position + 0x10);
             m1.setOldField(position);
             m1.setOldFigure(this);
-            if (board.check(m1))
+            if (board.check(m1)) {
+                if(position >= 0x60 && position <= 0x67)
+                {
+                    m1.setSpecial(true);
+                    m1.setNewFigure(new Queen(m1.getNewField(),getColor()));
+                }
                 ret.add(m1);
-
+            }
             if (!hasMoved) {
                 Move m2 = new Move();
                 m2.setNewField(position + 0x20);
                 m2.setOldField(position);
                 m2.setOldFigure(this);
-                if (board.check(m2))
+                if (board.check(m2)) {
+                    if(position >= 0x60 && position <= 0x67)
+                    {
+                        m2.setSpecial(true);
+                        m2.setNewFigure(new Queen(m2.getNewField(),getColor()));
+                    }
                     ret.add(m2);
+                }
             }
-        }   else if (getColor() == Color.black)
-        {
+        } else if (getColor() == Color.black) {
 
             Move captureLeft = new Move();
             captureLeft.setNewField(position - 0x10 - 0x01);
             captureLeft.setOldField(position);
             captureLeft.setOldFigure(this);
-            if (board.check(captureLeft))
+            if (board.check(captureLeft)) {
+                if(position >= 0x10 && position <= 0x17)
+                {
+                    captureLeft.setSpecial(true);
+                    captureLeft.setNewFigure(new Queen(captureLeft.getNewField(),getColor()));
+                }
                 ret.add(captureLeft);
-
+            }
             Move captureRight = new Move();
             captureRight.setNewField(position - 0x11);
             captureRight.setOldField(position);
             captureRight.setOldFigure(this);
             if (board.check(captureRight))
+            {
+                if(position >= 0x10 && position <= 0x17)
+                {
+                    captureRight.setSpecial(true);
+                    captureRight.setNewFigure(new Queen(captureRight.getNewField(),getColor()));
+                }
                 ret.add(captureRight);
-
+            }
 
             Move m1 = new Move();
             m1.setNewField(position - 0x10);
             m1.setOldField(position);
             m1.setOldFigure(this);
             if (board.check(m1))
+            {
+                if(position >= 0x10 && position <= 0x17)
+                {
+                    m1.setSpecial(true);
+                    m1.setNewFigure(new Queen(m1.getNewField(),getColor()));
+                }
                 ret.add(m1);
-
+            }
             if (!hasMoved) {
                 Move m2 = new Move();
                 m2.setNewField(position - 0x20);
                 m2.setOldField(position);
                 m2.setOldFigure(this);
                 if (board.check(m2))
+                {
+                    if(position >= 0x10 && position <= 0x17)
+                    {
+                        m2.setSpecial(true);
+                        m2.setNewFigure(new Queen(m2.getNewField(),getColor()));
+                    }
                     ret.add(m2);
+                }
             }
         }
 
 
-       //TODO PawnPromotion
+        //TODO PawnPromotion
         return ret;
 
     }
 
     @Override
     public FigureType getType() {
-        return  FigureType.PAWN;
+        return FigureType.PAWN;
     }
 }
