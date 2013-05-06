@@ -266,33 +266,7 @@ public class Board {
 
                 retVal.addAll(board[i].getMoves(this));
 
-                if (board[i].getName().equalsIgnoreCase("pawn")) {
-                    if (board[i].getColor() == Color.white) {
-                        if (board[i].getPosition() >= 0x60) {
-                            Move m = new Move();
-                            Queen q = new Queen(board[i].getPosition() + 0x10, board[i].getColor());
-                            m.setOldField(board[i].getPosition());
-                            m.setNewField(q.getPosition());
-                            m.setNewFigure(q);
-                            m.setOldFigure(board[i]);
-                            m.setSpecial(true);
-                            retVal.add(m);
-
-                        }
-                    } else {
-                        if (board[i].getPosition() <= 0x17) {
-                            Move m = new Move();
-                            Queen q = new Queen(board[i].getPosition() - 0x10, board[i].getColor());
-                            m.setOldField(board[i].getPosition());
-                            m.setNewField(q.getPosition());
-                            m.setNewFigure(q);
-                            m.setOldFigure(board[i]);
-                            m.setSpecial(true);
-                            retVal.add(m);
-                        }
-
-                    }
-                } else if (board[i].getName().equalsIgnoreCase("king")) {
+               if (board[i].getName().equalsIgnoreCase("king")) {
                     if (!board[i].hasMoved()) {
                         if (board[i].getColor() == Color.white) {
                             if (board[0x00] != null && board[0x00].getName().equalsIgnoreCase("rook") && !board[0x00].hasMoved() &&
