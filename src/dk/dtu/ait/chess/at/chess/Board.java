@@ -119,8 +119,10 @@ public class Board {
                     }
                 }
             }
-            move.getOldFigure().setMoved(true);
+            move.getOldFigure().increaseMoves();
             return true;
+        } else {
+            System.out.println("Move " + move.getOldField() + move.getNewField() + " was not valid!");
         }
         return false;
     }
@@ -163,7 +165,7 @@ public class Board {
                     board[0x77].setPosition(0x77);
                 }
                 //e8c8
-                else if(move.getOldField() == 0x74 && move.getNewField() == 0x72 &&
+                else if (move.getOldField() == 0x74 && move.getNewField() == 0x72 &&
                         board[0x73] != null && board[0x73].getName().equals("Rook")) {
                     board[0x70] = board[0x73];
                     board[0x73] = null;
@@ -177,6 +179,7 @@ public class Board {
                 }
             }
         }
+        move.getOldFigure().decreaseMoves();
     }
 
     /**
@@ -224,7 +227,7 @@ public class Board {
                 return false;
             }
         } else if (figure.equals("Bishop")) {
-            if (checkBishopMove(newField, oldField)) {
+            if (!checkBishopMove(newField, oldField)) {
                 return false;
             }
         } else if (figure.equals("Knight")) {
@@ -240,17 +243,17 @@ public class Board {
                 return false;
             }
         } else if (figure.equals("Rook")) {
-            if (checkRookMove(newField, oldField)) {
+            if (!checkRookMove(newField, oldField)) {
                 return false;
             }
         } else if (figure.equals("Pawn")) {
             //Pawns are only allowed to move forward, except they can capture another figure
             int sign = (move.getOldFigure().getColor() == Color.BLACK) ? -1 : 1;
-            if (!((newField - 0x10 * sign == oldField && board[newField] == null) ||
-                    ((newField - 0x09 * sign == oldField || newField - 0x11 * sign == oldField) &&
-                    (board[newField] != null && board[newField].getColor() != move.getOldFigure().getColor()) ||
-                    (newField - 0x20 * sign == oldField && !move.getOldFigure().hasMoved() && board[newField] == null)
-            ))) {
+            boolean normalMove = newField - 0x10 * sign == oldField && board[newField] == null;
+            boolean captureMove = (newField - 0x09 * sign == oldField || newField - 0x11 * sign == oldField) &&
+                    (board[newField] != null && board[newField].getColor() != move.getOldFigure().getColor());
+            boolean startMove = newField - 0x20 * sign == oldField && board[newField - 0x10 * sign] == null && !move.getOldFigure().hasMoved() && board[newField] == null;
+            if (!(normalMove || captureMove || startMove)) {
                 return false;
             }
         }
@@ -262,53 +265,53 @@ public class Board {
     public List<Move> getAllPossibleMoves(Color color) {
         ArrayList<Move> retVal = new ArrayList<Move>(250);
         for (int i = 0; i < board.length; i++) {
-            if(board[i] != null)
-            if (board[i].getColor() == color) {
+            if (board[i] != null)
+                if (board[i].getColor() == color) {
 
-                retVal.addAll(board[i].getMoves(this));
+                    retVal.addAll(board[i].getMoves(this));
 
-               if (board[i].getName().equalsIgnoreCase("king")) {
-                    if (!board[i].hasMoved()) {
-                        if (board[i].getColor() == Color.white) {
-                            if (board[0x00] != null && board[0x00].getName().equalsIgnoreCase("rook") && !board[0x00].hasMoved() &&
-                                    board[0x01] == null &&  board[0x02] == null && board[0x03] == null) {          //Queenside casteling white
-                                Move m = new Move();
-                                m.setOldField(board[i].getPosition());
-                                m.setNewField(0x02);
-                                m.setOldFigure(board[i]);
-                                m.setSpecial(true);
-                                retVal.add(m);
-                            } else if (board[0x07] != null && board[0x07].getName().equalsIgnoreCase("rook") && !board[0x07].hasMoved() &&
-                                    board[0x05] == null && board[0x06] == null) {     //Kingside casteling white
-                                Move m = new Move();
-                                m.setOldField(board[i].getPosition());
-                                m.setNewField(0x06);
-                                m.setOldFigure(board[i]);
-                                m.setSpecial(true);
-                                retVal.add(m);
-                            }
-                        } else {
-                            if (board[0x70] != null && board[0x70].getName().equalsIgnoreCase("rook") && !board[0x70].hasMoved()
-                                    && board[0x71] == null && board[0x72] == null && board[0x73] == null) {          //Queenside casteling black
-                                Move m = new Move();
-                                m.setOldField(board[i].getPosition());
-                                m.setNewField(0x72);
-                                m.setOldFigure(board[i]);
-                                m.setSpecial(true);
-                                retVal.add(m);
-                            } else if (board[0x77] != null && board[0x77].getName().equalsIgnoreCase("rook") && !board[0x77].hasMoved() &&
-                                    board[0x75] == null && board[0x76] == null) {     //Kingside casteling black
-                                Move m = new Move();
-                                m.setOldField(board[i].getPosition());
-                                m.setNewField(0x76);
-                                m.setOldFigure(board[i]);
-                                m.setSpecial(true);
-                                retVal.add(m);
+                    if (board[i].getName().equalsIgnoreCase("king")) {
+                        if (!board[i].hasMoved()) {
+                            if (board[i].getColor() == Color.white) {
+                                if (board[0x00] != null && board[0x00].getName().equalsIgnoreCase("rook") && !board[0x00].hasMoved() &&
+                                        board[0x01] == null && board[0x02] == null && board[0x03] == null) {          //Queenside casteling white
+                                    Move m = new Move();
+                                    m.setOldField(board[i].getPosition());
+                                    m.setNewField(0x02);
+                                    m.setOldFigure(board[i]);
+                                    m.setSpecial(true);
+                                    retVal.add(m);
+                                } else if (board[0x07] != null && board[0x07].getName().equalsIgnoreCase("rook") && !board[0x07].hasMoved() &&
+                                        board[0x05] == null && board[0x06] == null) {     //Kingside casteling white
+                                    Move m = new Move();
+                                    m.setOldField(board[i].getPosition());
+                                    m.setNewField(0x06);
+                                    m.setOldFigure(board[i]);
+                                    m.setSpecial(true);
+                                    retVal.add(m);
+                                }
+                            } else {
+                                if (board[0x70] != null && board[0x70].getName().equalsIgnoreCase("rook") && !board[0x70].hasMoved()
+                                        && board[0x71] == null && board[0x72] == null && board[0x73] == null) {          //Queenside casteling black
+                                    Move m = new Move();
+                                    m.setOldField(board[i].getPosition());
+                                    m.setNewField(0x72);
+                                    m.setOldFigure(board[i]);
+                                    m.setSpecial(true);
+                                    retVal.add(m);
+                                } else if (board[0x77] != null && board[0x77].getName().equalsIgnoreCase("rook") && !board[0x77].hasMoved() &&
+                                        board[0x75] == null && board[0x76] == null) {     //Kingside casteling black
+                                    Move m = new Move();
+                                    m.setOldField(board[i].getPosition());
+                                    m.setNewField(0x76);
+                                    m.setOldFigure(board[i]);
+                                    m.setSpecial(true);
+                                    retVal.add(m);
+                                }
                             }
                         }
                     }
                 }
-            }
         }
 
         return retVal;
@@ -320,7 +323,7 @@ public class Board {
         double step = newField - oldField;
         //Check if move was diagonal
         if (!(Math.floor(step / 0x09) == 0 || Math.floor(step / 0x11) == 0)) {
-            return true;
+            return false;
         }
         //Check if there has been another figure on the way
         int sign = (newField - oldField) / Math.abs(newField - oldField);
@@ -332,18 +335,18 @@ public class Board {
         }
         for (int i = oldField; i < newField; i += loop) {
             if (getFigure(i) != null) {
-                return true;
+                return false;
             }
         }
-        return false;
+        return true;
     }
 
     private boolean checkRookMove(int newField, int oldField) {
         //Check if rook has not left his row/column
-        if (!((newField & 0x80) == (oldField & 0x80) &&
-                (newField & 0x08) == (oldField & 0x08)
+        if (!((newField & 0xf0) == (oldField & 0xf0) &&
+                (newField & 0x0f) == (oldField & 0x0f)
         )) {
-            return true;
+            return false;
         }
         //Check if there has been another figure on the way
         int sign = (newField - oldField) / Math.abs(newField - oldField);
@@ -355,18 +358,17 @@ public class Board {
         }
         for (int i = oldField; i < newField; i += loop) {
             if (getFigure(i) != null) {
-                return true;
+                return false;
             }
         }
-        return false;
+        return true;
     }
 
     public Figure[] getFigures() {
         return board;
     }
 
-    public boolean isFinished()
-    {
+    public boolean isFinished() {
         return false;
     }
 }

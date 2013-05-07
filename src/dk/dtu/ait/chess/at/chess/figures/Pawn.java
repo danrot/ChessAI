@@ -62,7 +62,7 @@ public class Pawn extends Figure {
                 }
                 ret.add(m1);
             }
-            if (!hasMoved) {
+            if (!hasMoved()) {
                 Move m2 = new Move();
                 m2.setNewField(position + 0x20);
                 m2.setOldField(position);
@@ -117,7 +117,7 @@ public class Pawn extends Figure {
                 }
                 ret.add(m1);
             }
-            if (!hasMoved) {
+            if (!hasMoved()) {
                 Move m2 = new Move();
                 m2.setNewField(position - 0x20);
                 m2.setOldField(position);

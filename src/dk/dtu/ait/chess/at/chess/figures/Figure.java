@@ -18,14 +18,14 @@ public abstract class Figure {
     }
     protected int position;
     private Color color;
-    protected boolean hasMoved;
+    protected int moves;
 
 
     public Figure(int position, Color color)
     {
         this.color = color;
         this.position = position;
-        this.hasMoved = false;
+        this.moves = 0;
     }
 
     /**
@@ -59,15 +59,15 @@ public abstract class Figure {
      */
     public boolean hasMoved()
     {
-       return hasMoved;
+       return moves != 0;
     }
 
-    /**
-     * Sets if the figure has already been moved
-     * @param hasMoved Defines if the figure has already been moved
-     */
-    public void setMoved(boolean hasMoved) {
-        this.hasMoved = hasMoved;
+    public void increaseMoves() {
+        ++moves;
+    }
+
+    public void decreaseMoves() {
+        --moves;
     }
 
     /**
