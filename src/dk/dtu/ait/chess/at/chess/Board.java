@@ -250,7 +250,7 @@ public class Board {
             //Pawns are only allowed to move forward, except they can capture another figure
             int sign = (move.getOldFigure().getColor() == Color.BLACK) ? -1 : 1;
             boolean normalMove = newField - 0x10 * sign == oldField && board[newField] == null;
-            boolean captureMove = (newField - 0x09 * sign == oldField || newField - 0x11 * sign == oldField) &&
+            boolean captureMove = (newField - 0x0f * sign == oldField || newField - 0x11 * sign == oldField) &&
                     (board[newField] != null && board[newField].getColor() != move.getOldFigure().getColor());
             boolean startMove = newField - 0x20 * sign == oldField && board[newField - 0x10 * sign] == null && !move.getOldFigure().hasMoved() && board[newField] == null;
             if (!(normalMove || captureMove || startMove)) {
