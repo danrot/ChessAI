@@ -52,6 +52,7 @@ public class ChessEngine {
      */
     private void run()
     {
+        System.out.println("feature sigint=0 sigterm=0");
         this.running = true;
         while (running)
         {
