@@ -179,10 +179,6 @@ public class Rook extends Figure {
                 break;
         }
 
-        if (!hasMoved) {
-
-        }
-        //TODO Casteling!!!!
         return ret;
     }
     @Override

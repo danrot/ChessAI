@@ -18,13 +18,14 @@ public abstract class Figure {
     }
     protected int position;
     private Color color;
-    protected boolean hasMoved;
+    protected int moves;
 
 
     public Figure(int position, Color color)
     {
         this.color = color;
         this.position = position;
+        this.moves = 0;
     }
 
     /**
@@ -52,10 +53,23 @@ public abstract class Figure {
         return color;
     }
 
+    /**
+     * Returns true if the figure has already been moved, otherwise false
+     * @return True if the figure has already been moved, otherwise false
+     */
     public boolean hasMoved()
     {
-       return hasMoved;
+       return moves != 0;
     }
+
+    public void increaseMoves() {
+        ++moves;
+    }
+
+    public void decreaseMoves() {
+        --moves;
+    }
+
     /**
      * This function is used to get all the Moves the figure can execute.
      * @return a list with all the possible moves inside.
