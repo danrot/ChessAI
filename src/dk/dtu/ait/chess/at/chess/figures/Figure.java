@@ -25,6 +25,7 @@ public abstract class Figure {
     {
         this.color = color;
         this.position = position;
+        this.hasMoved = false;
     }
 
     /**
@@ -52,10 +53,23 @@ public abstract class Figure {
         return color;
     }
 
+    /**
+     * Returns true if the figure has already been moved, otherwise false
+     * @return True if the figure has already been moved, otherwise false
+     */
     public boolean hasMoved()
     {
        return hasMoved;
     }
+
+    /**
+     * Sets if the figure has already been moved
+     * @param hasMoved Defines if the figure has already been moved
+     */
+    public void setMoved(boolean hasMoved) {
+        this.hasMoved = hasMoved;
+    }
+
     /**
      * This function is used to get all the Moves the figure can execute.
      * @return a list with all the possible moves inside.
