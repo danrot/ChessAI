@@ -185,7 +185,6 @@ public class ChessEngine {
         {
             builder.append("q");
         }
-        
         return builder.toString();
     }
 
