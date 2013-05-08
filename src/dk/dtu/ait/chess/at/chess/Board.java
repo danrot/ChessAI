@@ -55,7 +55,6 @@ public class Board {
     }
 
 
-
     /**
      * Returns the figure which stands on the board on the given position
      *
@@ -114,7 +113,7 @@ public class Board {
                 //pawn promotion
                 if (move.getOldFigure().getType() == Figure.FigureType.PAWN) {
                     if ((move.getNewField() & 0xf0) == 0x70 || (move.getNewField() & 0xf0) == 0x00) {
-                        board[move.getNewField()] = new Queen(move.getNewField(),move.getOldFigure().getColor());
+                        board[move.getNewField()] = new Queen(move.getNewField(), move.getOldFigure().getColor());
                     }
                 }
             }
@@ -257,8 +256,8 @@ public class Board {
                 return false;
             }
         }
-        if (!(move.getSpecial() && move.getOldFigure().getType() == Figure.FigureType.PAWN))
-            move.setNewFigure(board[move.getNewField()]);
+
+        move.setNewFigure(board[move.getNewField()]);
         return true;
     }
 
