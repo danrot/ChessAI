@@ -132,7 +132,6 @@ public class Queen extends Figure {
                 default:
                     throw new RuntimeException();
             }
-
             if (board.check(d))
                 ret.add(d);
             else

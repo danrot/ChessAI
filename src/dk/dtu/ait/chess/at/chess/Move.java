@@ -110,4 +110,6 @@ public class Move {
     public void setSpecial(boolean special) {
         this.special = special;
     }
+
+
 }

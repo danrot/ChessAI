@@ -83,7 +83,6 @@ public class Knight extends Figure {
         tDoR.setOldField(position);
         tDoR.setOldFigure(this);
         tDoR.setNewField(position - 0x20 + 0x01);
-
         if (board.check(tDoR))
             ret.add(tDoR);
         return ret;

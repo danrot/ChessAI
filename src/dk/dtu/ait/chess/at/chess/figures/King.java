@@ -38,6 +38,11 @@ public class King extends Figure {
         r.setOldFigure(this);
         l.setOldFigure(this);
 
+        u.setNewField(position + 0x10);
+        d.setNewField(position - 0x10);
+        l.setNewField(position - 0x01);
+        r.setNewField(position + 0x01);
+
         if (board.check(u))
             ret.add(u);
         if (board.check(r))
