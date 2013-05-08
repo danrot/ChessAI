@@ -103,7 +103,7 @@ public class Board {
                     }
                     //e8c8
                     else if (move.getOldField() == 0x74 && move.getNewField() == 0x72 &&
-                            board[0x70] != null && board[0x70].getType() == Figure.FigureType.ROOK){
+                            board[0x70] != null && board[0x70].getType() == Figure.FigureType.ROOK) {
                         board[0x73] = board[0x70];
                         board[0x70] = null;
                         board[0x73].setPosition(0x73);
@@ -209,13 +209,13 @@ public class Board {
             boolean castlingWhite = (move.getSpecial() && move.getOldFigure().getColor() == Color.WHITE && !move.getOldFigure().hasMoved() &&
                     (
                             (board[0x00] != null && !board[0x00].hasMoved() && board[0x01] == null && board[0x02] == null && board[0x03] == null && newField == 0x02) ||
-                            (board[0x07] != null && !board[0x07].hasMoved() && board[0x05] == null && board[0x06] == null && newField == 0x06)
+                                    (board[0x07] != null && !board[0x07].hasMoved() && board[0x05] == null && board[0x06] == null && newField == 0x06)
                     )
             );
             boolean castlingBlack = (move.getSpecial() && move.getOldFigure().getColor() == Color.BLACK && !move.getOldFigure().hasMoved() &&
                     (
                             (board[0x70] != null && !board[0x70].hasMoved() && board[0x71] == null && board[0x72] == null && board[0x73] == null && newField == 0x72) ||
-                            (board[0x77] != null && !board[0x77].hasMoved() && board[0x75] == null && board[0x76] == null && newField == 0x76)
+                                    (board[0x77] != null && !board[0x77].hasMoved() && board[0x75] == null && board[0x76] == null && newField == 0x76)
                     )
             );
             //King is only allowed to move one field
@@ -234,11 +234,11 @@ public class Board {
             }
         } else if (figure == Figure.FigureType.QUEEN) {
             //Valid queen moves are the union of bishop and rook
-            if (!(checkBishopMove(newField, oldField) || checkRookMove(newField, oldField))) {
+            if (!(checkBishopMove(newField, oldField, move.getOldFigure().getColor()) || checkRookMove(newField, oldField, move.getOldFigure().getColor()))) {
                 return false;
             }
         } else if (figure == Figure.FigureType.BISHOP) {
-            if (!checkBishopMove(newField, oldField)) {
+            if (!checkBishopMove(newField, oldField, move.getOldFigure().getColor())) {
                 return false;
             }
         } else if (figure == Figure.FigureType.KNIGHT) {
@@ -254,7 +254,7 @@ public class Board {
                 return false;
             }
         } else if (figure == Figure.FigureType.ROOK) {
-            if (!checkRookMove(newField, oldField)) {
+            if (!checkRookMove(newField, oldField, move.getOldFigure().getColor())) {
                 return false;
             }
         } else if (figure == Figure.FigureType.PAWN) {
@@ -331,11 +331,12 @@ public class Board {
 
     /**
      * Returns true if the given move is a valid bishop move, otherwise false
+     *
      * @param newField The new field
      * @param oldField The old field
      * @return True if the given move is a valid bishop move, otherwise false
      */
-    private boolean checkBishopMove(int newField, int oldField) {
+    private boolean checkBishopMove(int newField, int oldField, Color color) {
         double step = newField - oldField;
         //Check if move was diagonal
         if (!(step % 0x0f == 0 || step % 0x11 == 0)) {
@@ -349,9 +350,18 @@ public class Board {
         } else {
             loop = sign * 0x11;
         }
+
+        boolean oppFigure = false;
         for (int i = oldField + loop; i <= newField && i >= oldField; i += loop) {
-            if (getFigure(i) != null) {
+            if (oppFigure) {
                 return false;
+            }
+            if (getFigure(i) != null) {
+                if (getFigure(i).getColor() == color) {
+                    return false;
+                } else {
+                    oppFigure = true;
+                }
             }
         }
         return true;
@@ -359,11 +369,12 @@ public class Board {
 
     /**
      * Returns true if the given move is a valid rook move, otherwise false
+     *
      * @param newField The new field
      * @param oldField The old field
      * @return True if the given move is a valid rook move, otherwise false
      */
-    private boolean checkRookMove(int newField, int oldField) {
+    private boolean checkRookMove(int newField, int oldField, Color color) {
         //Check if rook has not left his row/column
         if (!((newField & 0xf0) == (oldField & 0xf0) ||
                 (newField & 0x0f) == (oldField & 0x0f)
@@ -378,9 +389,18 @@ public class Board {
         } else {
             loop = sign * 0x01;
         }
+
+        boolean oppFigure = false;
         for (int i = oldField + loop; i <= newField && i >= oldField; i += loop) {
-            if (getFigure(i) != null) {
+            if (oppFigure) {
                 return false;
+            }
+            if (getFigure(i) != null) {
+                    if (getFigure(i).getColor() == color) {
+                        return false;
+                    } else {
+                        oppFigure = true;
+                    }
             }
         }
         return true;
