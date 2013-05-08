@@ -76,9 +76,6 @@ public class Board {
             board[move.getNewField()] = move.getOldFigure();
             board[move.getOldField()] = null;
             move.getOldFigure().setPosition(move.getNewField());
-            if (move.getNewFigure() != null) {
-                move.getNewFigure().setPosition(-1); //Highlight the figure as captured
-            }
 
             if (move.getSpecial()) {
                 //castling (e1g1 or e1c1 resp. e8g8 or e8c8)
@@ -122,7 +119,7 @@ public class Board {
             move.getOldFigure().increaseMoves();
             return true;
         } else {
-            System.out.println("Move " + move.getOldField() + move.getNewField() + " was not valid!");
+            System.out.println("Move from " + move.getOldFigure().getColor() + " " + move.getOldFigure().getName() + " " + Integer.toHexString(move.getOldField()) + Integer.toHexString(move.getNewField()) + " was not valid!");
         }
         return false;
     }
@@ -192,7 +189,7 @@ public class Board {
      * @return True if the move is valid, otherwise false
      */
     public boolean check(Move move) {
-        if ((move.getNewField() & BOARD_MASK) > 0) {
+        if (move.getNewField() < 0 || (move.getNewField() & BOARD_MASK) > 0) {
             //Move is not allowed if the position is out of the board
             return false;
         }
@@ -212,10 +209,10 @@ public class Board {
             //King is only allowed to move one field
             if (!(newField + 0x11 == oldField &&
                     newField + 0x10 == oldField &&
-                    newField + 0x09 == oldField &&
+                    newField + 0x0f == oldField &&
                     newField + 0x01 == oldField &&
                     newField - 0x01 == oldField &&
-                    newField - 0x09 == oldField &&
+                    newField - 0x0f == oldField &&
                     newField - 0x10 == oldField &&
                     newField - 0x11 == oldField
             )) {
@@ -232,13 +229,13 @@ public class Board {
             }
         } else if (figure.equals("Knight")) {
             if (!(newField - 0x21 == oldField &&
-                    newField - 0x19 == oldField &&
+                    newField - 0x1f == oldField &&
                     newField - 0x12 == oldField &&
-                    newField - 0x08 == oldField &&
+                    newField - 0x0e == oldField &&
                     newField + 0x21 == oldField &&
-                    newField + 0x19 == oldField &&
+                    newField + 0x1f == oldField &&
                     newField + 0x12 == oldField &&
-                    newField + 0x08 == oldField
+                    newField + 0x0e == oldField
             )) {
                 return false;
             }
@@ -322,18 +319,18 @@ public class Board {
     private boolean checkBishopMove(int newField, int oldField) {
         double step = newField - oldField;
         //Check if move was diagonal
-        if (!(Math.floor(step / 0x09) == 0 || Math.floor(step / 0x11) == 0)) {
+        if (!(step % 0x0f == 0 || step % 0x11 == 0)) {
             return false;
         }
         //Check if there has been another figure on the way
         int sign = (newField - oldField) / Math.abs(newField - oldField);
         int loop = 0;
-        if (Math.floor(step / 0x09) == 0) {
-            loop = sign * 0x09;
+        if (step % 0x0f == 0) {
+            loop = sign * 0x0f;
         } else {
             loop = sign * 0x11;
         }
-        for (int i = oldField; i < newField; i += loop) {
+        for (int i = oldField + loop; i <= newField && i >= oldField; i += loop) {
             if (getFigure(i) != null) {
                 return false;
             }
@@ -343,7 +340,7 @@ public class Board {
 
     private boolean checkRookMove(int newField, int oldField) {
         //Check if rook has not left his row/column
-        if (!((newField & 0xf0) == (oldField & 0xf0) &&
+        if (!((newField & 0xf0) == (oldField & 0xf0) ||
                 (newField & 0x0f) == (oldField & 0x0f)
         )) {
             return false;
@@ -351,12 +348,12 @@ public class Board {
         //Check if there has been another figure on the way
         int sign = (newField - oldField) / Math.abs(newField - oldField);
         int loop = 0;
-        if ((newField & 0xf0) == (oldField & 0xf0)) {
+        if ((newField & 0x0f) == (oldField & 0x0f)) {
             loop = sign * 0x10;
         } else {
             loop = sign * 0x01;
         }
-        for (int i = oldField; i < newField; i += loop) {
+        for (int i = oldField + loop; i <= newField && i >= oldField; i += loop) {
             if (getFigure(i) != null) {
                 return false;
             }
