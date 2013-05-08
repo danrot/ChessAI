@@ -6,6 +6,7 @@ package dk.dtu.ait.chess.at.chessEngine;
 
 import dk.dtu.ait.chess.at.chess.Board;
 import dk.dtu.ait.chess.at.chess.Move;
+import dk.dtu.ait.chess.at.chess.figures.Figure;
 import dk.dtu.ait.chess.at.chess.figures.Queen;
 import dk.dtu.ait.chess.at.chessAi.ChessAI;
 import dk.dtu.ait.chess.at.chessAi.strategy.FigureValueStrategy;
@@ -181,8 +182,8 @@ public class ChessEngine {
         builder.append((char)colNewPos);
         builder.append((char)rowNewPos);
         
-        if(m.getNewFigure() != null && m.getNewFigure().getName().equals("Queen") 
-                && m.getOldFigure().getName().equals("Pawn") && m.getSpecial())
+        if(m.getNewFigure() != null && m.getNewFigure().getType() == Figure.FigureType.QUEEN
+                && m.getOldFigure().getType() == Figure.FigureType.PAWN && m.getSpecial())
         {
             builder.append("q");
         }
