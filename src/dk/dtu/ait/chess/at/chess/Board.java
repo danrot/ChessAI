@@ -205,16 +205,30 @@ public class Board {
         int oldField = move.getOldField();
 
         if (figure == Figure.FigureType.KING) {
-            //TODO Allow castling
+            //white king 0x04
+            boolean castlingWhite = (move.getSpecial() && move.getOldFigure().getColor() == Color.WHITE && !move.getOldFigure().hasMoved() &&
+                    (
+                            (board[0x00] != null && !board[0x00].hasMoved() && board[0x01] == null && board[0x02] == null && board[0x03] == null && newField == 0x02) ||
+                            (board[0x07] != null && !board[0x07].hasMoved() && board[0x05] == null && board[0x06] == null && newField == 0x06)
+                    )
+            );
+            boolean castlingBlack = (move.getSpecial() && move.getOldFigure().getColor() == Color.BLACK && !move.getOldFigure().hasMoved() &&
+                    (
+                            (board[0x70] != null && !board[0x70].hasMoved() && board[0x71] == null && board[0x72] == null && board[0x73] == null && newField == 0x72) ||
+                            (board[0x77] != null && !board[0x77].hasMoved() && board[0x75] == null && board[0x76] == null && newField == 0x76)
+                    )
+            );
             //King is only allowed to move one field
-            if (!(newField + 0x11 == oldField &&
-                    newField + 0x10 == oldField &&
-                    newField + 0x0f == oldField &&
-                    newField + 0x01 == oldField &&
-                    newField - 0x01 == oldField &&
-                    newField - 0x0f == oldField &&
-                    newField - 0x10 == oldField &&
-                    newField - 0x11 == oldField
+            if (!(newField + 0x11 == oldField ||
+                    newField + 0x10 == oldField ||
+                    newField + 0x0f == oldField ||
+                    newField + 0x01 == oldField ||
+                    newField - 0x01 == oldField ||
+                    newField - 0x0f == oldField ||
+                    newField - 0x10 == oldField ||
+                    newField - 0x11 == oldField ||
+                    castlingWhite ||
+                    castlingBlack
             )) {
                 return false;
             }
@@ -315,7 +329,12 @@ public class Board {
 
     }
 
-
+    /**
+     * Returns true if the given move is a valid bishop move, otherwise false
+     * @param newField The new field
+     * @param oldField The old field
+     * @return True if the given move is a valid bishop move, otherwise false
+     */
     private boolean checkBishopMove(int newField, int oldField) {
         double step = newField - oldField;
         //Check if move was diagonal
@@ -338,6 +357,12 @@ public class Board {
         return true;
     }
 
+    /**
+     * Returns true if the given move is a valid rook move, otherwise false
+     * @param newField The new field
+     * @param oldField The old field
+     * @return True if the given move is a valid rook move, otherwise false
+     */
     private boolean checkRookMove(int newField, int oldField) {
         //Check if rook has not left his row/column
         if (!((newField & 0xf0) == (oldField & 0xf0) ||
