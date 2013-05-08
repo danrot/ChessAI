@@ -24,10 +24,9 @@ public class Rook extends Figure {
         ArrayList<Move> ret = new ArrayList<Move>(30);
         //up
         for (int i = 1; i < 8; i++) {
+
             Move u = new Move();
-
             u.setOldField(position);
-
             u.setOldFigure(this);
             switch (i) {
                 case 1:
@@ -181,8 +180,9 @@ public class Rook extends Figure {
 
         return ret;
     }
+
     @Override
     public FigureType getType() {
-        return  FigureType.ROOK;
+        return FigureType.ROOK;
     }
 }

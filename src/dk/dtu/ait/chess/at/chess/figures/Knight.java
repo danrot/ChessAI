@@ -26,71 +26,71 @@ public class Knight extends Figure {
         Move tUoL = new Move();
         tUoL.setOldField(position);
         tUoL.setOldFigure(this);
-        tUoL.setNewField(position+0x20-0x01);
+        tUoL.setNewField(position + 0x20 - 0x01);
 
-        if(board.check(tUoL))
+        if (board.check(tUoL))
             ret.add(tUoL);
 
         Move tUoR = new Move();
         tUoR.setOldField(position);
         tUoR.setOldFigure(this);
-        tUoR.setNewField(position+0x20+0x01);
+        tUoR.setNewField(position + 0x20 + 0x01);
 
-        if(board.check(tUoR))
+        if (board.check(tUoR))
             ret.add(tUoR);
 
         Move tLoU = new Move();
         tLoU.setOldField(position);
         tLoU.setOldFigure(this);
-        tLoU.setNewField(position+0x10-0x02);
+        tLoU.setNewField(position + 0x10 - 0x02);
 
-        if(board.check(tLoU))
+        if (board.check(tLoU))
             ret.add(tLoU);
 
         Move oDtL = new Move();
         oDtL.setOldField(position);
         oDtL.setOldFigure(this);
-        oDtL.setNewField(position-0x10-0x02);
+        oDtL.setNewField(position - 0x10 - 0x02);
 
-        if(board.check(oDtL))
+        if (board.check(oDtL))
             ret.add(oDtL);
 
         Move tDoL = new Move();
         tDoL.setOldField(position);
         tDoL.setOldFigure(this);
-        tDoL.setNewField(position-0x20-0x01);
+        tDoL.setNewField(position - 0x20 - 0x01);
 
-        if(board.check(tDoL))
+        if (board.check(tDoL))
             ret.add(tDoL);
 
         Move oUtR = new Move();
         oUtR.setOldField(position);
         oUtR.setOldFigure(this);
-        oUtR.setNewField(position+0x10+0x02);
+        oUtR.setNewField(position + 0x10 + 0x02);
 
-        if(board.check(oUtR))
+        if (board.check(oUtR))
             ret.add(oUtR);
 
         Move oDtR = new Move();
         oDtR.setOldField(position);
         oDtR.setOldFigure(this);
-        oDtR.setNewField(position-0x10+0x02);
+        oDtR.setNewField(position - 0x10 + 0x02);
 
-        if(board.check(oDtR))
+        if (board.check(oDtR))
             ret.add(oDtR);
 
         Move tDoR = new Move();
         tDoR.setOldField(position);
         tDoR.setOldFigure(this);
-        tDoR.setNewField(position-0x20+0x01);
+        tDoR.setNewField(position - 0x20 + 0x01);
 
-        if(board.check(tDoR))
+        if (board.check(tDoR))
             ret.add(tDoR);
         return ret;
     }
 
     @Override
     public FigureType getType() {
-        return  FigureType.KNIGHT;
+        return FigureType.KNIGHT;
     }
 }

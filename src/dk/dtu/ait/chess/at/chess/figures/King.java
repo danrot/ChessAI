@@ -47,8 +47,6 @@ public class King extends Figure {
         if (board.check(d))
             ret.add(d);
 
-
-        //TODO Casteling!!!
         return ret;
     }
 
