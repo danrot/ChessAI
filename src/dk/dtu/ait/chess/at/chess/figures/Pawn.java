@@ -30,11 +30,11 @@ public class Pawn extends Figure {
             captureLeft.setNewField(position + 0x10 - 0x01);
             captureLeft.setOldField(position);
             captureLeft.setOldFigure(this);
+
             if (board.check(captureLeft)) {
-                if(position >= 0x60 && position <= 0x67)
-                {
+                if (position >= 0x60 && position <= 0x67) {
                     captureLeft.setSpecial(true);
-                    captureLeft.setNewFigure(new Queen(captureLeft.getNewField(),getColor()));
+                    captureLeft.setNewFigure(new Queen(captureLeft.getNewField(), getColor()));
                 }
                 ret.add(captureLeft);
             }
@@ -42,11 +42,11 @@ public class Pawn extends Figure {
             captureRight.setNewField(position + 0x11);
             captureRight.setOldField(position);
             captureRight.setOldFigure(this);
+
             if (board.check(captureRight)) {
-                if(position >= 0x60 && position <= 0x67)
-                {
+                if (position >= 0x60 && position <= 0x67) {
                     captureRight.setSpecial(true);
-                    captureRight.setNewFigure(new Queen(captureRight.getNewField(),getColor()));
+                    captureRight.setNewFigure(new Queen(captureRight.getNewField(), getColor()));
                 }
                 ret.add(captureRight);
             }
@@ -54,11 +54,11 @@ public class Pawn extends Figure {
             m1.setNewField(position + 0x10);
             m1.setOldField(position);
             m1.setOldFigure(this);
+
             if (board.check(m1)) {
-                if(position >= 0x60 && position <= 0x67)
-                {
+                if (position >= 0x60 && position <= 0x67) {
                     m1.setSpecial(true);
-                    m1.setNewFigure(new Queen(m1.getNewField(),getColor()));
+                    m1.setNewFigure(new Queen(m1.getNewField(), getColor()));
                 }
                 ret.add(m1);
             }
@@ -67,11 +67,11 @@ public class Pawn extends Figure {
                 m2.setNewField(position + 0x20);
                 m2.setOldField(position);
                 m2.setOldFigure(this);
+
                 if (board.check(m2)) {
-                    if(position >= 0x60 && position <= 0x67)
-                    {
+                    if (position >= 0x60 && position <= 0x67) {
                         m2.setSpecial(true);
-                        m2.setNewFigure(new Queen(m2.getNewField(),getColor()));
+                        m2.setNewFigure(new Queen(m2.getNewField(), getColor()));
                     }
                     ret.add(m2);
                 }
@@ -83,23 +83,22 @@ public class Pawn extends Figure {
             captureLeft.setOldField(position);
             captureLeft.setOldFigure(this);
             if (board.check(captureLeft)) {
-                if(position >= 0x10 && position <= 0x17)
-                {
+                if (position >= 0x10 && position <= 0x17) {
                     captureLeft.setSpecial(true);
-                    captureLeft.setNewFigure(new Queen(captureLeft.getNewField(),getColor()));
+                    captureLeft.setNewFigure(new Queen(captureLeft.getNewField(), getColor()));
                 }
                 ret.add(captureLeft);
             }
+
             Move captureRight = new Move();
             captureRight.setNewField(position - 0x11);
             captureRight.setOldField(position);
             captureRight.setOldFigure(this);
-            if (board.check(captureRight))
-            {
-                if(position >= 0x10 && position <= 0x17)
-                {
+
+            if (board.check(captureRight)) {
+                if (position >= 0x10 && position <= 0x17) {
                     captureRight.setSpecial(true);
-                    captureRight.setNewFigure(new Queen(captureRight.getNewField(),getColor()));
+                    captureRight.setNewFigure(new Queen(captureRight.getNewField(), getColor()));
                 }
                 ret.add(captureRight);
             }
@@ -108,26 +107,25 @@ public class Pawn extends Figure {
             m1.setNewField(position - 0x10);
             m1.setOldField(position);
             m1.setOldFigure(this);
-            if (board.check(m1))
-            {
-                if(position >= 0x10 && position <= 0x17)
-                {
+
+            if (board.check(m1)) {
+                if (position >= 0x10 && position <= 0x17) {
                     m1.setSpecial(true);
-                    m1.setNewFigure(new Queen(m1.getNewField(),getColor()));
+                    m1.setNewFigure(new Queen(m1.getNewField(), getColor()));
                 }
                 ret.add(m1);
             }
+
             if (!hasMoved()) {
                 Move m2 = new Move();
                 m2.setNewField(position - 0x20);
                 m2.setOldField(position);
                 m2.setOldFigure(this);
-                if (board.check(m2))
-                {
-                    if(position >= 0x10 && position <= 0x17)
-                    {
+
+                if (board.check(m2)) {
+                    if (position >= 0x10 && position <= 0x17) {
                         m2.setSpecial(true);
-                        m2.setNewFigure(new Queen(m2.getNewField(),getColor()));
+                        m2.setNewFigure(new Queen(m2.getNewField(), getColor()));
                     }
                     ret.add(m2);
                 }

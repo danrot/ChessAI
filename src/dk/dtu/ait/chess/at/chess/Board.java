@@ -112,7 +112,7 @@ public class Board {
                 //pawn promotion
                 if (move.getOldFigure().getType() == Figure.FigureType.PAWN) {
                     if ((move.getNewField() & 0xf0) == 0x70 || (move.getNewField() & 0xf0) == 0x00) {
-                        board[move.getNewField()] = new Queen(move.getNewField(), move.getOldFigure().getColor());
+                        board[move.getNewField()] = move.getNewFigure();
                     }
                 }
             }
@@ -291,7 +291,8 @@ public class Board {
                                     m.setNewField(0x02);
                                     m.setOldFigure(board[i]);
                                     m.setSpecial(true);
-                                    retVal.add(m);
+                                    if (check(m))
+                                        retVal.add(m);
                                 } else if (board[0x07] != null && board[0x07].getType() == Figure.FigureType.ROOK && !board[0x07].hasMoved() &&
                                         board[0x05] == null && board[0x06] == null) {     //Kingside casteling white
                                     Move m = new Move();
@@ -299,7 +300,8 @@ public class Board {
                                     m.setNewField(0x06);
                                     m.setOldFigure(board[i]);
                                     m.setSpecial(true);
-                                    retVal.add(m);
+                                    if (check(m))
+                                        retVal.add(m);
                                 }
                             } else {
                                 if (board[0x70] != null && board[0x70].getType() == Figure.FigureType.ROOK && !board[0x70].hasMoved()
@@ -309,7 +311,8 @@ public class Board {
                                     m.setNewField(0x72);
                                     m.setOldFigure(board[i]);
                                     m.setSpecial(true);
-                                    retVal.add(m);
+                                    if (check(m))
+                                        retVal.add(m);
                                 } else if (board[0x77] != null && board[0x77].getType() == Figure.FigureType.ROOK && !board[0x77].hasMoved() &&
                                         board[0x75] == null && board[0x76] == null) {     //Kingside casteling black
                                     Move m = new Move();
@@ -317,7 +320,8 @@ public class Board {
                                     m.setNewField(0x76);
                                     m.setOldFigure(board[i]);
                                     m.setSpecial(true);
-                                    retVal.add(m);
+                                    if (check(m))
+                                        retVal.add(m);
                                 }
                             }
                         }
