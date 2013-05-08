@@ -228,13 +228,13 @@ public class Board {
                 return false;
             }
         } else if (figure == Figure.FigureType.KNIGHT) {
-            if (!(newField - 0x21 == oldField &&
-                    newField - 0x1f == oldField &&
-                    newField - 0x12 == oldField &&
-                    newField - 0x0e == oldField &&
-                    newField + 0x21 == oldField &&
-                    newField + 0x1f == oldField &&
-                    newField + 0x12 == oldField &&
+            if (!(newField - 0x21 == oldField ||
+                    newField - 0x1f == oldField ||
+                    newField - 0x12 == oldField ||
+                    newField - 0x0e == oldField ||
+                    newField + 0x21 == oldField ||
+                    newField + 0x1f == oldField ||
+                    newField + 0x12 == oldField ||
                     newField + 0x0e == oldField
             )) {
                 return false;
