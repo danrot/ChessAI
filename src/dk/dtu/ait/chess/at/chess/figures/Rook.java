@@ -56,6 +56,7 @@ public class Rook extends Figure {
                 default:
                     throw new RuntimeException();
             }
+
             if (board.check(u))
                 ret.add(u);
             else
@@ -133,7 +134,6 @@ public class Rook extends Figure {
                 default:
                     throw new RuntimeException();
             }
-
             if (board.check(d))
                 ret.add(d);
             else

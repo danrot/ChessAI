@@ -54,6 +54,8 @@ public class Board {
         board[0x74] = new King(0x74, Color.black);
     }
 
+
+
     /**
      * Returns the figure which stands on the board on the given position
      *
@@ -112,14 +114,14 @@ public class Board {
                 //pawn promotion
                 if (move.getOldFigure().getType() == Figure.FigureType.PAWN) {
                     if ((move.getNewField() & 0xf0) == 0x70 || (move.getNewField() & 0xf0) == 0x00) {
-                        board[move.getNewField()] = move.getNewFigure();
+                        board[move.getNewField()] = new Queen(move.getNewField(),move.getOldFigure().getColor());
                     }
                 }
             }
             move.getOldFigure().increaseMoves();
             return true;
         } else {
-            System.out.println("Move from " + move.getOldFigure().getColor() + " " + move.getOldFigure().getName() + " " + Integer.toHexString(move.getOldField()) + Integer.toHexString(move.getNewField()) + " was not valid!");
+            System.out.println("Move from " + (move.getOldFigure().getColor() == Color.WHITE ? "white" : "black") + " " + move.getOldFigure().getName() + " " + Integer.toHexString(move.getOldField()) + Integer.toHexString(move.getNewField()) + " was not valid!");
         }
         return false;
     }
@@ -170,11 +172,11 @@ public class Board {
                 }
             }
             //pawn promotion
-            if (move.getOldFigure().getType() == Figure.FigureType.PAWN) {
+          /*  if (move.getOldFigure().getType() == Figure.FigureType.PAWN) {
                 if ((move.getNewField() & 0xf0) == 0x70 || (move.getNewField() & 0xf0) == 0x00) {
                     board[move.getOldField()] = new Pawn(move.getNewField(), move.getOldFigure().getColor());
                 }
-            }
+            }*/
         }
         move.getOldFigure().decreaseMoves();
     }
@@ -189,6 +191,7 @@ public class Board {
      * @return True if the move is valid, otherwise false
      */
     public boolean check(Move move) {
+
         if (move.getNewField() < 0 || (move.getNewField() & BOARD_MASK) > 0) {
             //Move is not allowed if the position is out of the board
             return false;
@@ -254,8 +257,8 @@ public class Board {
                 return false;
             }
         }
-
-        move.setNewFigure(board[move.getNewField()]);
+        if (!(move.getSpecial() && move.getOldFigure().getType() == Figure.FigureType.PAWN))
+            move.setNewFigure(board[move.getNewField()]);
         return true;
     }
 
