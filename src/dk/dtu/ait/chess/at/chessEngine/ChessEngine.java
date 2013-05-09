@@ -171,7 +171,7 @@ public class ChessEngine {
         
         String oldPos = Integer.toHexString(m.getOldField());
         String newPos = Integer.toHexString(m.getNewField());
-        
+
         int colOldPos = (int)oldPos.charAt(1)+49;
         int colNewPos = (int)newPos.charAt(1)+49;
         int rowOldPos = (int)oldPos.charAt(0)+1;

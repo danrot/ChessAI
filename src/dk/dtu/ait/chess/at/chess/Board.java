@@ -3,12 +3,8 @@ package dk.dtu.ait.chess.at.chess;
 import dk.dtu.ait.chess.at.chess.figures.*;
 
 import java.awt.*;
-import java.awt.font.NumericShaper;
 import java.util.ArrayList;
 import java.util.List;
-
-import java.awt.*;
-import java.util.Random;
 
 /**
  * Holds all the figures on the board and is responsible for any operation including the board itself.
@@ -358,7 +354,7 @@ public class Board {
         }
 
         boolean oppFigure = false;
-        for (int i = oldField + loop; i <= newField && i >= oldField; i += loop) {
+        for (int i = oldField + loop; getLoopCondition(newField, i, sign); i += loop) {
             if (oppFigure) {
                 return false;
             }
@@ -397,7 +393,7 @@ public class Board {
         }
 
         boolean oppFigure = false;
-        for (int i = oldField + loop; i <= newField && i >= oldField; i += loop) {
+        for (int i = oldField + loop; getLoopCondition(newField, i, sign); i += loop) {
             if (oppFigure) {
                 return false;
             }
@@ -410,6 +406,21 @@ public class Board {
             }
         }
         return true;
+    }
+
+    /**
+     * Returns the loop condition for the bishop
+     * @param newField The new field of the move
+     * @param i The current place
+     * @param sign The direction of the move
+     * @return True if the conidition is true
+     */
+    private boolean getLoopCondition(int newField, int i, int sign) {
+        if (sign < 0) {
+            return i >= newField;
+        } else {
+            return i <= newField;
+        }
     }
 
     public Figure[] getFigures() {
