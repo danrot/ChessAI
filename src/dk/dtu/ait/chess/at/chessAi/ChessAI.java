@@ -24,6 +24,7 @@ public class ChessAI {
     private int seconds;
     private Color color;
     private Strategy strategy;
+    private int evaluations;
     
     public ChessAI(Strategy strategy, int seconds)
     {
@@ -61,10 +62,13 @@ public class ChessAI {
             }
             i++;
         }
+        System.out.println("EVALUATIONS: " + evaluations);
+        System.out.println("LEVEL: " + i);
         return best;
     }
     
     public void move(Board board, int searchDepth, Move next) {
+        evaluations = 0;
         this.max(board, Integer.MIN_VALUE, Integer.MAX_VALUE, 0, searchDepth, next);
     }
     
@@ -72,6 +76,7 @@ public class ChessAI {
     {
         if(board.isFinished() || searchDepth == maxSearchDepth)
         {
+            ++evaluations;
             return strategy.evaluateBoard(board, color);
         }
         Color c = (color == Color.BLACK ? Color.BLACK : Color.WHITE); 
@@ -106,6 +111,7 @@ public class ChessAI {
     {
         if(board.isFinished() || searchDepth == maxSearchDepth)
         {
+            ++evaluations;
             return strategy.evaluateBoard(board, color);
         }
         Color c = (color == Color.BLACK ? Color.WHITE : Color.BLACK); 
