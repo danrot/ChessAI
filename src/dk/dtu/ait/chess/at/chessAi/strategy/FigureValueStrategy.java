@@ -16,30 +16,32 @@ public class FigureValueStrategy implements Strategy{
     @Override
     public int evaluateBoard(Board board, Color myColor) {
         int retVal = 0;
+
         for(Figure f : board.getFigures())
         {
+
             if(f != null)
-            if(f.getColor() == myColor)
             {
+               int sign = f.getColor() == myColor ? 1 : -1;
                switch (f.getType())
                {
                    case QUEEN:
-                       retVal += 900;
+                       retVal += 900 * sign;
                        break;
                    case KING:
-                       retVal += 10000;
+                       retVal += 10000 * sign;
                        break;
                    case BISHOP:
-                       retVal += 300;
+                       retVal += 300 * sign;
                        break;
                    case KNIGHT:
-                       retVal += 300;
+                       retVal += 300 * sign;
                        break;
                    case ROOK:
-                       retVal += 500;
+                       retVal += 500 * sign;
                        break;
                    case PAWN:
-                       retVal += 100;
+                       retVal += 100 * sign;
                        break;
                }
             }

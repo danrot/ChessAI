@@ -148,7 +148,7 @@ public class ChessEngine {
             return false;
         }
         boolean result = this.board.apply(move);
-                        
+
         assert result;
         if (result)
         {
