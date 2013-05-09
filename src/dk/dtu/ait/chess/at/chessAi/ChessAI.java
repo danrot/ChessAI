@@ -2,6 +2,7 @@ package dk.dtu.ait.chess.at.chessAi;
 
 import dk.dtu.ait.chess.at.chess.Board;
 import dk.dtu.ait.chess.at.chess.Move;
+import dk.dtu.ait.chess.at.chessAi.strategy.FigureValueStrategy;
 import dk.dtu.ait.chess.at.chessAi.strategy.Strategy;
 
 import java.awt.Color;
@@ -47,15 +48,20 @@ public class ChessAI {
     
     public Move getMove(Board board) {
         Move m = new Move();
+        Move best = null;
         running = true;
         int i = 1;
         timer.schedule(new AITimerTask(), seconds*1000 - 50);
         while(running)
         {
             this.move(board, i, m);
+            if (running) {
+                best = m;
+                m = new Move();
+            }
             i++;
         }
-        return m;
+        return best;
     }
     
     public void move(Board board, int searchDepth, Move next) {
