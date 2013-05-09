@@ -35,7 +35,7 @@ public class Board {
         board[0x01] = new Knight(0x01, Color.white);
         board[0x06] = new Knight(0x06, Color.white);
         board[0x02] = new Bishop(0x02, Color.white);
-        board[0x05] = new Bishop(0x02, Color.white);
+        board[0x05] = new Bishop(0x05, Color.white);
         board[0x03] = new Queen(0x03, Color.white);
         board[0x04] = new King(0x04, Color.white);
 
@@ -49,7 +49,7 @@ public class Board {
         board[0x71] = new Knight(0x71, Color.black);
         board[0x76] = new Knight(0x76, Color.black);
         board[0x72] = new Bishop(0x72, Color.black);
-        board[0x75] = new Bishop(0x72, Color.black);
+        board[0x75] = new Bishop(0x75, Color.black);
         board[0x73] = new Queen(0x73, Color.black);
         board[0x74] = new King(0x74, Color.black);
     }
