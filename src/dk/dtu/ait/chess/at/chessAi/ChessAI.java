@@ -6,6 +6,7 @@ import dk.dtu.ait.chess.at.chessAi.strategy.FigureValueStrategy;
 import dk.dtu.ait.chess.at.chessAi.strategy.Strategy;
 
 import java.awt.Color;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -25,7 +26,8 @@ public class ChessAI {
     private Color color;
     private Strategy strategy;
     private int evaluations;
-    
+    private Move currentBest;
+
     public ChessAI(Strategy strategy, int seconds)
     {
         running = false;
@@ -49,7 +51,7 @@ public class ChessAI {
     
     public Move getMove(Board board) {
         Move m = new Move();
-        Move best = null;
+        currentBest = null;
         running = true;
         int i = 1;
         timer.schedule(new AITimerTask(), seconds*1000 - 50);
@@ -57,14 +59,14 @@ public class ChessAI {
         {
             this.move(board, i, m);
             if (running) {
-                best = m;
+                currentBest = m;
                 m = new Move();
             }
             i++;
         }
         System.out.println("EVALUATIONS: " + evaluations);
         System.out.println("LEVEL: " + i);
-        return best;
+        return currentBest;
     }
     
     public void move(Board board, int searchDepth, Move next) {
@@ -79,8 +81,15 @@ public class ChessAI {
             ++evaluations;
             return strategy.evaluateBoard(board, color);
         }
-        Color c = (color == Color.BLACK ? Color.BLACK : Color.WHITE); 
-        List<Move> childs = board.getAllPossibleMoves(c);
+        Color c = (color == Color.BLACK ? Color.BLACK : Color.WHITE);
+
+        //Adds the best move from previous iteration, to generate a bigger cut-off
+        List<Move> childs = new ArrayList<Move>();
+        if (searchDepth == 0 && currentBest != null) {
+            childs.add(currentBest);
+        }
+        childs.addAll(board.getAllPossibleMoves(c));
+
         while (alpha < beta && running)
         {
             if (childs.isEmpty())
