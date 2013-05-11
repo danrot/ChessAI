@@ -19,7 +19,7 @@ import java.util.TimerTask;
  * To change this template use File | Settings | File Templates.
  */
 public class ChessAI {
-    
+
     private boolean running;
     private Timer timer;
     private int seconds;
@@ -28,8 +28,7 @@ public class ChessAI {
     private int evaluations;
     private Move currentBest;
 
-    public ChessAI(Strategy strategy, int seconds)
-    {
+    public ChessAI(Strategy strategy, int seconds) {
         running = false;
         timer = new Timer();
         this.strategy = strategy;
@@ -48,15 +47,14 @@ public class ChessAI {
     public void setColor(Color color) {
         this.color = color;
     }
-    
+
     public Move getMove(Board board) {
         Move m = new Move();
         currentBest = null;
         running = true;
         int i = 1;
-        timer.schedule(new AITimerTask(), seconds*1000 - 50);
-        while(running)
-        {
+        timer.schedule(new AITimerTask(), seconds * 1000 - 50);
+        while (running) {
             this.move(board, i, m);
             if (running) {
                 currentBest = m;
@@ -68,16 +66,14 @@ public class ChessAI {
         System.out.println("LEVEL: " + i);
         return currentBest;
     }
-    
+
     public void move(Board board, int searchDepth, Move next) {
         evaluations = 0;
         this.max(board, Integer.MIN_VALUE, Integer.MAX_VALUE, 0, searchDepth, next);
     }
-    
-    private int max(Board board, int alpha, int beta, int searchDepth, int maxSearchDepth, Move next)
-    {
-        if(board.isFinished() || searchDepth == maxSearchDepth)
-        {
+
+    private int max(Board board, int alpha, int beta, int searchDepth, int maxSearchDepth, Move next) {
+        if (board.isFinished() || searchDepth == maxSearchDepth) {
             ++evaluations;
             return strategy.evaluateBoard(board, color);
         }
@@ -90,67 +86,61 @@ public class ChessAI {
         }
         childs.addAll(board.getAllPossibleMoves(c));
 
-        while (alpha < beta && running)
-        {
-            if (childs.isEmpty())
-            {
+        while (alpha < beta && running) {
+            if (childs.isEmpty()) {
                 break;
             }
-            board.apply(childs.get(0));
-            int v = min(board, alpha, beta, searchDepth+1, maxSearchDepth, next);
-            board.undo(childs.get(0));
-            
-            if (v > alpha)
-            {
-                alpha = v;
-                if (searchDepth == 0) {
-                    next.setNewField(childs.get(0).getNewField());
-                    next.setOldField(childs.get(0).getOldField());
-                    next.setNewFigure(childs.get(0).getNewFigure());
-                    next.setOldFigure(childs.get(0).getOldFigure());
-                    next.setSpecial(childs.get(0).getSpecial());
+
+            if (board.apply(childs.get(0))) {
+                int v = min(board, alpha, beta, searchDepth + 1, maxSearchDepth, next);
+                board.undo(childs.get(0));
+
+                if (v > alpha) {
+                    alpha = v;
+                    if (searchDepth == 0) {
+                        next.setNewField(childs.get(0).getNewField());
+                        next.setOldField(childs.get(0).getOldField());
+                        next.setNewFigure(childs.get(0).getNewFigure());
+                        next.setOldFigure(childs.get(0).getOldFigure());
+                        next.setSpecial(childs.get(0).getSpecial());
+                    }
                 }
             }
             childs.remove(0);
         }
         return alpha;
     }
-    
-    private int min(Board board, int alpha, int beta, int searchDepth, int maxSearchDepth, Move next)
-    {
-        if(board.isFinished() || searchDepth == maxSearchDepth)
-        {
+
+    private int min(Board board, int alpha, int beta, int searchDepth, int maxSearchDepth, Move next) {
+        if (board.isFinished() || searchDepth == maxSearchDepth) {
             ++evaluations;
             return strategy.evaluateBoard(board, color);
         }
-        Color c = (color == Color.BLACK ? Color.WHITE : Color.BLACK); 
+        Color c = (color == Color.BLACK ? Color.WHITE : Color.BLACK);
         List<Move> childs = board.getAllPossibleMoves(c);
-        while (alpha < beta && running)
-        {
-            if (childs.isEmpty())
-            {
+        while (alpha < beta && running) {
+            if (childs.isEmpty()) {
                 break;
             }
 
-            board.apply(childs.get(0));
-            int v = max(board, alpha, beta, searchDepth+1, maxSearchDepth, next);
-            board.undo(childs.get(0));
-            
-            if (v < beta)
-            {
-                beta = v;
+            if (board.apply(childs.get(0))) {
+                int v = max(board, alpha, beta, searchDepth + 1, maxSearchDepth, next);
+                board.undo(childs.get(0));
+
+                if (v < beta) {
+                    beta = v;
+                }
             }
             childs.remove(0);
         }
         return beta;
     }
-    
-    private class AITimerTask extends TimerTask
-    {
+
+    private class AITimerTask extends TimerTask {
         @Override
         public void run() {
             running = false;
         }
-        
+
     }
 }
