@@ -21,6 +21,7 @@ public abstract class Figure {
     protected int moves;
 
 
+
     public Figure(int position, Color color)
     {
         this.color = color;
