@@ -58,7 +58,6 @@ public class ChessAI {
             this.move(board, i, m);
             if (running) {
                 currentBest = m;
-                m = new Move();
             }
             i++;
         }

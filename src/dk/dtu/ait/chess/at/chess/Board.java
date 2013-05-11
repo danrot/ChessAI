@@ -221,6 +221,7 @@ public class Board {
             //Move is not allowed if the position is out of the board
             return false;
         }
+
         if (board[move.getNewField()] != null && board[move.getNewField()].getColor() == move.getOldFigure().getColor()) {
             //Move is also not allowed if the new position is the same color as the old one, because it is not
             //possible to capture its own figure
@@ -239,13 +240,13 @@ public class Board {
                             (board[0x00] != null && !board[0x00].hasMoved() && board[0x01] == null && board[0x02] == null && board[0x03] == null && newField == 0x02) ||
                                     (board[0x07] != null && !board[0x07].hasMoved() && board[0x05] == null && board[0x06] == null && newField == 0x06)
                     )
-            );
+            ) && !checkCheck(Color.white);
             boolean castlingBlack = (move.getSpecial() && move.getOldFigure().getColor() == Color.BLACK && !move.getOldFigure().hasMoved() &&
                     (
                             (board[0x70] != null && !board[0x70].hasMoved() && board[0x71] == null && board[0x72] == null && board[0x73] == null && newField == 0x72) ||
                                     (board[0x77] != null && !board[0x77].hasMoved() && board[0x75] == null && board[0x76] == null && newField == 0x76)
                     )
-            );
+            ) && !checkCheck(Color.black);
             //King is only allowed to move one field
             if (!(newField + 0x11 == oldField ||
                     newField + 0x10 == oldField ||
@@ -302,8 +303,125 @@ public class Board {
     }
 
     private boolean checkCheck(Color color) {
-        //TODO Implement
+        //Get kings position
+        Figure[] figures = (color == Color.white) ? whiteFigures : blackFigures;
+        int pos = figures[KING].getPosition();
+
+        //Check if some figures can capture the king
+
+        //Rook and Queen
+        for (int i = pos + 0x10; getCheckLoopCondition(i); i += 0x10) {
+            if (checkCheckRook(color, pos + 0x10, i)) {
+                return true;
+            }
+            Figure f = getFigure(i);
+            if (f != null && (f.getColor() == color || (f.getType() != Figure.FigureType.ROOK && f.getType() != Figure.FigureType.QUEEN))) {
+                break;
+            }
+        }
+        for (int i = pos - 0x10; getCheckLoopCondition(i); i -= 0x10) {
+            if (checkCheckRook(color, pos - 0x10, i)) {
+                return true;
+            }
+            Figure f = getFigure(i);
+            if (f != null && (f.getColor() == color || (f.getType() != Figure.FigureType.ROOK && f.getType() != Figure.FigureType.QUEEN))) {
+                break;
+            }
+        }
+        for (int i = pos + 0x01; getCheckLoopCondition(i); i += 0x01) {
+            if (checkCheckRook(color, pos + 0x01, i)) {
+                return true;
+            }
+            Figure f = getFigure(i);
+            if (f != null && (f.getColor() == color || (f.getType() != Figure.FigureType.ROOK && f.getType() != Figure.FigureType.QUEEN))) {
+                break;
+            }
+        }
+        for (int i = pos - 0x01; getCheckLoopCondition(i); i -= 0x01) {
+            if (checkCheckRook(color, pos - 0x01, i)) {
+                return true;
+            }
+            Figure f = getFigure(i);
+            if (f != null && (f.getColor() == color || (f.getType() != Figure.FigureType.ROOK && f.getType() != Figure.FigureType.QUEEN))) {
+                break;
+            }
+        }
+
+        //Bishop and Queen (0x0f, 0x11)
+        for (int i = pos + 0x11; getCheckLoopCondition(i); i += 0x11) {
+            if (checkCheckBishop(color, pos + 0x11, i)) {
+                return true;
+            }
+            Figure f = getFigure(i);
+            if (f != null && (f.getColor() == color || (f.getType() != Figure.FigureType.BISHOP && f.getType() != Figure.FigureType.QUEEN))) {
+                break;
+            }
+        }
+        for (int i = pos - 0x11; getCheckLoopCondition(i); i -= 0x11) {
+            if (checkCheckBishop(color, pos - 0x11, i)) {
+                return true;
+            }
+            Figure f = getFigure(i);
+            if (f != null && (f.getColor() == color || (f.getType() != Figure.FigureType.BISHOP && f.getType() != Figure.FigureType.QUEEN))) {
+                break;
+            }
+        }
+        for (int i = pos + 0x0f; getCheckLoopCondition(i); i += 0x0f) {
+            if (checkCheckBishop(color, pos + 0x0f, i)) {
+                return true;
+            }
+            Figure f = getFigure(i);
+            if (f != null && (f.getColor() == color || (f.getType() != Figure.FigureType.BISHOP && f.getType() != Figure.FigureType.QUEEN))) {
+                break;
+            }
+        }
+        for (int i = pos - 0x0f; getCheckLoopCondition(i); i -= 0x0f) {
+            if (checkCheckBishop(color, pos - 0x0f, i)) {
+                return true;
+            }
+            Figure f = getFigure(i);
+            if (f != null && (f.getColor() == color || (f.getType() != Figure.FigureType.BISHOP && f.getType() != Figure.FigureType.QUEEN))) {
+                break;
+            }
+        }
+
+        //Knight
+        if (checkCheckMove(color, pos, Figure.FigureType.KNIGHT, -0x21) ||
+                checkCheckMove(color, pos, Figure.FigureType.KNIGHT, -0x1f) ||
+                checkCheckMove(color, pos, Figure.FigureType.KNIGHT, -0x12) ||
+                checkCheckMove(color, pos, Figure.FigureType.KNIGHT, -0x0e) ||
+                checkCheckMove(color, pos, Figure.FigureType.KNIGHT, 0x21) ||
+                checkCheckMove(color, pos, Figure.FigureType.KNIGHT, 0x1f) ||
+                checkCheckMove(color, pos, Figure.FigureType.KNIGHT, 0x12) ||
+                checkCheckMove(color, pos, Figure.FigureType.KNIGHT, 0x0e)) {
+            return true;
+        }
+
+        //Pawn
+        int sign = (color == Color.white) ? 1 : -1;
+        if (checkCheckMove(color, pos, Figure.FigureType.PAWN, 0x11 * sign) ||
+                checkCheckMove(color, pos, Figure.FigureType.PAWN, 0x0f * sign)) {
+            return true;
+        }
+
         return false;
+    }
+
+    private boolean checkCheckBishop(Color color, int pos, int i) {
+        return board[i] != null && board[i].getColor() != color &&
+                (board[i].getType() == Figure.FigureType.BISHOP || board[i].getType() == Figure.FigureType.QUEEN ||
+                        (board[i].getType() == Figure.FigureType.KING && i == pos));
+    }
+
+    private boolean checkCheckRook(Color color, int pos, int i) {
+        return board[i] != null && board[i].getColor() != color &&
+                (board[i].getType() == Figure.FigureType.ROOK || board[i].getType() == Figure.FigureType.QUEEN ||
+                        (board[i].getType() == Figure.FigureType.KING && i == pos));
+    }
+
+    private boolean checkCheckMove(Color color, int kingPos, Figure.FigureType figure, int move) {
+        int pos = kingPos + move;
+        return pos >= 0 && pos < 128 && board[pos] != null && board[pos].getType() == figure && board[pos].getColor() != color;
     }
 
     public List<Move> getAllPossibleMoves(Color color) {
@@ -457,6 +575,16 @@ public class Board {
         } else {
             return i <= newField;
         }
+    }
+
+    /**
+     * Returns the loop condition for the checking of check
+     *
+     * @param i The current place
+     * @return True if the conidition is true
+     */
+    private boolean getCheckLoopCondition(int i) {
+        return i > 0 && (i & BOARD_MASK) <= 0;
     }
 
     public Figure[] getFigures() {
