@@ -97,6 +97,9 @@ public class Board {
             board[move.getNewField()] = move.getOldFigure();
             board[move.getOldField()] = null;
             move.getOldFigure().setPosition(move.getNewField());
+            if (move.getNewFigure() != null) {
+                move.getNewFigure().setPosition(-1);
+            }
 
             if (move.getSpecial()) {
                 //castling (e1g1 or e1c1 resp. e8g8 or e8c8)
@@ -196,22 +199,16 @@ public class Board {
                     board[0x70].setPosition(0x70);
                 }
             }
-            //pawn promotion
-          /*  if (move.getOldFigure().getType() == Figure.FigureType.PAWN) {
-                if ((move.getNewField() & 0xf0) == 0x70 || (move.getNewField() & 0xf0) == 0x00) {
-                    board[move.getOldField()] = new Pawn(move.getNewField(), move.getOldFigure().getColor());
-                }
-            }*/
         }
         move.getOldFigure().decreaseMoves();
     }
 
     /**
      * Checks if the given move is a legal one.
-     *
+     * <p/>
      * Also sets the new figure in the move, as the move itself is not aware of it.
      * However, this is not done if the move is invalid.
-     *
+     * <p/>
      * This method does not check if the king is in check afterwards, as this is quite hard to achieve.
      * Instead this will be done in a seperate method call in the apply-function.
      *
@@ -311,58 +308,58 @@ public class Board {
 
     public List<Move> getAllPossibleMoves(Color color) {
         ArrayList<Move> retVal = new ArrayList<Move>(250);
-        for (int i = 0; i < board.length; i++) {
-            if (board[i] != null)
-                if (board[i].getColor() == color) {
 
-                    retVal.addAll(board[i].getMoves(this));
+        Figure[] figures = (color == Color.white) ? whiteFigures : blackFigures;
+        for (Figure f : figures) {
+            if (f.getPosition() != -1) { //-1 indicates that the figure is not on the board anymore
+                retVal.addAll(f.getMoves(this));
 
-                    if (board[i].getType() == Figure.FigureType.KING) {
-                        if (!board[i].hasMoved()) {
-                            if (board[i].getColor() == Color.white) {
-                                if (board[0x00] != null && board[0x00].getType() == Figure.FigureType.ROOK && !board[0x00].hasMoved() &&
-                                        board[0x01] == null && board[0x02] == null && board[0x03] == null) {          //Queenside casteling white
-                                    Move m = new Move();
-                                    m.setOldField(board[i].getPosition());
-                                    m.setNewField(0x02);
-                                    m.setOldFigure(board[i]);
-                                    m.setSpecial(true);
-                                    if (check(m))
-                                        retVal.add(m);
-                                } else if (board[0x07] != null && board[0x07].getType() == Figure.FigureType.ROOK && !board[0x07].hasMoved() &&
-                                        board[0x05] == null && board[0x06] == null) {     //Kingside casteling white
-                                    Move m = new Move();
-                                    m.setOldField(board[i].getPosition());
-                                    m.setNewField(0x06);
-                                    m.setOldFigure(board[i]);
-                                    m.setSpecial(true);
-                                    if (check(m))
-                                        retVal.add(m);
-                                }
-                            } else {
-                                if (board[0x70] != null && board[0x70].getType() == Figure.FigureType.ROOK && !board[0x70].hasMoved()
-                                        && board[0x71] == null && board[0x72] == null && board[0x73] == null) {          //Queenside casteling black
-                                    Move m = new Move();
-                                    m.setOldField(board[i].getPosition());
-                                    m.setNewField(0x72);
-                                    m.setOldFigure(board[i]);
-                                    m.setSpecial(true);
-                                    if (check(m))
-                                        retVal.add(m);
-                                } else if (board[0x77] != null && board[0x77].getType() == Figure.FigureType.ROOK && !board[0x77].hasMoved() &&
-                                        board[0x75] == null && board[0x76] == null) {     //Kingside casteling black
-                                    Move m = new Move();
-                                    m.setOldField(board[i].getPosition());
-                                    m.setNewField(0x76);
-                                    m.setOldFigure(board[i]);
-                                    m.setSpecial(true);
-                                    if (check(m))
-                                        retVal.add(m);
-                                }
+                if (f.getType() == Figure.FigureType.KING) {
+                    if (!f.hasMoved()) {
+                        if (f.getColor() == Color.white) {
+                            if (board[0x00] != null && board[0x00].getType() == Figure.FigureType.ROOK && !board[0x00].hasMoved() &&
+                                    board[0x01] == null && board[0x02] == null && board[0x03] == null) {          //Queenside casteling white
+                                Move m = new Move();
+                                m.setOldField(f.getPosition());
+                                m.setNewField(0x02);
+                                m.setOldFigure(f);
+                                m.setSpecial(true);
+                                if (check(m))
+                                    retVal.add(m);
+                            } else if (board[0x07] != null && board[0x07].getType() == Figure.FigureType.ROOK && !board[0x07].hasMoved() &&
+                                    board[0x05] == null && board[0x06] == null) {     //Kingside casteling white
+                                Move m = new Move();
+                                m.setOldField(f.getPosition());
+                                m.setNewField(0x06);
+                                m.setOldFigure(f);
+                                m.setSpecial(true);
+                                if (check(m))
+                                    retVal.add(m);
+                            }
+                        } else {
+                            if (board[0x70] != null && board[0x70].getType() == Figure.FigureType.ROOK && !board[0x70].hasMoved()
+                                    && board[0x71] == null && board[0x72] == null && board[0x73] == null) {          //Queenside casteling black
+                                Move m = new Move();
+                                m.setOldField(f.getPosition());
+                                m.setNewField(0x72);
+                                m.setOldFigure(f);
+                                m.setSpecial(true);
+                                if (check(m))
+                                    retVal.add(m);
+                            } else if (board[0x77] != null && board[0x77].getType() == Figure.FigureType.ROOK && !board[0x77].hasMoved() &&
+                                    board[0x75] == null && board[0x76] == null) {     //Kingside casteling black
+                                Move m = new Move();
+                                m.setOldField(f.getPosition());
+                                m.setNewField(0x76);
+                                m.setOldFigure(f);
+                                m.setSpecial(true);
+                                if (check(m))
+                                    retVal.add(m);
                             }
                         }
                     }
                 }
+            }
         }
 
         return retVal;
@@ -436,11 +433,11 @@ public class Board {
                 return false;
             }
             if (getFigure(i) != null) {
-                    if (getFigure(i).getColor() == color) {
-                        return false;
-                    } else {
-                        oppFigure = true;
-                    }
+                if (getFigure(i).getColor() == color) {
+                    return false;
+                } else {
+                    oppFigure = true;
+                }
             }
         }
         return true;
@@ -448,9 +445,10 @@ public class Board {
 
     /**
      * Returns the loop condition for the bishop
+     *
      * @param newField The new field of the move
-     * @param i The current place
-     * @param sign The direction of the move
+     * @param i        The current place
+     * @param sign     The direction of the move
      * @return True if the conidition is true
      */
     private boolean getLoopCondition(int newField, int i, int sign) {
