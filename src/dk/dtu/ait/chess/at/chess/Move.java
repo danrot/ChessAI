@@ -10,6 +10,17 @@ import dk.dtu.ait.chess.at.chess.figures.Figure;
  * a move like a pawn promotion or a castling.
  */
 public class Move {
+
+    public Move(Move move)
+    {
+        this.oldFigure = move.oldFigure;
+        this.newFigure = move.newFigure;
+        this.newField = move.newField;
+        this.oldField = move.oldField;
+    }
+
+    public Move(){}
+
     /**
      * The field on which the move starts
      */
