@@ -114,6 +114,12 @@ public class Board {
                 }
             }
             move.getOldFigure().increaseMoves();
+
+            if (checkCheck(move.getOldFigure().getColor())) {
+                undo(move);
+                return false;
+            }
+
             return true;
         } else {
             System.out.println("Move from " + (move.getOldFigure().getColor() == Color.WHITE ? "white" : "black") + " " + move.getOldFigure().getName() + " " + Integer.toHexString(move.getOldField()) + Integer.toHexString(move.getNewField()) + " was not valid!");
@@ -178,9 +184,12 @@ public class Board {
 
     /**
      * Checks if the given move is a legal one.
-     * <p/>
+     *
      * Also sets the new figure in the move, as the move itself is not aware of it.
      * However, this is not done if the move is invalid.
+     *
+     * This method does not check if the king is in check afterwards, as this is quite hard to achieve.
+     * Instead this will be done in a seperate method call in the apply-function.
      *
      * @param move The move to check
      * @return True if the move is valid, otherwise false
@@ -269,6 +278,11 @@ public class Board {
 
         move.setNewFigure(board[move.getNewField()]);
         return true;
+    }
+
+    private boolean checkCheck(Color color) {
+        //TODO Implement
+        return false;
     }
 
     public List<Move> getAllPossibleMoves(Color color) {
