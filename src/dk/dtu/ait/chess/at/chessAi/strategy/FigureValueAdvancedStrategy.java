@@ -14,6 +14,13 @@ import java.awt.*;
  */
 public class FigureValueAdvancedStrategy implements Strategy {
 
+    private static final int[] PawnRow = new int[] {
+            0, 0, -1, 0, 2, 14, 30, 0
+    };
+
+    private static final int[] PawnLine = new int[] {
+           -2, 0, 3, 4, 5, 1, -2, -2
+    };
 
     @Override
     public int evaluateBoard(Board board, Color myColor) {
@@ -49,16 +56,32 @@ public class FigureValueAdvancedStrategy implements Strategy {
     }
 
     private int evalPawn(Board board, Figure figure) {
+<<<<<<< HEAD
 
         return 0;  //To change body of created methods use File | Settings | File Templates.
+=======
+        int retVal = 100;
+
+        int row = (figure.getPosition() & 0xf0) / 0x10;
+        int col = (figure.getPosition() & 0x0f);
+
+        retVal += PawnRow[row];
+        retVal += PawnLine[col] * row / 2;
+
+        return retVal;
+>>>>>>> e56a1d7c86c3c37cd228fee82873a1b67e925c5a
     }
 
     private int evalRook(Board board, Figure figure) {
-        return 0;  //To change body of created methods use File | Settings | File Templates.
+        return 500;  //To change body of created methods use File | Settings | File Templates.
     }
 
     private int evalKnight(Board board, Figure figure) {
+<<<<<<< HEAD
         return 300 + (int) (3.0 * (4 - arrCenterManhattanDistance[figure.getPosition()] + 0.5));
+=======
+        return 300;  //To change body of created methods use File | Settings | File Templates.
+>>>>>>> e56a1d7c86c3c37cd228fee82873a1b67e925c5a
     }
 
     static final int arrCenterManhattanDistance[] = {
@@ -84,14 +107,20 @@ public class FigureValueAdvancedStrategy implements Strategy {
     };
 
     private int evalBishop(Board board, Figure figure) {
-        return 0;  //To change body of created methods use File | Settings | File Templates.
+        return 300;  //To change body of created methods use File | Settings | File Templates.
     }
 
     private int evalKing(Board board, Figure figure) {
-        return 0;  //To change body of created methods use File | Settings | File Templates.
+        return 10000;  //To change body of created methods use File | Settings | File Templates.
     }
 
+<<<<<<< HEAD
     private int evalQueen(Board board, Figure figure) {
         return 0;  //To change body of created methods use File | Settings | File Templates.
+=======
+    private int evalQueen(Board board, Figure figure)
+    {
+        return 900;  //To change body of created methods use File | Settings | File Templates.
+>>>>>>> e56a1d7c86c3c37cd228fee82873a1b67e925c5a
     }
 }
