@@ -32,9 +32,7 @@ public class Bishop extends Figure {
         for (int i = 0; i < moves[position].length; i++) {
                 Move m = new Move(moves[position][i]);
                 m.setOldFigure(this);
-                if (board.check(m)) {
-                    ret.add(m);
-                }
+                ret.add(m);
             }
         return ret;
     }
@@ -153,135 +151,12 @@ public class Bishop extends Figure {
                             }
                             break;
                     }
-                    if((m.getNewField() & 0x10) > 0 && m.getNewField() > 0)
+                    if((m.getNewField() & 0x88) > 0 && m.getNewField() > 0)
                     tmpMoves.add(m);
                 }
             }
             moves[j] = tmpMoves.toArray(new Move[1]);
         }
-    }
-
-
-    public List<Move> getMoves_alt(Board board) {
-        ArrayList<Move> ret = new ArrayList<Move>(20);
-
-
-        for (int I = 0; I < 4; I++) {
-            for (int i = 1; i <= 7; i++) {
-                Move m = new Move();
-                m.setOldField(position);
-                m.setOldFigure(this);
-
-                switch (I) {
-                    case 0:   //      Right up
-                        switch (i) {
-                            case 1:
-                                m.setNewField(position + 0x11);
-                                break;
-                            case 2:
-                                m.setNewField(position + 0x22);
-                                break;
-                            case 3:
-                                m.setNewField(position + 0x33);
-                                break;
-                            case 4:
-                                m.setNewField(position + 0x44);
-                                break;
-                            case 5:
-                                m.setNewField(position + 0x55);
-                                break;
-                            case 6:
-                                m.setNewField(position + 0x66);
-                                break;
-                            case 7:
-                                m.setNewField(position + 0x77);
-                                break;
-                        }
-                        break;
-                    case 1:     // left down
-                        switch (i) {
-                            case 1:
-                                m.setNewField(position - 0x11);
-                                break;
-                            case 2:
-                                m.setNewField(position - 0x22);
-                                break;
-                            case 3:
-                                m.setNewField(position - 0x33);
-                                break;
-                            case 4:
-                                m.setNewField(position - 0x44);
-                                break;
-                            case 5:
-                                m.setNewField(position - 0x55);
-                                break;
-                            case 6:
-                                m.setNewField(position - 0x66);
-                                break;
-                            case 7:
-                                m.setNewField(position - 0x77);
-                                break;
-                        }
-                        break;
-                    case 2:                    // left up
-                        switch (i) {
-                            case 1:
-                                m.setNewField(position - 0x01 + 0x10);
-                                break;
-                            case 2:
-                                m.setNewField(position - 0x02 + 0x20);
-                                break;
-                            case 3:
-                                m.setNewField(position - 0x03 + 0x30);
-                                break;
-                            case 4:
-                                m.setNewField(position - 0x04 + 0x40);
-                                break;
-                            case 5:
-                                m.setNewField(position - 0x05 + 0x50);
-                                break;
-                            case 6:
-                                m.setNewField(position - 0x06 + 0x60);
-                                break;
-                            case 7:
-                                m.setNewField(position - 0x07 + 0x70);
-                                break;
-                        }
-                        break;
-                    case 3:                   // right down
-                        switch (i) {
-                            case 1:
-                                m.setNewField(position + 0x01 - 0x10);
-                                break;
-                            case 2:
-                                m.setNewField(position + 0x02 - 0x20);
-                                break;
-                            case 3:
-                                m.setNewField(position + 0x03 - 0x30);
-                                break;
-                            case 4:
-                                m.setNewField(position + 0x04 - 0x40);
-                                break;
-                            case 5:
-                                m.setNewField(position + 0x05 - 0x50);
-                                break;
-                            case 6:
-                                m.setNewField(position + 0x06 - 0x60);
-                                break;
-                            case 7:
-                                m.setNewField(position + 0x07 - 0x70);
-                                break;
-                        }
-                        break;
-                }
-                if (board.check(m)) {
-                    ret.add(m);
-                } else {
-                    break;
-                }
-            }
-        }
-        return ret;
     }
 
     @Override

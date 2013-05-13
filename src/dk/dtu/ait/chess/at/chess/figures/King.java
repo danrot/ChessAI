@@ -31,44 +31,8 @@ public class King extends Figure {
         for (int i = 0; i < moves[position].length; i++) {
             Move m = new Move(moves[position][i]);
             m.setOldFigure(this);
-            if (board.check(m)) {
-                ret.add(m);
-            }
+            ret.add(m);
         }
-        return ret;
-    }
-
-    public List<Move> getMoves_alt(Board board) {
-        ArrayList<Move> ret = new ArrayList<Move>(5);
-        Move u = new Move();
-        Move d = new Move();
-        Move l = new Move();
-        Move r = new Move();
-
-        u.setOldField(position);
-        d.setOldField(position);
-        l.setOldField(position);
-        r.setOldField(position);
-
-        u.setOldFigure(this);
-        d.setOldFigure(this);
-        r.setOldFigure(this);
-        l.setOldFigure(this);
-
-        u.setNewField(position + 0x10);
-        d.setNewField(position - 0x10);
-        l.setNewField(position - 0x01);
-        r.setNewField(position + 0x01);
-
-        if (board.check(u))
-            ret.add(u);
-        if (board.check(r))
-            ret.add(r);
-        if (board.check(l))
-            ret.add(l);
-        if (board.check(d))
-            ret.add(d);
-
         return ret;
     }
 
@@ -111,21 +75,21 @@ public class King extends Figure {
             dl.setNewField(i - 0x10 - 0x01);
             dr.setNewField(i - 0x10 + 0x01);
 
-            if ((d.getNewField() & 0x10) > 0 && d.getNewField() > 0)
+            if ((d.getNewField() & 0x88) > 0 && d.getNewField() > 0)
                 tmpMoves.add(d);
-            if ((u.getNewField() & 0x10) > 0 && u.getNewField() > 0)
+            if ((u.getNewField() & 0x88) > 0 && u.getNewField() > 0)
                 tmpMoves.add(u);
-            if ((l.getNewField() & 0x10) > 0 && l.getNewField() > 0)
+            if ((l.getNewField() & 0x88) > 0 && l.getNewField() > 0)
                 tmpMoves.add(l);
-            if ((r.getNewField() & 0x10) > 0 && r.getNewField() > 0)
+            if ((r.getNewField() & 0x88) > 0 && r.getNewField() > 0)
                 tmpMoves.add(r);
-            if ((ul.getNewField() & 0x10) > 0 && ul.getNewField() > 0)
+            if ((ul.getNewField() & 0x88) > 0 && ul.getNewField() > 0)
                 tmpMoves.add(ul);
-            if ((ur.getNewField() & 0x10) > 0 && ur.getNewField() > 0)
+            if ((ur.getNewField() & 0x88) > 0 && ur.getNewField() > 0)
                 tmpMoves.add(ur);
-            if ((dl.getNewField() & 0x10) > 0 && dl.getNewField() > 0)
+            if ((dl.getNewField() & 0x88) > 0 && dl.getNewField() > 0)
                 tmpMoves.add(dl);
-            if ((dr.getNewField() & 0x10) > 0 && dr.getNewField() > 0)
+            if ((dr.getNewField() & 0x88) > 0 && dr.getNewField() > 0)
                 tmpMoves.add(dr);
 
             moves[i] = tmpMoves.toArray(new Move[0]);

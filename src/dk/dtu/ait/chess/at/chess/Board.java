@@ -148,8 +148,6 @@ public class Board {
             }
 
             return true;
-        } else {
-            System.out.println("Move from " + (move.getOldFigure().getColor() == Color.WHITE ? "white" : "black") + " " + move.getOldFigure().getName() + " " + Integer.toHexString(move.getOldField()) + Integer.toHexString(move.getNewField()) + " was not valid!");
         }
         return false;
     }
