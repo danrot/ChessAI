@@ -34,15 +34,13 @@ public class Pawn extends Figure {
             for (int i = 0; i < whiteMoves[position].length; i++) {
                 Move m = new Move(whiteMoves[position][i]);
                 m.setOldFigure(this);
-                if (board.check(m))
-                    ret.add(m);
+                ret.add(m);
             }
         } else {
             for (int i = 0; i < blackMoves[position].length; i++) {
                 Move m = new Move(blackMoves[position][i]);
                 m.setOldFigure(this);
-                if (board.check(m))
-                    ret.add(m);
+                ret.add(m);
             }
         }
         return ret;
