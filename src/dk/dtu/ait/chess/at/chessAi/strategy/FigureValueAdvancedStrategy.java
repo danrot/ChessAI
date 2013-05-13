@@ -14,12 +14,12 @@ import java.awt.*;
  */
 public class FigureValueAdvancedStrategy implements Strategy {
 
-    private static final int[] PawnRow = new int[] {
+    private static final int[] PawnRow = new int[]{
             0, 0, -1, 0, 2, 14, 30, 0
     };
 
-    private static final int[] PawnLine = new int[] {
-           -2, 0, 3, 4, 5, 1, -2, -2
+    private static final int[] PawnLine = new int[]{
+            -2, 0, 3, 4, 5, 1, -2, -2
     };
 
     @Override
@@ -72,7 +72,10 @@ public class FigureValueAdvancedStrategy implements Strategy {
     }
 
     private int evalKnight(Board board, Figure figure) {
-        return 300 + (int) (3.0 * (4 - arrCenterManhattanDistance[figure.getPosition()] + 0.5));
+        double o = (3.0 * (4 - arrCenterManhattanDistance[figure.getPosition()]));
+        double round = (o >= 0 ? 0.5 : -0.5);
+        int i = (int) (o + round);
+        return 300 + i;
     }
 
     static final int arrCenterManhattanDistance[] = {
@@ -106,8 +109,7 @@ public class FigureValueAdvancedStrategy implements Strategy {
     }
 
 
-    private int evalQueen(Board board, Figure figure)
-    {
+    private int evalQueen(Board board, Figure figure) {
         return 900;  //To change body of created methods use File | Settings | File Templates.
     }
 }
