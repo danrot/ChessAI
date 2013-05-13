@@ -440,7 +440,6 @@ public class Board {
                                 m.setNewField(0x02);
                                 m.setOldFigure(f);
                                 m.setSpecial(true);
-                                if (check(m))
                                     retVal.add(m);
                             } else if (board[0x07] != null && board[0x07].getType() == Figure.FigureType.ROOK && !board[0x07].hasMoved() &&
                                     board[0x05] == null && board[0x06] == null) {     //Kingside casteling white
@@ -449,7 +448,6 @@ public class Board {
                                 m.setNewField(0x06);
                                 m.setOldFigure(f);
                                 m.setSpecial(true);
-                                if (check(m))
                                     retVal.add(m);
                             }
                         } else {
@@ -460,7 +458,6 @@ public class Board {
                                 m.setNewField(0x72);
                                 m.setOldFigure(f);
                                 m.setSpecial(true);
-                                if (check(m))
                                     retVal.add(m);
                             } else if (board[0x77] != null && board[0x77].getType() == Figure.FigureType.ROOK && !board[0x77].hasMoved() &&
                                     board[0x75] == null && board[0x76] == null) {     //Kingside casteling black
@@ -469,7 +466,6 @@ public class Board {
                                 m.setNewField(0x76);
                                 m.setOldFigure(f);
                                 m.setSpecial(true);
-                                if (check(m))
                                     retVal.add(m);
                             }
                         }
