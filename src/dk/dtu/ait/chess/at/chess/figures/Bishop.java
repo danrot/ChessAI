@@ -30,10 +30,11 @@ public class Bishop extends Figure {
     public List<Move> getMoves(Board board) {
         ArrayList<Move> ret = new ArrayList<Move>(15);
         for (int i = 0; i < moves[position].length; i++) {
-                Move m = new Move(moves[position][i]);
-                m.setOldFigure(this);
+            Move m = new Move(moves[position][i]);
+            m.setOldFigure(this);
+            if (board.check(m))
                 ret.add(m);
-            }
+        }
         return ret;
     }
 
@@ -151,8 +152,8 @@ public class Bishop extends Figure {
                             }
                             break;
                     }
-                    if((m.getNewField() & 0x88) == 0 && m.getNewField() > 0)
-                    tmpMoves.add(m);
+                    if ((m.getNewField() & 0x88) == 0 && m.getNewField() > 0)
+                        tmpMoves.add(m);
                 }
             }
             moves[j] = tmpMoves.toArray(new Move[1]);
