@@ -59,11 +59,12 @@ public class FigureValueAdvancedStrategy implements Strategy {
                         retVal += evalRook(board, f) * sign;
                         break;
                     case PAWN:
-                        if (board.getFigures()[f.getPosition() + 0x10] != null &&
-                                board.getFigures()[f.getPosition() + 0x10].getColor() == myColor &&
-                                board.getFigures()[f.getPosition() + 0x10].getType() == Figure.FigureType.PAWN) {
-                            doublePawn = true;
-                        }
+                        if (f.getPosition() + 0x10 <= 127)
+                            if (board.getFigures()[f.getPosition() + 0x10] != null &&
+                                    board.getFigures()[f.getPosition() + 0x10].getColor() == myColor &&
+                                    board.getFigures()[f.getPosition() + 0x10].getType() == Figure.FigureType.PAWN) {
+                                doublePawn = true;
+                            }
                         retVal += evalPawn(board, f) * sign;
                         break;
                 }
@@ -98,12 +99,12 @@ public class FigureValueAdvancedStrategy implements Strategy {
     private int evalRook(Board board, Figure figure) {
 
         Integer movement = new Integer(0);
-        attacksFromMinorPieces += attakedFromRook(figure, board, movement);
-        attacksFromMinorPieces += attakedFromBishop(figure, board, new Integer(0));
+        attacksFromMinorPieces += attackedFromRook(figure, board, movement);
+        attacksFromMinorPieces += attackedFromBishop(figure, board, new Integer(0));
 
-        if (attakedFromKnight(figure, board))
+        if (attackedFromKnight(figure, board))
             attacksFromMinorPieces++;
-        if (attakedFromPawn(figure, board))
+        if (attackedFromPawn(figure, board))
             attacksFromMinorPieces++;
 
         return 500 + (int) (1.5 * movement + 0.5);
@@ -140,22 +141,22 @@ public class FigureValueAdvancedStrategy implements Strategy {
 
     private int evalBishop(Board board, Figure figure) {
         Integer movement = new Integer(0);
-        attacksFromMinorPieces += attakedFromBishop(figure, board, movement);
-        if (attakedFromKnight(figure, board))
+        attacksFromMinorPieces += attackedFromBishop(figure, board, movement);
+        if (attackedFromKnight(figure, board))
             attacksFromMinorPieces++;
-        if (attakedFromPawn(figure, board))
+        if (attackedFromPawn(figure, board))
             attacksFromMinorPieces++;
         return 300 + 2 * movement;
     }
 
     private int evalKing(Board board, Figure figure) {
 
-        attacksFromMinorPieces += attakedFromRook(figure, board, new Integer(0));
+        attacksFromMinorPieces += attackedFromRook(figure, board, new Integer(0));
 
-        attacksFromMinorPieces += attakedFromBishop(figure, board, new Integer(0));
-        if (attakedFromKnight(figure, board))
+        attacksFromMinorPieces += attackedFromBishop(figure, board, new Integer(0));
+        if (attackedFromKnight(figure, board))
             attacksFromMinorPieces++;
-        if (attakedFromPawn(figure, board))
+        if (attackedFromPawn(figure, board))
             attacksFromMinorPieces++;
         if (attackedFromQueen)
             attacksFromMinorPieces++;
@@ -166,19 +167,19 @@ public class FigureValueAdvancedStrategy implements Strategy {
 
     private int evalQueen(Board board, Figure figure) {
         Integer movement = new Integer(0);
-        attacksFromMinorPieces += attakedFromRook(figure, board, movement);
+        attacksFromMinorPieces += attackedFromRook(figure, board, movement);
 
-        attacksFromMinorPieces += attakedFromBishop(figure, board, movement);
+        attacksFromMinorPieces += attackedFromBishop(figure, board, movement);
         attacksFromMinorPieces++;
-        if (attakedFromKnight(figure, board))
+        if (attackedFromKnight(figure, board))
             attacksFromMinorPieces++;
-        if (attakedFromPawn(figure, board))
+        if (attackedFromPawn(figure, board))
             attacksFromMinorPieces++;
 
         return 900 + movement;
     }
 
-    private int attakedFromRook(Figure f, Board board, Integer movement) {
+    private int attackedFromRook(Figure f, Board board, Integer movement) {
         int pos = f.getPosition();
         Color color = f.getColor();
         int ret = 0;
@@ -245,7 +246,7 @@ public class FigureValueAdvancedStrategy implements Strategy {
         return ret;
     }
 
-    private int attakedFromBishop(Figure f, Board board, Integer movement) {
+    private int attackedFromBishop(Figure f, Board board, Integer movement) {
         int pos = f.getPosition();
         Color color = f.getColor();
         int ret = 0;
@@ -312,7 +313,7 @@ public class FigureValueAdvancedStrategy implements Strategy {
         return ret;
     }
 
-    private boolean attakedFromKing(Figure f, Board board) {
+    private boolean attackedFromKing(Figure f, Board board) {
         int pos = f.getPosition();
         Color color = f.getColor();
         if (checkPositionColorType(color, pos, Figure.FigureType.KING, -0x11, board) ||
@@ -328,7 +329,7 @@ public class FigureValueAdvancedStrategy implements Strategy {
         return false;
     }
 
-    private boolean attakedFromKnight(Figure f, Board board) {
+    private boolean attackedFromKnight(Figure f, Board board) {
         int pos = f.getPosition();
         Color color = f.getColor();
         if (checkPositionColorType(color, pos, Figure.FigureType.KNIGHT, -0x21, board) ||
@@ -344,7 +345,7 @@ public class FigureValueAdvancedStrategy implements Strategy {
         return false;
     }
 
-    private boolean attakedFromPawn(Figure f, Board board) {
+    private boolean attackedFromPawn(Figure f, Board board) {
         Color color = f.getColor();
         int pos = f.getPosition();
         int sign = (color == Color.white) ? 1 : -1;
@@ -366,7 +367,7 @@ public class FigureValueAdvancedStrategy implements Strategy {
      * Returns the loop condition for the checking of check
      *
      * @param i The current place
-     * @return True if the conidition is true
+     * @return True if the condition is true
      */
     private boolean checkIfOnBoard(int i) {
         return i > 0 && (i & 0x88) <= 0;
