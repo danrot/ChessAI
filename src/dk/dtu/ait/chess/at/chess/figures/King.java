@@ -75,21 +75,21 @@ public class King extends Figure {
             dl.setNewField(i - 0x10 - 0x01);
             dr.setNewField(i - 0x10 + 0x01);
 
-            if ((d.getNewField() & 0x88) > 0 && d.getNewField() > 0)
+            if ((d.getNewField() & 0x88) == 0 && d.getNewField() > 0)
                 tmpMoves.add(d);
-            if ((u.getNewField() & 0x88) > 0 && u.getNewField() > 0)
+            if ((u.getNewField() & 0x88) == 0 && u.getNewField() > 0)
                 tmpMoves.add(u);
-            if ((l.getNewField() & 0x88) > 0 && l.getNewField() > 0)
+            if ((l.getNewField() & 0x88) == 0 && l.getNewField() > 0)
                 tmpMoves.add(l);
-            if ((r.getNewField() & 0x88) > 0 && r.getNewField() > 0)
+            if ((r.getNewField() & 0x88) == 0 && r.getNewField() > 0)
                 tmpMoves.add(r);
-            if ((ul.getNewField() & 0x88) > 0 && ul.getNewField() > 0)
+            if ((ul.getNewField() & 0x88) == 0 && ul.getNewField() > 0)
                 tmpMoves.add(ul);
-            if ((ur.getNewField() & 0x88) > 0 && ur.getNewField() > 0)
+            if ((ur.getNewField() & 0x88) == 0 && ur.getNewField() > 0)
                 tmpMoves.add(ur);
-            if ((dl.getNewField() & 0x88) > 0 && dl.getNewField() > 0)
+            if ((dl.getNewField() & 0x88) == 0 && dl.getNewField() > 0)
                 tmpMoves.add(dl);
-            if ((dr.getNewField() & 0x88) > 0 && dr.getNewField() > 0)
+            if ((dr.getNewField() & 0x88) == 0 && dr.getNewField() > 0)
                 tmpMoves.add(dr);
 
             moves[i] = tmpMoves.toArray(new Move[0]);

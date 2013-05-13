@@ -151,7 +151,7 @@ public class Bishop extends Figure {
                             }
                             break;
                     }
-                    if((m.getNewField() & 0x88) > 0 && m.getNewField() > 0)
+                    if((m.getNewField() & 0x88) == 0 && m.getNewField() > 0)
                     tmpMoves.add(m);
                 }
             }
