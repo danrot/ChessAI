@@ -28,22 +28,22 @@ public class FigureValueAdvancedStrategy implements Strategy {
                 switch (f.getType())
                 {
                     case QUEEN:
-                        retVal += evalQueen(board, f, myColor) * sign;
+                        retVal += evalQueen(board, f) * sign;
                         break;
                     case KING:
-                        retVal += evalKing(board, f, myColor) * sign;
+                        retVal += evalKing(board, f) * sign;
                         break;
                     case BISHOP:
-                        retVal += evalBishop(board,f,myColor) * sign;
+                        retVal += evalBishop(board,f) * sign;
                         break;
                     case KNIGHT:
-                        retVal += evalKnight(board,f,myColor) * sign;
+                        retVal += evalKnight(board,f) * sign;
                         break;
                     case ROOK:
-                        retVal += evalRook(board,f,myColor) * sign;
+                        retVal += evalRook(board,f) * sign;
                         break;
                     case PAWN:
-                        retVal += evalPawn(board,f,myColor) * sign;
+                        retVal += evalPawn(board,f) * sign;
                         break;
                 }
             }
@@ -51,27 +51,27 @@ public class FigureValueAdvancedStrategy implements Strategy {
         return retVal;
     }
 
-    private int evalPawn(Board board, Figure figure, Color color) {
+    private int evalPawn(Board board, Figure figure) {
         return 0;  //To change body of created methods use File | Settings | File Templates.
     }
 
-    private int evalRook(Board board, Figure figure, Color color) {
+    private int evalRook(Board board, Figure figure) {
         return 0;  //To change body of created methods use File | Settings | File Templates.
     }
 
-    private int evalKnight(Board board, Figure figure, Color color) {
+    private int evalKnight(Board board, Figure figure) {
         return 0;  //To change body of created methods use File | Settings | File Templates.
     }
 
-    private int evalBishop(Board board, Figure figure, Color color) {
+    private int evalBishop(Board board, Figure figure) {
         return 0;  //To change body of created methods use File | Settings | File Templates.
     }
 
-    private int evalKing(Board board, Figure figure, Color color) {
+    private int evalKing(Board board, Figure figure) {
         return 0;  //To change body of created methods use File | Settings | File Templates.
     }
 
-    private int evalQueen(Board board,Figure figure,Color color)
+    private int evalQueen(Board board, Figure figure)
     {
         return 0;  //To change body of created methods use File | Settings | File Templates.
     }
