@@ -26,9 +26,7 @@ public class Knight extends Figure {
         {
             Move m = new Move(moves[position][i]);
             m.setOldFigure(this);
-            if (board.check(m)) {
-                ret.add(m);
-            }
+            ret.add(m);
         }
         return  ret;
     }
@@ -51,132 +49,60 @@ public class Knight extends Figure {
             tUoL.setOldField(i);
             tUoL.setNewField(i + 0x20 - 0x01);
 
-            if((tUoL.getNewField() & 0x10) > 0 && tUoL.getNewField() > 0)
+            if((tUoL.getNewField() & 0x88) > 0 && tUoL.getNewField() > 0)
                 ret.add(tUoL);
 
             Move tUoR = new Move();
             tUoR.setOldField(i);
             tUoR.setNewField(i + 0x20 + 0x01);
 
-            if((tUoR.getNewField() & 0x10) > 0 && tUoR.getNewField() > 0)
+            if((tUoR.getNewField() & 0x88) > 0 && tUoR.getNewField() > 0)
                 ret.add(tUoR);
 
             Move tLoU = new Move();
             tLoU.setOldField(i);
             tLoU.setNewField(i + 0x10 - 0x02);
 
-            if((tLoU.getNewField() & 0x10) > 0 && tLoU.getNewField() > 0)
+            if((tLoU.getNewField() & 0x88) > 0 && tLoU.getNewField() > 0)
                 ret.add(tLoU);
 
             Move oDtL = new Move();
             oDtL.setOldField(i);
             oDtL.setNewField(i - 0x10 - 0x02);
 
-            if((oDtL.getNewField() & 0x10) > 0 && oDtL.getNewField() > 0)
+            if((oDtL.getNewField() & 0x88) > 0 && oDtL.getNewField() > 0)
                 ret.add(oDtL);
 
             Move tDoL = new Move();
             tDoL.setOldField(i);
             tDoL.setNewField(i - 0x20 - 0x01);
 
-            if((tDoL.getNewField() & 0x10) > 0 && tDoL.getNewField() > 0)
+            if((tDoL.getNewField() & 0x88) > 0 && tDoL.getNewField() > 0)
                 ret.add(tDoL);
 
             Move oUtR = new Move();
             oUtR.setOldField(i);
             oUtR.setNewField(i + 0x10 + 0x02);
 
-            if((oUtR.getNewField() & 0x10) > 0 && oUtR.getNewField() > 0)
+            if((oUtR.getNewField() & 0x88) > 0 && oUtR.getNewField() > 0)
                 ret.add(oUtR);
 
             Move oDtR = new Move();
             oDtR.setOldField(i);
             oDtR.setNewField(i - 0x10 + 0x02);
 
-            if((oDtR.getNewField() & 0x10) > 0 && oDtR.getNewField() > 0)
+            if((oDtR.getNewField() & 0x88) > 0 && oDtR.getNewField() > 0)
                 ret.add(oDtR);
 
             Move tDoR = new Move();
             tDoR.setOldField(i);
             tDoR.setNewField(i - 0x20 + 0x01);
 
-            if((tDoR.getNewField() & 0x10) > 0 && tDoR.getNewField() > 0)
+            if((tDoR.getNewField() & 0x88) > 0 && tDoR.getNewField() > 0)
                 ret.add(tDoR);
 
             moves[i] = ret.toArray(new Move[0]);
         }
-
-
-
-    }
-
-
-    public List<Move> getMoves_alt(Board board) {
-        ArrayList<Move> ret = new ArrayList<Move>(8);
-
-        Move tUoL = new Move();
-        tUoL.setOldField(position);
-        tUoL.setOldFigure(this);
-        tUoL.setNewField(position + 0x20 - 0x01);
-
-        if (board.check(tUoL))
-            ret.add(tUoL);
-
-        Move tUoR = new Move();
-        tUoR.setOldField(position);
-        tUoR.setOldFigure(this);
-        tUoR.setNewField(position + 0x20 + 0x01);
-
-        if (board.check(tUoR))
-            ret.add(tUoR);
-
-        Move tLoU = new Move();
-        tLoU.setOldField(position);
-        tLoU.setOldFigure(this);
-        tLoU.setNewField(position + 0x10 - 0x02);
-
-        if (board.check(tLoU))
-            ret.add(tLoU);
-
-        Move oDtL = new Move();
-        oDtL.setOldField(position);
-        oDtL.setOldFigure(this);
-        oDtL.setNewField(position - 0x10 - 0x02);
-
-        if (board.check(oDtL))
-            ret.add(oDtL);
-
-        Move tDoL = new Move();
-        tDoL.setOldField(position);
-        tDoL.setOldFigure(this);
-        tDoL.setNewField(position - 0x20 - 0x01);
-
-        if (board.check(tDoL))
-            ret.add(tDoL);
-
-        Move oUtR = new Move();
-        oUtR.setOldField(position);
-        oUtR.setOldFigure(this);
-        oUtR.setNewField(position + 0x10 + 0x02);
-
-        if (board.check(oUtR))
-            ret.add(oUtR);
-
-        Move oDtR = new Move();
-        oDtR.setOldField(position);
-        oDtR.setOldFigure(this);
-        oDtR.setNewField(position - 0x10 + 0x02);
-
-        if (board.check(oDtR))
-            ret.add(oDtR);
-
-        Move tDoR = new Move();
-        tDoR.setOldField(position);
-        tDoR.setOldFigure(this);
-        tDoR.setNewField(position - 0x20 + 0x01);
-        if (board.check(tDoR))
-            ret.add(tDoR);
-        return ret;
     }
 
     @Override
