@@ -73,7 +73,7 @@ public class Rook extends Figure {
                     default:
                         throw new RuntimeException();
                 }
-                if ((u.getNewField() & 0x88) > 0 && u.getNewField() > 0)
+                if ((u.getNewField() & 0x88) == 0 && u.getNewField() > 0)
                     ret.add(u);
             }
             //right
@@ -109,7 +109,7 @@ public class Rook extends Figure {
                     default:
                         throw new RuntimeException();
                 }
-                if ((r.getNewField() & 0x88) > 0 && r.getNewField() > 0)
+                if ((r.getNewField() & 0x88) == 0 && r.getNewField() > 0)
                     ret.add(r);
             }
             //down
@@ -144,7 +144,7 @@ public class Rook extends Figure {
                     default:
                         throw new RuntimeException();
                 }
-                if ((d.getNewField() & 0x88) > 0 && d.getNewField() > 0)
+                if ((d.getNewField() & 0x88) == 0 && d.getNewField() > 0)
                     ret.add(d);
 
             }
@@ -180,7 +180,7 @@ public class Rook extends Figure {
                     default:
                         throw new RuntimeException();
                 }
-                if ((l.getNewField() & 0x88) > 0 && l.getNewField() > 0)
+                if ((l.getNewField() & 0x88) == 0 && l.getNewField() > 0)
                     ret.add(l);
 
             }
