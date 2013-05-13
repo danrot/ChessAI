@@ -31,8 +31,7 @@ public class King extends Figure {
         for (int i = 0; i < moves[position].length; i++) {
             Move m = new Move(moves[position][i]);
             m.setOldFigure(this);
-            if (board.check(m))
-                ret.add(m);
+            ret.add(m);
         }
         return ret;
     }
