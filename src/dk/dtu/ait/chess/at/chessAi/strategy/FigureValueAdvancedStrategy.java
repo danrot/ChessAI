@@ -22,9 +22,21 @@ public class FigureValueAdvancedStrategy implements Strategy {
             -2, 0, 3, 4, 5, 1, -2, -2
     };
 
+    private boolean doublePawn = false;
+    private int blackPoints = 0;
+    private int whitePoints = 0;
+    private int attacksFromMinorPieces = 0;
+    private boolean attackedFromQueen = false;
+
     @Override
     public int evaluateBoard(Board board, Color myColor) {
         int retVal = 0;
+
+        blackPoints = 0;
+        whitePoints = 0;
+        doublePawn = false;
+        attacksFromMinorPieces = 0;
+
 
         for (Figure f : board.getFigures()) {
 
@@ -47,10 +59,26 @@ public class FigureValueAdvancedStrategy implements Strategy {
                         retVal += evalRook(board, f) * sign;
                         break;
                     case PAWN:
+                        if (board.getFigures()[f.getPosition() + 0x10] != null &&
+                                board.getFigures()[f.getPosition() + 0x10].getColor() == myColor &&
+                                board.getFigures()[f.getPosition() + 0x10].getType() == Figure.FigureType.PAWN) {
+                            doublePawn = true;
+                        }
                         retVal += evalPawn(board, f) * sign;
                         break;
                 }
             }
+        }
+        if (doublePawn) {
+            retVal -= 8;
+        }
+
+        if (attacksFromMinorPieces == 0) {
+            retVal += 2;
+        } else if (attacksFromMinorPieces == 1) {
+            retVal -= 10;
+        } else {
+            retVal -= 50;
         }
         return retVal;
     }
@@ -68,7 +96,17 @@ public class FigureValueAdvancedStrategy implements Strategy {
     }
 
     private int evalRook(Board board, Figure figure) {
-        return 500;  //To change body of created methods use File | Settings | File Templates.
+
+        Integer movement = new Integer(0);
+        attacksFromMinorPieces += attakedFromRook(figure, board, movement);
+        attacksFromMinorPieces += attakedFromBishop(figure, board, new Integer(0));
+
+        if (attakedFromKnight(figure, board))
+            attacksFromMinorPieces++;
+        if (attakedFromPawn(figure, board))
+            attacksFromMinorPieces++;
+
+        return 500 + (int) (1.5 * movement + 0.5);
     }
 
     private int evalKnight(Board board, Figure figure) {
@@ -101,15 +139,238 @@ public class FigureValueAdvancedStrategy implements Strategy {
     };
 
     private int evalBishop(Board board, Figure figure) {
-        return 300;  //To change body of created methods use File | Settings | File Templates.
+        Integer movement = new Integer(0);
+        attacksFromMinorPieces += attakedFromBishop(figure, board, movement);
+        if (attakedFromKnight(figure, board))
+            attacksFromMinorPieces++;
+        if (attakedFromPawn(figure, board))
+            attacksFromMinorPieces++;
+        return 300 + 2 * movement;
     }
 
     private int evalKing(Board board, Figure figure) {
-        return 10000;  //To change body of created methods use File | Settings | File Templates.
+
+        attacksFromMinorPieces += attakedFromRook(figure, board, new Integer(0));
+
+        attacksFromMinorPieces += attakedFromBishop(figure, board, new Integer(0));
+        if (attakedFromKnight(figure, board))
+            attacksFromMinorPieces++;
+        if (attakedFromPawn(figure, board))
+            attacksFromMinorPieces++;
+        if (attackedFromQueen)
+            attacksFromMinorPieces++;
+
+        return 10000;
     }
 
 
     private int evalQueen(Board board, Figure figure) {
-        return 900;  //To change body of created methods use File | Settings | File Templates.
+        Integer movement = new Integer(0);
+        attacksFromMinorPieces += attakedFromRook(figure, board, movement);
+
+        attacksFromMinorPieces += attakedFromBishop(figure, board, movement);
+        attacksFromMinorPieces++;
+        if (attakedFromKnight(figure, board))
+            attacksFromMinorPieces++;
+        if (attakedFromPawn(figure, board))
+            attacksFromMinorPieces++;
+
+        return 900 + movement;
     }
+
+    private int attakedFromRook(Figure f, Board board, Integer movement) {
+        int pos = f.getPosition();
+        Color color = f.getColor();
+        int ret = 0;
+        for (int i = pos + 0x10; checkIfOnBoard(i); i += 0x10) {
+            movement++;
+            if (board.getFigure(i) != null && board.getFigure(i).getColor() != f.getColor()) {
+                if (board.getFigure(i).getType() == Figure.FigureType.QUEEN) {
+                    attackedFromQueen = true;
+                    break;
+                } else if (board.getFigure(i).getType() == Figure.FigureType.ROOK) {
+                    ret++;
+                    break;
+                }
+            }
+            if (board.getFigure(i) != null && board.getFigure(i).getColor() == color) {
+                break;
+            }
+        }
+        for (int i = pos - 0x10; checkIfOnBoard(i); i -= 0x10) {
+            movement++;
+            if (board.getFigure(i) != null && board.getFigure(i).getColor() != f.getColor()) {
+                if (board.getFigure(i).getType() == Figure.FigureType.QUEEN) {
+                    attackedFromQueen = true;
+                    break;
+                } else if (board.getFigure(i).getType() == Figure.FigureType.ROOK) {
+                    ret++;
+                    break;
+                }
+            }
+            if (board.getFigure(i) != null && board.getFigure(i).getColor() == color) {
+                break;
+            }
+        }
+        for (int i = pos + 0x01; checkIfOnBoard(i); i += 0x01) {
+            movement++;
+            if (board.getFigure(i) != null && board.getFigure(i).getColor() != f.getColor()) {
+                if (board.getFigure(i).getType() == Figure.FigureType.QUEEN) {
+                    attackedFromQueen = true;
+                    break;
+                } else if (board.getFigure(i).getType() == Figure.FigureType.ROOK) {
+                    ret++;
+                    break;
+                }
+            }
+            if (board.getFigure(i) != null && board.getFigure(i).getColor() == color) {
+                break;
+            }
+        }
+        for (int i = pos - 0x01; checkIfOnBoard(i); i -= 0x01) {
+            movement++;
+            if (board.getFigure(i) != null && board.getFigure(i).getColor() != f.getColor()) {
+                if (board.getFigure(i).getType() == Figure.FigureType.QUEEN) {
+                    attackedFromQueen = true;
+                    break;
+                } else if (board.getFigure(i).getType() == Figure.FigureType.ROOK) {
+                    ret++;
+                    break;
+                }
+            }
+            if (board.getFigure(i) != null && board.getFigure(i).getColor() == color) {
+                break;
+            }
+        }
+        return ret;
+    }
+
+    private int attakedFromBishop(Figure f, Board board, Integer movement) {
+        int pos = f.getPosition();
+        Color color = f.getColor();
+        int ret = 0;
+        for (int i = pos + 0x11; checkIfOnBoard(i); i += 0x11) {
+            movement++;
+            if (board.getFigure(i) != null && board.getFigure(i).getColor() != f.getColor()) {
+                if (board.getFigure(i).getType() == Figure.FigureType.QUEEN) {
+                    attackedFromQueen = true;
+                    break;
+                } else if (board.getFigure(i).getType() == Figure.FigureType.ROOK) {
+                    ret++;
+                    break;
+                }
+            }
+            if (board.getFigure(i) != null && board.getFigure(i).getColor() == color) {
+                break;
+            }
+        }
+        for (int i = pos - 0x11; checkIfOnBoard(i); i -= 0x11) {
+            movement++;
+            if (board.getFigure(i) != null && board.getFigure(i).getColor() != f.getColor()) {
+                if (board.getFigure(i).getType() == Figure.FigureType.QUEEN) {
+                    attackedFromQueen = true;
+                    break;
+                } else if (board.getFigure(i).getType() == Figure.FigureType.ROOK) {
+                    ret++;
+                    break;
+                }
+            }
+            if (board.getFigure(i) != null && board.getFigure(i).getColor() == color) {
+                break;
+            }
+        }
+        for (int i = pos + 0x0F; checkIfOnBoard(i); i += 0x0F) {
+            movement++;
+            if (board.getFigure(i) != null && board.getFigure(i).getColor() != f.getColor()) {
+                if (board.getFigure(i).getType() == Figure.FigureType.QUEEN) {
+                    attackedFromQueen = true;
+                    break;
+                } else if (board.getFigure(i).getType() == Figure.FigureType.ROOK) {
+                    ret++;
+                    break;
+                }
+            }
+            if (board.getFigure(i) != null && board.getFigure(i).getColor() == color) {
+                break;
+            }
+        }
+        for (int i = pos - 0x0F; checkIfOnBoard(i); i -= 0x0F) {
+            movement++;
+            if (board.getFigure(i) != null && board.getFigure(i).getColor() != f.getColor()) {
+                if (board.getFigure(i).getType() == Figure.FigureType.QUEEN) {
+                    attackedFromQueen = true;
+                    break;
+                } else if (board.getFigure(i).getType() == Figure.FigureType.ROOK) {
+                    ret++;
+                    break;
+                }
+            }
+            if (board.getFigure(i) != null && board.getFigure(i).getColor() == color) {
+                break;
+            }
+        }
+        return ret;
+    }
+
+    private boolean attakedFromKing(Figure f, Board board) {
+        int pos = f.getPosition();
+        Color color = f.getColor();
+        if (checkPositionColorType(color, pos, Figure.FigureType.KING, -0x11, board) ||
+                checkPositionColorType(color, pos, Figure.FigureType.KING, -0x10, board) ||
+                checkPositionColorType(color, pos, Figure.FigureType.KING, -0x01, board) ||
+                checkPositionColorType(color, pos, Figure.FigureType.KING, -0x0F, board) ||
+                checkPositionColorType(color, pos, Figure.FigureType.KING, 0x11, board) ||
+                checkPositionColorType(color, pos, Figure.FigureType.KING, 0x0f, board) ||
+                checkPositionColorType(color, pos, Figure.FigureType.KING, 0x10, board) ||
+                checkPositionColorType(color, pos, Figure.FigureType.KING, 0x01, board)) {
+            return true;
+        }
+        return false;
+    }
+
+    private boolean attakedFromKnight(Figure f, Board board) {
+        int pos = f.getPosition();
+        Color color = f.getColor();
+        if (checkPositionColorType(color, pos, Figure.FigureType.KNIGHT, -0x21, board) ||
+                checkPositionColorType(color, pos, Figure.FigureType.KNIGHT, -0x1f, board) ||
+                checkPositionColorType(color, pos, Figure.FigureType.KNIGHT, -0x12, board) ||
+                checkPositionColorType(color, pos, Figure.FigureType.KNIGHT, -0x0e, board) ||
+                checkPositionColorType(color, pos, Figure.FigureType.KNIGHT, 0x21, board) ||
+                checkPositionColorType(color, pos, Figure.FigureType.KNIGHT, 0x1f, board) ||
+                checkPositionColorType(color, pos, Figure.FigureType.KNIGHT, 0x12, board) ||
+                checkPositionColorType(color, pos, Figure.FigureType.KNIGHT, 0x0e, board)) {
+            return true;
+        }
+        return false;
+    }
+
+    private boolean attakedFromPawn(Figure f, Board board) {
+        Color color = f.getColor();
+        int pos = f.getPosition();
+        int sign = (color == Color.white) ? 1 : -1;
+        if (checkPositionColorType(color, pos, Figure.FigureType.PAWN, 0x11 * sign, board) ||
+                checkPositionColorType(color, pos, Figure.FigureType.PAWN, 0x0f * sign, board)) {
+            return true;
+        }
+
+        return false;
+    }
+
+
+    private boolean checkPositionColorType(Color color, int figurePos, Figure.FigureType figure, int move, Board board) {
+        int pos = figurePos + move;
+        return pos >= 0 && (pos & 0x88) == 0 && board.getFigures()[pos] != null && board.getFigures()[pos].getType() == figure && board.getFigures()[pos].getColor() != color;
+    }
+
+    /**
+     * Returns the loop condition for the checking of check
+     *
+     * @param i The current place
+     * @return True if the conidition is true
+     */
+    private boolean checkIfOnBoard(int i) {
+        return i > 0 && (i & 0x88) <= 0;
+    }
+
+
 }
