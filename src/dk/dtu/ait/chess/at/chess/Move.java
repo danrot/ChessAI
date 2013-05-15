@@ -17,6 +17,7 @@ public class Move {
         this.newFigure = move.newFigure;
         this.newField = move.newField;
         this.oldField = move.oldField;
+        this.special = move.special;
     }
 
     public Move(){}
