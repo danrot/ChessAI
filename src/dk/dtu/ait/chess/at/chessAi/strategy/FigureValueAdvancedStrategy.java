@@ -236,7 +236,6 @@ public class FigureValueAdvancedStrategy implements Strategy {
             attacksFromMinorPiecesOther += att;
         }
 
-
         if (attackedFromKnight(figure, board))
             if (figure.getColor() == myColor) {
                 attacksFromMinorPiecesI++;
