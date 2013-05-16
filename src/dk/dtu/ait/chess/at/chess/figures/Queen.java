@@ -20,12 +20,16 @@ public class Queen extends Figure {
     }
 
     @Override
-    public List<Move> getMoves(Board board) {
+    public List<Move> getMoves(Board board, ArrayList<Move> firsMoves, Integer first) {
         ArrayList<Move> ret = new ArrayList<Move>(50);
         for (int i = 0; i < moves[position].length; i++) {
             Move m = new Move(moves[position][i]);
             m.setOldFigure(this);
-            ret.add(m);
+            if (m.getNewField() == first) {
+                firsMoves.add(m);
+            } else {
+                ret.add(m);
+            }
         }
         return ret;
     }
@@ -73,7 +77,7 @@ public class Queen extends Figure {
                     default:
                         throw new RuntimeException();
                 }
-                if ((u.getNewField() & 0x88) == 0 && u.getNewField() > 0)
+                if ((u.getNewField() & 0x88) == 0 && u.getNewField() >= 0)
                     ret.add(u);
             }
             //right
@@ -109,7 +113,7 @@ public class Queen extends Figure {
                     default:
                         throw new RuntimeException();
                 }
-                if ((r.getNewField() & 0x88) == 0 && r.getNewField() > 0)
+                if ((r.getNewField() & 0x88) == 0 && r.getNewField() >= 0)
                     ret.add(r);
             }
             //down
@@ -144,7 +148,7 @@ public class Queen extends Figure {
                     default:
                         throw new RuntimeException();
                 }
-                if ((d.getNewField() & 0x88) == 0 && d.getNewField() > 0)
+                if ((d.getNewField() & 0x88) == 0 && d.getNewField() >= 0)
                     ret.add(d);
 
             }
@@ -180,7 +184,7 @@ public class Queen extends Figure {
                     default:
                         throw new RuntimeException();
                 }
-                if ((l.getNewField() & 0x88) == 0 && l.getNewField() > 0)
+                if ((l.getNewField() & 0x88) == 0 && l.getNewField() >= 0)
                     ret.add(l);
 
             }
@@ -293,7 +297,7 @@ public class Queen extends Figure {
                             }
                             break;
                     }
-                    if ((m.getNewField() & 0x88) == 0 && m.getNewField() > 0)
+                    if ((m.getNewField() & 0x88) == 0 && m.getNewField() >= 0)
                         ret.add(m);
                 }
             }

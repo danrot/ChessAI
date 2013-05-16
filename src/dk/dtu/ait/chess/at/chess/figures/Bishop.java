@@ -27,12 +27,16 @@ public class Bishop extends Figure {
     }
 
     @Override
-    public List<Move> getMoves(Board board) {
+    public List<Move> getMoves(Board board, ArrayList<Move> firsMoves, Integer first) {
         ArrayList<Move> ret = new ArrayList<Move>(15);
         for (int i = 0; i < moves[position].length; i++) {
                 Move m = new Move(moves[position][i]);
                 m.setOldFigure(this);
+            if (m.getNewField() == first) {
+                firsMoves.add(m);
+            } else {
                 ret.add(m);
+            }
             }
         return ret;
     }
@@ -151,7 +155,7 @@ public class Bishop extends Figure {
                             }
                             break;
                     }
-                    if((m.getNewField() & 0x88) == 0 && m.getNewField() > 0)
+                    if((m.getNewField() & 0x88) == 0 && m.getNewField() >= 0)
                     tmpMoves.add(m);
                 }
             }

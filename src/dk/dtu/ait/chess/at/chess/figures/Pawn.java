@@ -26,7 +26,7 @@ public class Pawn extends Figure {
     }
 
     @Override
-    public List<Move> getMoves(Board board) {
+    public List<Move> getMoves(Board board, ArrayList<Move> firsMoves, Integer first) {
         ArrayList<Move> ret = new ArrayList<Move>(3);
 
         if (getColor() == Color.WHITE) {
@@ -34,13 +34,21 @@ public class Pawn extends Figure {
             for (int i = 0; i < whiteMoves[position].length; i++) {
                 Move m = new Move(whiteMoves[position][i]);
                 m.setOldFigure(this);
-                ret.add(m);
+                if (m.getNewField() == first) {
+                    firsMoves.add(m);
+                } else {
+                    ret.add(m);
+                }
             }
         } else {
             for (int i = 0; i < blackMoves[position].length; i++) {
                 Move m = new Move(blackMoves[position][i]);
                 m.setOldFigure(this);
-                ret.add(m);
+                if (m.getNewField() == first) {
+                    firsMoves.add(m);
+                } else {
+                    ret.add(m);
+                }
             }
         }
         return ret;
@@ -65,7 +73,7 @@ public class Pawn extends Figure {
                 if (i >= 0x60 && i <= 0x67) {
                     captureLeft.setSpecial(true);
                 }
-                if ((captureLeft.getNewField() & 0x88) == 0 && captureLeft.getNewField() > 0) {
+                if ((captureLeft.getNewField() & 0x88) == 0 && captureLeft.getNewField() >= 0) {
 
                     retWhite.add(captureLeft);
                 }
@@ -77,7 +85,7 @@ public class Pawn extends Figure {
                 if (i >= 0x60 && i <= 0x67) {
                     captureRight.setSpecial(true);
                 }
-                if ((captureRight.getNewField() & 0x88) == 0 && captureRight.getNewField() > 0) {
+                if ((captureRight.getNewField() & 0x88) == 0 && captureRight.getNewField() >= 0) {
 
                     retWhite.add(captureRight);
                 }
@@ -89,7 +97,7 @@ public class Pawn extends Figure {
                     m1.setSpecial(true);
                 }
 
-                if ((m1.getNewField() & 0x88) == 0 && m1.getNewField() > 0) {
+                if ((m1.getNewField() & 0x88) == 0 && m1.getNewField() >= 0) {
 
                     retWhite.add(m1);
                 }
@@ -98,7 +106,7 @@ public class Pawn extends Figure {
                     m2.setNewField(i + 0x20);
                     m2.setOldField(i);
 
-                    if ((m2.getNewField() & 0x88) == 0 && m2.getNewField() > 0) {
+                    if ((m2.getNewField() & 0x88) == 0 && m2.getNewField() >= 0) {
                         retWhite.add(m2);
                     }
                 }
@@ -112,7 +120,7 @@ public class Pawn extends Figure {
                 if (i >= 0x10 && i <= 0x17) {
                     captureLeft.setSpecial(true);
                 }
-                if ((captureLeft.getNewField() & 0x88) == 0 && captureLeft.getNewField() > 0) {
+                if ((captureLeft.getNewField() & 0x88) == 0 && captureLeft.getNewField() >= 0) {
 
                     retBlack.add(captureLeft);
                 }
@@ -123,7 +131,7 @@ public class Pawn extends Figure {
                 if (i >= 0x10 && i <= 0x17) {
                     captureRight.setSpecial(true);
                 }
-                if ((captureRight.getNewField() & 0x88) == 0 && captureRight.getNewField() > 0) {
+                if ((captureRight.getNewField() & 0x88) == 0 && captureRight.getNewField() >= 0) {
 
                     retBlack.add(captureRight);
                 }
@@ -136,7 +144,7 @@ public class Pawn extends Figure {
                     m1.setSpecial(true);
                 }
 
-                if ((m1.getNewField() & 0x88) == 0 && m1.getNewField() > 0) {
+                if ((m1.getNewField() & 0x88) == 0 && m1.getNewField() >= 0) {
                     retBlack.add(m1);
                 }
 
@@ -146,7 +154,7 @@ public class Pawn extends Figure {
                     m2.setOldField(i);
 
 
-                    if ((m2.getNewField() & 0x88) == 0 && m2.getNewField() > 0) {
+                    if ((m2.getNewField() & 0x88) == 0 && m2.getNewField() >= 0) {
                         retBlack.add(m2);
                     }
                 }

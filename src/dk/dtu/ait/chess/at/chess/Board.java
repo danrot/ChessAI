@@ -4,6 +4,8 @@ import dk.dtu.ait.chess.at.chess.figures.*;
 
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -33,6 +35,9 @@ public class Board {
      * The bitmask to check if the field is on the board
      */
     private final int BOARD_MASK = 0x88;
+
+    private LinkedList<Integer> positionStack = new LinkedList<Integer>();
+
 
     public Board() {
         //white figures
@@ -143,10 +148,11 @@ public class Board {
             move.getOldFigure().increaseMoves();
 
             if (checkCheck(move.getOldFigure().getColor())) {
+                positionStack.add(0,0);
                 undo(move);
                 return false;
             }
-
+            positionStack.add(0, move.getNewField());
             return true;
         }
         return false;
@@ -198,6 +204,7 @@ public class Board {
                 }
             }
         }
+        positionStack.remove(0);
         move.getOldFigure().decreaseMoves();
     }
 
@@ -423,12 +430,13 @@ public class Board {
     }
 
     public List<Move> getAllPossibleMoves(Color color) {
-        ArrayList<Move> retVal = new ArrayList<Move>(250);
-
+        HashSet<Move> retVal = new HashSet<Move>(250);
+        ArrayList<Move> firsMoves = new ArrayList<Move>(16);
         Figure[] figures = (color == Color.white) ? whiteFigures : blackFigures;
         for (Figure f : figures) {
             if (f.getPosition() != -1) { //-1 indicates that the figure is not on the board anymore
-                retVal.addAll(f.getMoves(this));
+
+                retVal.addAll(f.getMoves(this, firsMoves, positionStack.get(0)));
 
                 if (f.getType() == Figure.FigureType.KING) {
                     if (!f.hasMoved()) {
@@ -440,7 +448,7 @@ public class Board {
                                 m.setNewField(0x02);
                                 m.setOldFigure(f);
                                 m.setSpecial(true);
-                                    retVal.add(m);
+                                retVal.add(m);
                             } else if (board[0x07] != null && board[0x07].getType() == Figure.FigureType.ROOK && !board[0x07].hasMoved() &&
                                     board[0x05] == null && board[0x06] == null) {     //Kingside casteling white
                                 Move m = new Move();
@@ -448,7 +456,7 @@ public class Board {
                                 m.setNewField(0x06);
                                 m.setOldFigure(f);
                                 m.setSpecial(true);
-                                    retVal.add(m);
+                                retVal.add(m);
                             }
                         } else {
                             if (board[0x70] != null && board[0x70].getType() == Figure.FigureType.ROOK && !board[0x70].hasMoved()
@@ -458,7 +466,7 @@ public class Board {
                                 m.setNewField(0x72);
                                 m.setOldFigure(f);
                                 m.setSpecial(true);
-                                    retVal.add(m);
+                                retVal.add(m);
                             } else if (board[0x77] != null && board[0x77].getType() == Figure.FigureType.ROOK && !board[0x77].hasMoved() &&
                                     board[0x75] == null && board[0x76] == null) {     //Kingside casteling black
                                 Move m = new Move();
@@ -466,15 +474,17 @@ public class Board {
                                 m.setNewField(0x76);
                                 m.setOldFigure(f);
                                 m.setSpecial(true);
-                                    retVal.add(m);
+                                retVal.add(m);
                             }
                         }
                     }
                 }
             }
         }
-
-        return retVal;
+        ArrayList<Move> rt = new ArrayList<Move>(retVal.size());
+        rt.addAll(0,firsMoves);
+        rt.addAll(retVal);
+        return rt;
 
     }
 

@@ -63,6 +63,9 @@ public class ChessAI {
         }
         System.out.println("EVALUATIONS: " + evaluations);
         System.out.println("LEVEL: " + i);
+        System.out.println("CUTOFF: " + cutoff/number*100 + "%");
+        cutoff = 0;
+        number = 0;
         return currentBest;
     }
 
@@ -71,7 +74,12 @@ public class ChessAI {
         this.max(board, Integer.MIN_VALUE, Integer.MAX_VALUE, 0, searchDepth, next);
     }
 
+    double number = 0;
+    double cutoff = 0;
+
     private int max(Board board, int alpha, int beta, int searchDepth, int maxSearchDepth, Move next) {
+        double localEvals = 0;
+        double nodes;
         if (board.isFinished() || searchDepth == maxSearchDepth) {
             ++evaluations;
             return strategy.evaluateBoard(board, color);
@@ -85,11 +93,13 @@ public class ChessAI {
         }
         childs.addAll(board.getAllPossibleMoves(c));
 
+        nodes = childs.size();
         while (alpha < beta && running) {
             if (childs.isEmpty()) {
                 break;
             }
 
+            localEvals++;
             if (board.apply(childs.get(0))) {
                 int v = min(board, alpha, beta, searchDepth + 1, maxSearchDepth, next);
                 board.undo(childs.get(0));
@@ -107,21 +117,27 @@ public class ChessAI {
             }
             childs.remove(0);
         }
+
+        number++;
+        cutoff += ((nodes-localEvals)/nodes);
         return alpha;
     }
 
     private int min(Board board, int alpha, int beta, int searchDepth, int maxSearchDepth, Move next) {
+        double localEvals = 0;
+        double nodes;
         if (board.isFinished() || searchDepth == maxSearchDepth) {
             ++evaluations;
             return strategy.evaluateBoard(board, color);
         }
         Color c = (color == Color.BLACK ? Color.WHITE : Color.BLACK);
         List<Move> childs = board.getAllPossibleMoves(c);
+        nodes = childs.size();
         while (alpha < beta && running) {
             if (childs.isEmpty()) {
                 break;
             }
-
+            localEvals++;
             if (board.apply(childs.get(0))) {
                 int v = max(board, alpha, beta, searchDepth + 1, maxSearchDepth, next);
                 board.undo(childs.get(0));
@@ -132,6 +148,8 @@ public class ChessAI {
             }
             childs.remove(0);
         }
+        number++;
+        cutoff += ((nodes-localEvals)/nodes);
         return beta;
     }
 

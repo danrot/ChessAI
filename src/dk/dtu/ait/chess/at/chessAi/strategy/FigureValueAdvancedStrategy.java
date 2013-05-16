@@ -47,8 +47,9 @@ public class FigureValueAdvancedStrategy implements Strategy {
     private boolean doublePawn = false;
     private int blackPoints = 0;
     private int whitePoints = 0;
-    private int attacksFromMinorPieces = 0;
+    private int attacksFromMinorPiecesI = 0, attacksFromMinorPiecesOther = 0;
     private boolean attackedFromQueen = false;
+    private Color myColor;
 
     @Override
     public int evaluateBoard(Board board, Color myColor) {
@@ -57,13 +58,15 @@ public class FigureValueAdvancedStrategy implements Strategy {
         blackPoints = 0;
         whitePoints = 0;
         doublePawn = false;
-        attacksFromMinorPieces = 0;
-
+        attacksFromMinorPiecesI = 0;
+        attacksFromMinorPiecesOther = 0;
+        this.myColor = myColor;
 
         for (Figure f : board.getFigures()) {
 
             if (f != null) {
                 int sign = f.getColor() == myColor ? 1 : -1;
+
                 switch (f.getType()) {
                     case QUEEN:
                         retVal += evalQueen(board, f) * sign;
@@ -96,9 +99,9 @@ public class FigureValueAdvancedStrategy implements Strategy {
             retVal -= 8;
         }
 
-        if (attacksFromMinorPieces == 0) {
+        if (attacksFromMinorPiecesI == 0) {
             retVal += 2;
-        } else if (attacksFromMinorPieces == 1) {
+        } else if (attacksFromMinorPiecesI == 1) {
             retVal -= 10;
         } else {
             retVal -= 50;
@@ -121,19 +124,34 @@ public class FigureValueAdvancedStrategy implements Strategy {
     private int evalRook(Board board, Figure figure) {
 
         Integer movement = new Integer(0);
-        attacksFromMinorPieces += attackedFromRook(figure, board, movement);
-        attacksFromMinorPieces += attackedFromBishop(figure, board, new Integer(0));
+        int att = 0;
+        att += attackedFromRook(figure, board, movement);
+        att += attackedFromBishop(figure, board, new Integer(0));
 
+        if (figure.getColor() == myColor) {
+            attacksFromMinorPiecesI += att;
+        } else {
+            attacksFromMinorPiecesOther += att;
+        }
         if (attackedFromKnight(figure, board))
-            attacksFromMinorPieces++;
+            if (figure.getColor() == myColor) {
+                attacksFromMinorPiecesI++;
+            } else {
+                attacksFromMinorPiecesOther++;
+            }
         if (attackedFromPawn(figure, board))
-            attacksFromMinorPieces++;
+            if (figure.getColor() == myColor) {
+                attacksFromMinorPiecesI++;
+            } else {
+                attacksFromMinorPiecesOther++;
+            }
 
         return 500 + (int) (1.5 * movement + 0.5);
     }
 
     private int evalKnight(Board board, Figure figure) {
-        double o = (3.0 * (4 - arrCenterManhattanDistance[figure.getPosition()]));
+        int distance = arrCenterManhattanDistance[figure.getPosition()];
+        double o = (3.0 * (4 - distance));
         double round = (o >= 0 ? 0.5 : -0.5);
         int i = (int) (o + round);
         return 300 + i;
@@ -141,40 +159,89 @@ public class FigureValueAdvancedStrategy implements Strategy {
 
     private int evalBishop(Board board, Figure figure) {
         Integer movement = new Integer(0);
-        attacksFromMinorPieces += attackedFromBishop(figure, board, movement);
+        int att = 0;
+        att += attackedFromBishop(figure, board, new Integer(0));
+
+        if (figure.getColor() == myColor) {
+            attacksFromMinorPiecesI += att;
+        } else {
+            attacksFromMinorPiecesOther += att;
+        }
+
         if (attackedFromKnight(figure, board))
-            attacksFromMinorPieces++;
+            if (figure.getColor() == myColor) {
+                attacksFromMinorPiecesI++;
+            } else {
+                attacksFromMinorPiecesOther++;
+            }
         if (attackedFromPawn(figure, board))
-            attacksFromMinorPieces++;
+            if (figure.getColor() == myColor) {
+                attacksFromMinorPiecesI++;
+            } else {
+                attacksFromMinorPiecesOther++;
+            }
         return 300 + 2 * movement;
     }
 
     private int evalKing(Board board, Figure figure) {
 
-        attacksFromMinorPieces += attackedFromRook(figure, board, new Integer(0));
+        Integer movement = new Integer(0);
+        int att = 0;
+        att += attackedFromRook(figure, board, movement);
+        att += attackedFromBishop(figure, board, new Integer(0));
 
-        attacksFromMinorPieces += attackedFromBishop(figure, board, new Integer(0));
+        if (figure.getColor() == myColor) {
+            attacksFromMinorPiecesI += att;
+        } else {
+            attacksFromMinorPiecesOther += att;
+        }
+
         if (attackedFromKnight(figure, board))
-            attacksFromMinorPieces++;
+            if (figure.getColor() == myColor) {
+                attacksFromMinorPiecesI++;
+            } else {
+                attacksFromMinorPiecesOther++;
+            }
         if (attackedFromPawn(figure, board))
-            attacksFromMinorPieces++;
+            if (figure.getColor() == myColor) {
+                attacksFromMinorPiecesI++;
+            } else {
+                attacksFromMinorPiecesOther++;
+            }
         if (attackedFromQueen)
-            attacksFromMinorPieces++;
+            if (figure.getColor() == myColor) {
+                attacksFromMinorPiecesI++;
+            } else {
+                attacksFromMinorPiecesOther++;
+            }
 
         return 10000;
     }
 
     private int evalQueen(Board board, Figure figure) {
         Integer movement = new Integer(0);
-        attacksFromMinorPieces += attackedFromRook(figure, board, movement);
+        int att = 0;
+        att += attackedFromRook(figure, board, movement);
+        att += attackedFromBishop(figure, board, new Integer(0));
 
-        attacksFromMinorPieces += attackedFromBishop(figure, board, movement);
-        attacksFromMinorPieces++;
+        if (figure.getColor() == myColor) {
+            attacksFromMinorPiecesI += att;
+        } else {
+            attacksFromMinorPiecesOther += att;
+        }
+
         if (attackedFromKnight(figure, board))
-            attacksFromMinorPieces++;
+            if (figure.getColor() == myColor) {
+                attacksFromMinorPiecesI++;
+            } else {
+                attacksFromMinorPiecesOther++;
+            }
         if (attackedFromPawn(figure, board))
-            attacksFromMinorPieces++;
-
+            if (figure.getColor() == myColor) {
+                attacksFromMinorPiecesI++;
+            } else {
+                attacksFromMinorPiecesOther++;
+            }
         return 900 + movement;
     }
 
@@ -194,6 +261,7 @@ public class FigureValueAdvancedStrategy implements Strategy {
                 }
             }
             if (board.getFigure(i) != null && board.getFigure(i).getColor() == color) {
+                movement--;
                 break;
             }
         }
@@ -209,6 +277,7 @@ public class FigureValueAdvancedStrategy implements Strategy {
                 }
             }
             if (board.getFigure(i) != null && board.getFigure(i).getColor() == color) {
+                movement--;
                 break;
             }
         }
@@ -224,6 +293,7 @@ public class FigureValueAdvancedStrategy implements Strategy {
                 }
             }
             if (board.getFigure(i) != null && board.getFigure(i).getColor() == color) {
+                movement--;
                 break;
             }
         }
@@ -239,6 +309,7 @@ public class FigureValueAdvancedStrategy implements Strategy {
                 }
             }
             if (board.getFigure(i) != null && board.getFigure(i).getColor() == color) {
+                movement--;
                 break;
             }
         }
@@ -261,6 +332,7 @@ public class FigureValueAdvancedStrategy implements Strategy {
                 }
             }
             if (board.getFigure(i) != null && board.getFigure(i).getColor() == color) {
+                movement--;
                 break;
             }
         }
@@ -276,6 +348,7 @@ public class FigureValueAdvancedStrategy implements Strategy {
                 }
             }
             if (board.getFigure(i) != null && board.getFigure(i).getColor() == color) {
+                movement--;
                 break;
             }
         }
@@ -291,6 +364,7 @@ public class FigureValueAdvancedStrategy implements Strategy {
                 }
             }
             if (board.getFigure(i) != null && board.getFigure(i).getColor() == color) {
+                movement--;
                 break;
             }
         }
@@ -306,6 +380,7 @@ public class FigureValueAdvancedStrategy implements Strategy {
                 }
             }
             if (board.getFigure(i) != null && board.getFigure(i).getColor() == color) {
+                movement--;
                 break;
             }
         }
@@ -359,7 +434,7 @@ public class FigureValueAdvancedStrategy implements Strategy {
 
     private boolean checkPositionColorType(Color color, int figurePos, Figure.FigureType figure, int move, Board board) {
         int pos = figurePos + move;
-        return pos >= 0 && (pos & 0x88) == 0 && board.getFigures()[pos] != null && board.getFigures()[pos].getType() == figure && board.getFigures()[pos].getColor() != color;
+        return checkIfOnBoard(pos) && board.getFigures()[pos] != null && board.getFigures()[pos].getType() == figure && board.getFigures()[pos].getColor() != color;
     }
 
     /**

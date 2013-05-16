@@ -17,6 +17,7 @@ public class Move {
         this.newFigure = move.newFigure;
         this.newField = move.newField;
         this.oldField = move.oldField;
+        this.special = move.special;
     }
 
     public Move(){}
@@ -122,5 +123,25 @@ public class Move {
         this.special = special;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
 
+        Move move = (Move) o;
+
+        if (newField != move.newField) return false;
+        if (oldField != move.oldField) return false;
+        if (special != move.special) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = oldField;
+        result = 31 * result + newField;
+        result = 31 * result + (special ? 1 : 0);
+        return result;
+    }
 }

@@ -4,6 +4,8 @@ import dk.dtu.ait.chess.at.chess.Board;
 import dk.dtu.ait.chess.at.chess.Move;
 
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -12,6 +14,7 @@ import java.util.List;
  *   It defines the main functions a figure must be able to perform
  */
 public abstract class Figure {
+
 
     public enum FigureType {
      QUEEN, KING, BISHOP, KNIGHT, PAWN, ROOK
@@ -75,7 +78,7 @@ public abstract class Figure {
      * This function is used to get all the Moves the figure can execute.
      * @return a list with all the possible moves inside.
      */
-    public abstract List<Move> getMoves(Board board);
+    public abstract List<Move> getMoves(Board board, ArrayList<Move> firsMoves, Integer first);
 
 
     /**
