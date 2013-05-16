@@ -83,11 +83,13 @@ public class ChessEngine {
                 //Apply move on the board
                 this.board.apply(recieved);
 
+                System.out.println("BEFOREVALUE: " + new FigureValueAdvancedStrategy().evaluateBoard(board, Color.black));
                 if (!inForceMode) {
                     if (!doMove(board)) {
                         System.out.println("Wrong move!!!");
                     }
                 }
+                System.out.println("AFTERVALUE: " + new FigureValueAdvancedStrategy().evaluateBoard(board, Color.black));
             }
         }
     }
