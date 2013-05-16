@@ -217,9 +217,7 @@ public class Board {
                 }
             }
         }
-<<<<<<< HEAD
-        positionStack.remove(0);
-=======
+
 
         board[move.getNewField()] = move.getNewFigure();
         board[move.getOldField()] = move.getOldFigure();
@@ -227,8 +225,7 @@ public class Board {
         if (move.getNewFigure() != null) {
             move.getNewFigure().setPosition(move.getNewField());
         }
-
->>>>>>> 26c72d3a05fcd102047e90c3d3bcd1519909e889
+        positionStack.remove(0);
         move.getOldFigure().decreaseMoves();
     }
 
