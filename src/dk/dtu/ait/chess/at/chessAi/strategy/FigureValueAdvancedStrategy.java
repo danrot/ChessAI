@@ -50,6 +50,7 @@ public class FigureValueAdvancedStrategy implements Strategy {
     private int attacksFromMinorPiecesI = 0, attacksFromMinorPiecesOther = 0;
     private boolean attackedFromQueen = false;
     private Color myColor;
+    private int movement = 0;
 
     @Override
     public int evaluateBoard(Board board, Color myColor) {
@@ -129,10 +130,10 @@ public class FigureValueAdvancedStrategy implements Strategy {
 
     private int evalRook(Board board, Figure figure) {
 
-        Integer movement = new Integer(0);
+        movement = 0;
         int att = 0;
-        att += attackedFromRook(figure, board, movement);
-        att += attackedFromBishop(figure, board, new Integer(0));
+        att += attackedFromRook(figure, board);
+        att += attackedFromBishop(figure, board);
 
         if (figure.getColor() == myColor) {
             attacksFromMinorPiecesI += att;
@@ -164,9 +165,9 @@ public class FigureValueAdvancedStrategy implements Strategy {
     }
 
     private int evalBishop(Board board, Figure figure) {
-        Integer movement = new Integer(0);
+        movement = 0;
         int att = 0;
-        att += attackedFromBishop(figure, board, new Integer(0));
+        att += attackedFromBishop(figure, board);
 
         if (figure.getColor() == myColor) {
             attacksFromMinorPiecesI += att;
@@ -191,10 +192,9 @@ public class FigureValueAdvancedStrategy implements Strategy {
 
     private int evalKing(Board board, Figure figure) {
 
-        Integer movement = new Integer(0);
         int att = 0;
-        att += attackedFromRook(figure, board, movement);
-        att += attackedFromBishop(figure, board, new Integer(0));
+        att += attackedFromRook(figure, board);
+        att += attackedFromBishop(figure, board);
 
         if (figure.getColor() == myColor) {
             attacksFromMinorPiecesI += att;
@@ -225,10 +225,10 @@ public class FigureValueAdvancedStrategy implements Strategy {
     }
 
     private int evalQueen(Board board, Figure figure) {
-        Integer movement = new Integer(0);
+        movement = 0;
         int att = 0;
-        att += attackedFromRook(figure, board, movement);
-        att += attackedFromBishop(figure, board, new Integer(0));
+        att += attackedFromRook(figure, board);
+        att += attackedFromBishop(figure, board);
 
         if (figure.getColor() == myColor) {
             attacksFromMinorPiecesI += att;
@@ -236,10 +236,7 @@ public class FigureValueAdvancedStrategy implements Strategy {
             attacksFromMinorPiecesOther += att;
         }
 
-<<<<<<< HEAD
-=======
-        attacksFromMinorPieces += attackedFromBishop(figure, board, movement);
->>>>>>> 26c72d3a05fcd102047e90c3d3bcd1519909e889
+
         if (attackedFromKnight(figure, board))
             if (figure.getColor() == myColor) {
                 attacksFromMinorPiecesI++;
@@ -255,7 +252,7 @@ public class FigureValueAdvancedStrategy implements Strategy {
         return 900 + movement;
     }
 
-    private int attackedFromRook(Figure f, Board board, Integer movement) {
+    private int attackedFromRook(Figure f, Board board) {
         int pos = f.getPosition();
         Color color = f.getColor();
         int ret = 0;
@@ -326,7 +323,7 @@ public class FigureValueAdvancedStrategy implements Strategy {
         return ret;
     }
 
-    private int attackedFromBishop(Figure f, Board board, Integer movement) {
+    private int attackedFromBishop(Figure f, Board board) {
         int pos = f.getPosition();
         Color color = f.getColor();
         int ret = 0;
