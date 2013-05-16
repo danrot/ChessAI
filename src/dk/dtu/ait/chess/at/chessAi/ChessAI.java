@@ -63,6 +63,7 @@ public class ChessAI {
         }
         System.out.println("EVALUATIONS: " + evaluations);
         System.out.println("LEVEL: " + i);
+        System.out.println("VALUE: " + strategy.evaluateBoard(board, color));
         return currentBest;
     }
 
