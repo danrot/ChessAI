@@ -142,6 +142,13 @@ public class Board {
                 if (move.getOldFigure().getType() == Figure.FigureType.PAWN) {
                     if ((move.getNewField() & 0xf0) == 0x70 || (move.getNewField() & 0xf0) == 0x00) {
                         board[move.getNewField()] = new Queen(move.getNewField(), move.getOldFigure().getColor());
+                        Figure[] figures = (move.getOldFigure().getColor() == Color.white) ? whiteFigures : blackFigures;
+                        for (int i = 8; i < 16; i++) {
+                            if (figures[i] == move.getOldFigure()) {
+                                figures[i] = board[move.getNewField()];
+                                break;
+                            }
+                        }
                     }
                 }
             }
@@ -164,13 +171,6 @@ public class Board {
      * @param move The move to undo
      */
     public void undo(Move move) {
-        board[move.getNewField()] = move.getNewFigure();
-        board[move.getOldField()] = move.getOldFigure();
-        move.getOldFigure().setPosition(move.getOldField());
-        if (move.getNewFigure() != null) {
-            move.getNewFigure().setPosition(move.getNewField());
-        }
-
         if (move.getSpecial()) {
             //castling (e1g1 or e1c1 resp. e8g8 or e8c8)
             if (move.getOldFigure().getType() == Figure.FigureType.KING) {
@@ -203,8 +203,32 @@ public class Board {
                     board[0x70].setPosition(0x70);
                 }
             }
+
+            //pawn promotion
+            if (move.getOldFigure().getType() == Figure.FigureType.PAWN) {
+                if ((move.getNewField() & 0xf0) == 0x70 || (move.getNewField() & 0xf0) == 0x00) {
+                    Figure[] figures = (move.getOldFigure().getColor() == Color.white) ? whiteFigures : blackFigures;
+                    for (int i = 8; i < 16; i++) {
+                        if (figures[i] == board[move.getNewField()]) {
+                            figures[i] = move.getOldFigure();
+                            break;
+                        }
+                    }
+                }
+            }
         }
+<<<<<<< HEAD
         positionStack.remove(0);
+=======
+
+        board[move.getNewField()] = move.getNewFigure();
+        board[move.getOldField()] = move.getOldFigure();
+        move.getOldFigure().setPosition(move.getOldField());
+        if (move.getNewFigure() != null) {
+            move.getNewFigure().setPosition(move.getNewField());
+        }
+
+>>>>>>> 26c72d3a05fcd102047e90c3d3bcd1519909e889
         move.getOldFigure().decreaseMoves();
     }
 

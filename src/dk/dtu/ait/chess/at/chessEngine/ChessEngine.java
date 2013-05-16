@@ -54,7 +54,7 @@ public class ChessEngine {
         System.out.println("feature sigint=0 sigterm=0");
         this.running = true;
         while (running) {
-            String nextCmd = scan.next();
+            String nextCmd = scan.nextLine();
             if (nextCmd.equals("go")) {
                 inForceMode = false;
                 if (!doMove(board)) {
@@ -69,35 +69,12 @@ public class ChessEngine {
             } else if (nextCmd.equals("force")) {
                 inForceMode = true;
             } else if (nextCmd.matches("([a-h][1-8]){2}[q]?")) {
-                //Parse String vom recieved String
-                String newPos = nextCmd.substring(2, 4);
-                String oldPos = nextCmd.substring(0, 2);
 
-                //Convert Row and Colum numbers to Interger Board Position
-                Integer colOldPos = (int) oldPos.charAt(0) - 97;
-                Integer colNewPos = (int) newPos.charAt(0) - 97;
-                Integer rowOldPos = (int) oldPos.charAt(1) - 49;
-                Integer rowNewPos = (int) newPos.charAt(1) - 49;
-
-                //Add Row and Column number to one String
-                String oldPosParsed = rowOldPos.toString() + colOldPos.toString();
-                String newPosParsed = rowNewPos.toString() + colNewPos.toString();
-
-                //Convert String to hexadecimal Integer
-                int indexOld = Integer.parseInt(oldPosParsed, 16);
-                int indexNew = Integer.parseInt(newPosParsed, 16);
-
-                //Create Move
-                Move recieved = new Move();
-                recieved.setNewField(indexNew);
-                recieved.setOldField(indexOld);
-                recieved.setOldFigure(this.board.getFigure(indexOld));
-                recieved.setNewFigure(this.board.getFigure(indexNew));
-
+                 Move recieved = this.parseStringToMove(nextCmd);
                 //check for special Moves
                 if (nextCmd.endsWith("q")) {
                     recieved.setSpecial(true);
-                    recieved.setNewFigure(new Queen(indexNew, recieved.getOldFigure().getColor()));
+                    recieved.setNewFigure(new Queen(recieved.getNewField(), recieved.getOldFigure().getColor()));
                 } else if (isCastlingMove(nextCmd)) {
                     recieved.setSpecial(true);
                     recieved.setNewFigure(null);
@@ -106,13 +83,45 @@ public class ChessEngine {
                 //Apply move on the board
                 this.board.apply(recieved);
 
+                System.out.println("BEFOREVALUE: " + new FigureValueAdvancedStrategy().evaluateBoard(board, Color.black));
                 if (!inForceMode) {
                     if (!doMove(board)) {
                         System.out.println("Wrong move!!!");
                     }
                 }
+                System.out.println("AFTERVALUE: " + new FigureValueAdvancedStrategy().evaluateBoard(board, Color.black));
             }
         }
+    }
+    
+    private Move parseStringToMove(String nextCmd)
+    {
+            //Parse String vom recieved String
+            String newPos = nextCmd.substring(2, 4);
+            String oldPos = nextCmd.substring(0, 2);
+
+            //Convert Row and Colum numbers to Interger Board Position
+            Integer colOldPos = (int) oldPos.charAt(0) - 97;
+            Integer colNewPos = (int) newPos.charAt(0) - 97;
+            Integer rowOldPos = (int) oldPos.charAt(1) - 49;
+            Integer rowNewPos = (int) newPos.charAt(1) - 49;
+
+            //Add Row and Column number to one String
+            String oldPosParsed = rowOldPos.toString() + colOldPos.toString();
+            String newPosParsed = rowNewPos.toString() + colNewPos.toString();
+
+            //Convert String to hexadecimal Integer
+            int indexOld = Integer.parseInt(oldPosParsed, 16);
+            int indexNew = Integer.parseInt(newPosParsed, 16);
+
+            //Create Move
+            Move recieved = new Move();
+            recieved.setNewField(indexNew);
+            recieved.setOldField(indexOld);
+            recieved.setOldFigure(this.board.getFigure(indexOld));
+            recieved.setNewFigure(this.board.getFigure(indexNew));
+            
+            return recieved;
     }
 
     /**

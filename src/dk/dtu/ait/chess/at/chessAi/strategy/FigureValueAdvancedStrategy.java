@@ -64,7 +64,7 @@ public class FigureValueAdvancedStrategy implements Strategy {
 
         for (Figure f : board.getFigures()) {
 
-            if (f != null) {
+            if (f != null && f.getPosition() != -1) {
                 int sign = f.getColor() == myColor ? 1 : -1;
 
                 switch (f.getType()) {
@@ -114,6 +114,12 @@ public class FigureValueAdvancedStrategy implements Strategy {
 
         int row = (figure.getPosition() & 0xf0) / 0x10;
         int col = (figure.getPosition() & 0x0f);
+
+        //Correct row if color is black
+        if (figure.getColor() == Color.BLACK) {
+            row = 7 - row;
+            col = 7 - col;
+        }
 
         retVal += PawnRow[row];
         retVal += PawnLine[col] * row / 2;
@@ -230,6 +236,10 @@ public class FigureValueAdvancedStrategy implements Strategy {
             attacksFromMinorPiecesOther += att;
         }
 
+<<<<<<< HEAD
+=======
+        attacksFromMinorPieces += attackedFromBishop(figure, board, movement);
+>>>>>>> 26c72d3a05fcd102047e90c3d3bcd1519909e889
         if (attackedFromKnight(figure, board))
             if (figure.getColor() == myColor) {
                 attacksFromMinorPiecesI++;
