@@ -20,17 +20,15 @@ import java.util.TimerTask;
  */
 public class ChessAI {
 
-    private boolean running;
-    private Timer timer;
     private int seconds;
     private Color color;
     private Strategy strategy;
     private int evaluations;
     private Move currentBest;
 
+    private double start;
+
     public ChessAI(Strategy strategy, int seconds) {
-        running = false;
-        timer = new Timer();
         this.strategy = strategy;
         this.seconds = seconds;
         this.color = Color.BLACK;
@@ -49,14 +47,13 @@ public class ChessAI {
     }
 
     public Move getMove(Board board) {
+        start = System.currentTimeMillis();
         Move m = new Move();
         currentBest = null;
-        running = true;
         int i = 1;
-        timer.schedule(new AITimerTask(), seconds * 1000 - 50);
-        while (running) {
+        while (inTime()) {
             this.move(board, i, m);
-            if (running) {
+            if (inTime()) {
                 currentBest = m;
             }
             i++;
@@ -77,6 +74,11 @@ public class ChessAI {
     double number = 0;
     double cutoff = 0;
 
+    private boolean inTime()
+    {
+        return  (start + seconds * 1000) > (System.currentTimeMillis() - 50);
+    }
+
     private int max(Board board, int alpha, int beta, int searchDepth, int maxSearchDepth, Move next) {
         double localEvals = 0;
         double nodes;
@@ -94,7 +96,7 @@ public class ChessAI {
         childs.addAll(board.getAllPossibleMoves(c));
 
         nodes = childs.size();
-        while (alpha < beta && running) {
+        while (alpha < beta && inTime()) {
             if (childs.isEmpty()) {
                 break;
             }
@@ -133,7 +135,7 @@ public class ChessAI {
         Color c = (color == Color.BLACK ? Color.WHITE : Color.BLACK);
         List<Move> childs = board.getAllPossibleMoves(c);
         nodes = childs.size();
-        while (alpha < beta && running) {
+        while (alpha < beta && inTime()) {
             if (childs.isEmpty()) {
                 break;
             }
@@ -151,13 +153,5 @@ public class ChessAI {
         number++;
         cutoff += ((nodes-localEvals)/nodes);
         return beta;
-    }
-
-    private class AITimerTask extends TimerTask {
-        @Override
-        public void run() {
-            running = false;
-        }
-
     }
 }
