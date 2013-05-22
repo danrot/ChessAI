@@ -19,6 +19,17 @@ public class Queen extends Figure {
         super(position, color);
     }
 
+
+    @Override
+    public List<Move> getMoves(Board board, Integer first) {
+        ArrayList<Move> ret = new ArrayList<Move>(8);
+        for (int i = 0; i < moves[position].length; i++) {
+            Move m = new Move(moves[position][i]);
+            m.setOldFigure(this);
+            ret.add(m);
+        }
+        return ret;
+    }
     @Override
     public List<Move> getMoves(Board board, ArrayList<Move> firsMoves, Integer first) {
         ArrayList<Move> ret = new ArrayList<Move>(50);

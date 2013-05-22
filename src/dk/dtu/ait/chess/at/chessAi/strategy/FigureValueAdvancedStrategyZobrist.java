@@ -1,9 +1,12 @@
 package dk.dtu.ait.chess.at.chessAi.strategy;
 
 import dk.dtu.ait.chess.at.chess.Board;
+import dk.dtu.ait.chess.at.chess.Move;
 import dk.dtu.ait.chess.at.chess.figures.Figure;
 
 import java.awt.*;
+import java.util.HashMap;
+import java.util.Random;
 
 /**
  * Created with IntelliJ IDEA.
@@ -12,7 +15,7 @@ import java.awt.*;
  * Time: 14:21
  * To change this template use File | Settings | File Templates.
  */
-public class FigureValueAdvancedStrategy implements Strategy {
+public class FigureValueAdvancedStrategyZobrist implements Strategy {
 
     private static final int[] PawnRow = new int[]{
             0, 0, -1, 0, 2, 14, 30, 0
@@ -52,6 +55,40 @@ public class FigureValueAdvancedStrategy implements Strategy {
     private Color myColor;
     private int movement = 0;
 
+
+    private static long[][] zobristTable = new long[128][12];
+
+
+    private HashMap<Long, Integer> zobristValues = new HashMap<Long, Integer>(Integer.MAX_VALUE/25);
+
+    private static void initZobrist() {
+        Random rand = new Random(140041);
+
+        for (int i = 0; i < 128; i++) {
+            for (int j = 0; j < 12; j++) {
+                zobristTable[i][j] = Math.abs(rand.nextLong());
+            }
+        }
+    }
+
+    static {
+        initZobrist();
+    }
+
+    private long getHashValue(Board board) {
+
+        long hash = 0;
+        for (int fi = 0; fi < 128; fi++) {
+            Figure f = board.getFigure(fi);
+            if (f != null && (fi & 0x88) == 0) {
+                int multiplikator = (f.getColor() == Color.WHITE ? 0 : 6);
+                hash ^= zobristTable[fi][(f.getType().ordinal() + 1) + multiplikator - 1];
+            }
+        }
+        return hash;
+    }
+
+
     @Override
     public int evaluateBoard(Board board, Color myColor) {
         int retVal = 0;
@@ -62,60 +99,66 @@ public class FigureValueAdvancedStrategy implements Strategy {
         attacksFromMinorPiecesI = 0;
         attacksFromMinorPiecesOther = 0;
         this.myColor = myColor;
+        long zobristHash = getHashValue(board);
+        if (zobristValues.containsKey(zobristHash)) {
+            return zobristValues.get(zobristHash);
+        } else {
 
-        for (Figure f : board.getFigures()) {
+            for (Figure f : board.getFigures()) {
 
-            if (f != null && f.getPosition() != -1) {
-                int sign = f.getColor() == myColor ? 1 : -1;
+                if (f != null && f.getPosition() != -1) {
+                    int sign = f.getColor() == myColor ? 1 : -1;
 
-                switch (f.getType()) {
-                    case QUEEN:
-                        retVal += evalQueen(board, f) * sign;
-                        break;
-                    case KING:
-                        retVal += evalKing(board, f) * sign;
-                        break;
-                    case BISHOP:
-                        retVal += evalBishop(board, f) * sign;
-                        break;
-                    case KNIGHT:
-                        retVal += evalKnight(board, f) * sign;
-                        break;
-                    case ROOK:
-                        retVal += evalRook(board, f) * sign;
-                        break;
-                    case PAWN:
-                        if ((f.getPosition() + 0x10) <= 127)
-                            if (board.getFigures()[f.getPosition() + 0x10] != null &&
-                                    board.getFigures()[f.getPosition() + 0x10].getColor() == myColor &&
-                                    board.getFigures()[f.getPosition() + 0x10].getType() == Figure.FigureType.PAWN) {
-                                doublePawn = true;
-                            }
-                        retVal += evalPawn(board, f) * sign;
-                        break;
+                    switch (f.getType()) {
+                        case QUEEN:
+                            retVal += evalQueen(board, f) * sign;
+                            break;
+                        case KING:
+                            retVal += evalKing(board, f) * sign;
+                            break;
+                        case BISHOP:
+                            retVal += evalBishop(board, f) * sign;
+                            break;
+                        case KNIGHT:
+                            retVal += evalKnight(board, f) * sign;
+                            break;
+                        case ROOK:
+                            retVal += evalRook(board, f) * sign;
+                            break;
+                        case PAWN:
+                            if ((f.getPosition() + 0x10) <= 127)
+                                if (board.getFigures()[f.getPosition() + 0x10] != null &&
+                                        board.getFigures()[f.getPosition() + 0x10].getColor() == myColor &&
+                                        board.getFigures()[f.getPosition() + 0x10].getType() == Figure.FigureType.PAWN) {
+                                    doublePawn = true;
+                                }
+                            retVal += evalPawn(board, f) * sign;
+                            break;
+                    }
                 }
             }
-        }
-        if (doublePawn) {
-            retVal -= 8;
-        }
+            if (doublePawn) {
+                retVal -= 8;
+            }
 
-        if (attacksFromMinorPiecesI == 0) {
-            retVal += 2;
-        } else if (attacksFromMinorPiecesI == 1) {
-            retVal -= 10;
-        } else {
-            retVal -= 50;
-        }
+            if (attacksFromMinorPiecesI == 0) {
+                retVal += 2;
+            } else if (attacksFromMinorPiecesI == 1) {
+                retVal -= 10;
+            } else {
+                retVal -= 50;
+            }
 
-        if (attacksFromMinorPiecesOther == 0) {
-            retVal -= 2;
-        } else if (attacksFromMinorPiecesOther == 1) {
-            retVal += 10;
-        } else {
-            retVal += 50;
+            if (attacksFromMinorPiecesOther == 0) {
+                retVal -= 2;
+            } else if (attacksFromMinorPiecesOther == 1) {
+                retVal += 10;
+            } else {
+                retVal += 50;
+            }
+            zobristValues.put(zobristHash, retVal);
+            return retVal;
         }
-        return retVal;
     }
 
     private int evalPawn(Board board, Figure figure) {

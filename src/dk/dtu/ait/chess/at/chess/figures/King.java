@@ -40,6 +40,17 @@ public class King extends Figure {
         return ret;
     }
 
+    @Override
+    public List<Move> getMoves(Board board, Integer first) {
+        ArrayList<Move> ret = new ArrayList<Move>(8);
+        for (int i = 0; i < moves[position].length; i++) {
+            Move m = new Move(moves[position][i]);
+            m.setOldFigure(this);
+                ret.add(m);
+            }
+        return ret;
+    }
+
     private static Move[][] moves;
 
     private static void generateMoves() {

@@ -3,9 +3,7 @@ package dk.dtu.ait.chess.at.chess;
 import dk.dtu.ait.chess.at.chess.figures.*;
 
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.LinkedList;
+import java.util.*;
 import java.util.List;
 
 /**
@@ -77,6 +75,7 @@ public class Board {
             board[i] = new Pawn(i, Color.black);
             blackFigures[i - 0x60 + 8] = board[i];
         }
+
     }
 
 
@@ -155,7 +154,7 @@ public class Board {
             move.getOldFigure().increaseMoves();
 
             if (checkCheck(move.getOldFigure().getColor())) {
-                positionStack.add(0,0);
+                positionStack.add(0, 0);    //dummy
                 undo(move);
                 return false;
             }
@@ -457,7 +456,10 @@ public class Board {
         for (Figure f : figures) {
             if (f.getPosition() != -1) { //-1 indicates that the figure is not on the board anymore
 
-                retVal.addAll(f.getMoves(this, firsMoves, positionStack.get(0)));
+                if (!positionStack.isEmpty())
+                    retVal.addAll(f.getMoves(this, firsMoves, positionStack.get(0)));
+                else
+                    retVal.addAll(f.getMoves(this, 0));
 
                 if (f.getType() == Figure.FigureType.KING) {
                     if (!f.hasMoved()) {
@@ -503,7 +505,7 @@ public class Board {
             }
         }
         ArrayList<Move> rt = new ArrayList<Move>(retVal.size());
-        rt.addAll(0,firsMoves);
+        rt.addAll(0, firsMoves);
         rt.addAll(retVal);
         return rt;
 

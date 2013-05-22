@@ -80,6 +80,8 @@ public abstract class Figure {
      */
     public abstract List<Move> getMoves(Board board, ArrayList<Move> firsMoves, Integer first);
 
+    public abstract List<Move> getMoves(Board board, Integer first);
+
 
     /**
      * Returns the name of the figure. Not sure if ever used.

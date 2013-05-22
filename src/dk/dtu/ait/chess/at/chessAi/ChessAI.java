@@ -2,6 +2,7 @@ package dk.dtu.ait.chess.at.chessAi;
 
 import dk.dtu.ait.chess.at.chess.Board;
 import dk.dtu.ait.chess.at.chess.Move;
+import dk.dtu.ait.chess.at.chessAi.strategy.FigureValueAdvancedStrategyZobrist;
 import dk.dtu.ait.chess.at.chessAi.strategy.FigureValueStrategy;
 import dk.dtu.ait.chess.at.chessAi.strategy.Strategy;
 
@@ -23,7 +24,7 @@ public class ChessAI {
     private int seconds;
     private Color color;
     private Strategy strategy;
-    private int evaluations;
+    private long evaluations;
     private Move currentBest;
 
     private double start;
@@ -83,7 +84,7 @@ public class ChessAI {
         double localEvals = 0;
         double nodes;
         if (board.isFinished() || searchDepth == maxSearchDepth) {
-            ++evaluations;
+            evaluations++;
             return strategy.evaluateBoard(board, color);
         }
         Color c = (color == Color.BLACK ? Color.BLACK : Color.WHITE);
@@ -129,7 +130,7 @@ public class ChessAI {
         double localEvals = 0;
         double nodes;
         if (board.isFinished() || searchDepth == maxSearchDepth) {
-            ++evaluations;
+            evaluations++;
             return strategy.evaluateBoard(board, color);
         }
         Color c = (color == Color.BLACK ? Color.WHITE : Color.BLACK);

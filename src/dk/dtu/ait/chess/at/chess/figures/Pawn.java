@@ -26,6 +26,30 @@ public class Pawn extends Figure {
     }
 
     @Override
+    public List<Move> getMoves(Board board, Integer first) {
+        ArrayList<Move> ret = new ArrayList<Move>(8);
+        if (getColor() == Color.WHITE) {
+
+            for (int i = 0; i < whiteMoves[position].length; i++) {
+                Move m = new Move(whiteMoves[position][i]);
+                m.setOldFigure(this);
+
+                ret.add(m);
+            }
+        } else {
+            for (int i = 0; i < blackMoves[position].length; i++) {
+                Move m = new Move(blackMoves[position][i]);
+                m.setOldFigure(this);
+
+                ret.add(m);
+
+            }
+        }
+        return ret;
+    }
+
+
+    @Override
     public List<Move> getMoves(Board board, ArrayList<Move> firsMoves, Integer first) {
         ArrayList<Move> ret = new ArrayList<Move>(3);
 
@@ -64,7 +88,7 @@ public class Pawn extends Figure {
             List<Move> retWhite = new ArrayList<Move>(3);
             List<Move> retBlack = new ArrayList<Move>(3);
 
-            {
+            {       //white
                 Move captureLeft = new Move();
                 captureLeft.setNewField(i + 0x10 - 0x01);
                 captureLeft.setOldField(i);
@@ -113,7 +137,7 @@ public class Pawn extends Figure {
 
             }
             whiteMoves[i] = retWhite.toArray(new Move[0]);
-            {
+            {     //black
                 Move captureLeft = new Move();
                 captureLeft.setNewField(i - 0x10 - 0x01);
                 captureLeft.setOldField(i);
