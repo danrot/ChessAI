@@ -85,7 +85,7 @@ public class FigureValueAdvancedStrategy implements Strategy {
                         retVal += evalRook(board, f) * sign;
                         break;
                     case PAWN:
-                        if ((f.getPosition() + 0x10) <= 127)
+                        if ((f.getPosition() + 0x10) <= 127 && f.getColor() == myColor)
                             if (board.getFigures()[f.getPosition() + 0x10] != null &&
                                     board.getFigures()[f.getPosition() + 0x10].getColor() == myColor &&
                                     board.getFigures()[f.getPosition() + 0x10].getType() == Figure.FigureType.PAWN) {

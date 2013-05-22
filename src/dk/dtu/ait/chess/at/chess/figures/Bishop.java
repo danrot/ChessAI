@@ -36,18 +36,19 @@ public class Bishop extends Figure {
         }
         return ret;
     }
+
     @Override
     public List<Move> getMoves(Board board, ArrayList<Move> firsMoves, Integer first) {
         ArrayList<Move> ret = new ArrayList<Move>(15);
         for (int i = 0; i < moves[position].length; i++) {
-                Move m = new Move(moves[position][i]);
-                m.setOldFigure(this);
+            Move m = new Move(moves[position][i]);
+            m.setOldFigure(this);
             if (m.getNewField() == first) {
                 firsMoves.add(m);
             } else {
                 ret.add(m);
             }
-            }
+        }
         return ret;
     }
 
@@ -56,120 +57,38 @@ public class Bishop extends Figure {
     private static void generateMoves() {
         moves = new Move[128][];
         for (int j = 0; j < 128; j++) {
-            ArrayList<Move> tmpMoves = new ArrayList<Move>(28);
-            for (int I = 0; I < 4; I++) {
-                for (int i = 1; i <= 7; i++) {
-                    Move m = new Move();
-                    m.setOldField(j);
-                    //   m.setOldFigure(this);
 
-                    switch (I) {
-                        case 0:   //      Right up
-                            switch (i) {
-                                case 1:
-                                    m.setNewField(j + 0x11);
-                                    break;
-                                case 2:
-                                    m.setNewField(j + 0x22);
-                                    break;
-                                case 3:
-                                    m.setNewField(j + 0x33);
-                                    break;
-                                case 4:
-                                    m.setNewField(j + 0x44);
-                                    break;
-                                case 5:
-                                    m.setNewField(j + 0x55);
-                                    break;
-                                case 6:
-                                    m.setNewField(j + 0x66);
-                                    break;
-                                case 7:
-                                    m.setNewField(j + 0x77);
-                                    break;
-                            }
-                            break;
-                        case 1:     // left down
-                            switch (i) {
-                                case 1:
-                                    m.setNewField(j - 0x11);
-                                    break;
-                                case 2:
-                                    m.setNewField(j - 0x22);
-                                    break;
-                                case 3:
-                                    m.setNewField(j - 0x33);
-                                    break;
-                                case 4:
-                                    m.setNewField(j - 0x44);
-                                    break;
-                                case 5:
-                                    m.setNewField(j - 0x55);
-                                    break;
-                                case 6:
-                                    m.setNewField(j - 0x66);
-                                    break;
-                                case 7:
-                                    m.setNewField(j - 0x77);
-                                    break;
-                            }
-                            break;
-                        case 2:                    // left up
-                            switch (i) {
-                                case 1:
-                                    m.setNewField(j - 0x01 + 0x10);
-                                    break;
-                                case 2:
-                                    m.setNewField(j - 0x02 + 0x20);
-                                    break;
-                                case 3:
-                                    m.setNewField(j - 0x03 + 0x30);
-                                    break;
-                                case 4:
-                                    m.setNewField(j - 0x04 + 0x40);
-                                    break;
-                                case 5:
-                                    m.setNewField(j - 0x05 + 0x50);
-                                    break;
-                                case 6:
-                                    m.setNewField(j - 0x06 + 0x60);
-                                    break;
-                                case 7:
-                                    m.setNewField(j - 0x07 + 0x70);
-                                    break;
-                            }
-                            break;
-                        case 3:                   // right down
-                            switch (i) {
-                                case 1:
-                                    m.setNewField(j + 0x01 - 0x10);
-                                    break;
-                                case 2:
-                                    m.setNewField(j + 0x02 - 0x20);
-                                    break;
-                                case 3:
-                                    m.setNewField(j + 0x03 - 0x30);
-                                    break;
-                                case 4:
-                                    m.setNewField(j + 0x04 - 0x40);
-                                    break;
-                                case 5:
-                                    m.setNewField(j + 0x05 - 0x50);
-                                    break;
-                                case 6:
-                                    m.setNewField(j + 0x06 - 0x60);
-                                    break;
-                                case 7:
-                                    m.setNewField(j + 0x07 - 0x70);
-                                    break;
-                            }
-                            break;
-                    }
-                    if((m.getNewField() & 0x88) == 0 && m.getNewField() >= 0)
-                    tmpMoves.add(m);
+            if ((j & 0x88) == 0) {
+                ArrayList<Move> tmpMoves = new ArrayList<Move>(28);
+                for (int i = 1; i < 8; i++) {
+
+                    Move ru = new Move();
+                    ru.setOldField(j);
+                    ru.setNewField(j + i * 0x11);
+                    if ((ru.getNewField() & 0x88) == 0 && ru.getNewField() >= 0)
+                        tmpMoves.add(ru);
+
+                    Move lu = new Move();
+                    lu.setOldField(j);
+                    lu.setNewField(j + i * (0x0F));
+                    if ((lu.getNewField() & 0x88) == 0 && lu.getNewField() >= 0)
+                        tmpMoves.add(lu);
+
+                    Move rd = new Move();
+                    rd.setOldField(j);
+                    rd.setNewField(j - i * (0x0F));
+                    if ((rd.getNewField() & 0x88) == 0 && rd.getNewField() >= 0)
+                        tmpMoves.add(rd);
+
+                    Move ld = new Move();
+                    ld.setOldField(j);
+                    ld.setNewField(j - i * 0x11);
+                    if ((ld.getNewField() & 0x88) == 0 && ld.getNewField() >= 0)
+                        tmpMoves.add(ld);
                 }
+
+                moves[j] = tmpMoves.toArray(new Move[1]);
             }
-            moves[j] = tmpMoves.toArray(new Move[1]);
         }
     }
 

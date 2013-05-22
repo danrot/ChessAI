@@ -56,6 +56,7 @@ public class King extends Figure {
     private static void generateMoves() {
         moves = new Move[128][];
         for (int i = 0; i < 128; i++) {
+            if ((i & 0x88) == 0){
             ArrayList<Move> tmpMoves = new ArrayList<Move>(8);
 
             Move u = new Move();
@@ -108,7 +109,7 @@ public class King extends Figure {
                 tmpMoves.add(dr);
 
             moves[i] = tmpMoves.toArray(new Move[0]);
-        }
+        }                                    }
     }
 
     @Override

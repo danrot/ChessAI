@@ -84,13 +84,14 @@ public class Pawn extends Figure {
     private static void generateMoves() {
         blackMoves = new Move[128][];
         whiteMoves = new Move[128][];
-        for (int i = 0; i < 128; i++) {
+        for (int i = 16; i < 104; i++)
+            if ((i & 0x88) == 0){
             List<Move> retWhite = new ArrayList<Move>(3);
             List<Move> retBlack = new ArrayList<Move>(3);
 
             {       //white
                 Move captureLeft = new Move();
-                captureLeft.setNewField(i + 0x10 - 0x01);
+                captureLeft.setNewField(i + 0x0F);
                 captureLeft.setOldField(i);
 
 
@@ -125,7 +126,7 @@ public class Pawn extends Figure {
 
                     retWhite.add(m1);
                 }
-                if (i <= 0x17) {
+                if (i >= 0x10 && i <= 0x17) {
                     Move m2 = new Move();
                     m2.setNewField(i + 0x20);
                     m2.setOldField(i);
@@ -137,9 +138,10 @@ public class Pawn extends Figure {
 
             }
             whiteMoves[i] = retWhite.toArray(new Move[0]);
-            {     //black
+
+                {     //black
                 Move captureLeft = new Move();
-                captureLeft.setNewField(i - 0x10 - 0x01);
+                captureLeft.setNewField(i - 0x0F);
                 captureLeft.setOldField(i);
                 if (i >= 0x10 && i <= 0x17) {
                     captureLeft.setSpecial(true);
@@ -172,7 +174,7 @@ public class Pawn extends Figure {
                     retBlack.add(m1);
                 }
 
-                if (i >= 60) {
+                if (i >= 0x60 && i <= 0x67) {
                     Move m2 = new Move();
                     m2.setNewField(i - 0x20);
                     m2.setOldField(i);
