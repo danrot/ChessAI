@@ -10,8 +10,8 @@ import dk.dtu.ait.chess.at.chess.figures.Figure;
 import dk.dtu.ait.chess.at.chess.figures.Queen;
 import dk.dtu.ait.chess.at.chessAi.ChessAI;
 import dk.dtu.ait.chess.at.chessAi.strategy.FigureValueAdvancedStrategy;
-import dk.dtu.ait.chess.at.chessAi.strategy.FigureValueAdvancedStrategyZobrist;
-import dk.dtu.ait.chess.at.chessAi.strategy.FigureValueStrategy;
+import dk.dtu.ait.chess.at.chessAi.strategy.RandomStrategy;
+import dk.dtu.ait.chess.at.chessAi.strategy.ZobristStrategy;
 
 import java.awt.Color;
 import java.util.Scanner;

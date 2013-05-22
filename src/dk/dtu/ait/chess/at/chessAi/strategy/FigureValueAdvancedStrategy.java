@@ -63,36 +63,38 @@ public class FigureValueAdvancedStrategy implements Strategy {
         attacksFromMinorPiecesOther = 0;
         this.myColor = myColor;
 
-        for (Figure f : board.getFigures()) {
+        for (int i = 0; i < 8; i++) {
+            for (int j = i * 16; j < (i * 16 + 8); j++) {
+                Figure f = board.getFigure(j);
+                if (f != null && f.getPosition() != -1) {
+                    int sign = f.getColor() == myColor ? 1 : -1;
 
-            if (f != null && f.getPosition() != -1) {
-                int sign = f.getColor() == myColor ? 1 : -1;
-
-                switch (f.getType()) {
-                    case QUEEN:
-                        retVal += evalQueen(board, f) * sign;
-                        break;
-                    case KING:
-                        retVal += evalKing(board, f) * sign;
-                        break;
-                    case BISHOP:
-                        retVal += evalBishop(board, f) * sign;
-                        break;
-                    case KNIGHT:
-                        retVal += evalKnight(board, f) * sign;
-                        break;
-                    case ROOK:
-                        retVal += evalRook(board, f) * sign;
-                        break;
-                    case PAWN:
-                        if ((f.getPosition() + 0x10) <= 127 && f.getColor() == myColor)
-                            if (board.getFigures()[f.getPosition() + 0x10] != null &&
-                                    board.getFigures()[f.getPosition() + 0x10].getColor() == myColor &&
-                                    board.getFigures()[f.getPosition() + 0x10].getType() == Figure.FigureType.PAWN) {
-                                doublePawn = true;
-                            }
-                        retVal += evalPawn(board, f) * sign;
-                        break;
+                    switch (f.getType()) {
+                        case QUEEN:
+                            retVal += evalQueen(board, f) * sign;
+                            break;
+                        case KING:
+                            retVal += evalKing(board, f) * sign;
+                            break;
+                        case BISHOP:
+                            retVal += evalBishop(board, f) * sign;
+                            break;
+                        case KNIGHT:
+                            retVal += evalKnight(board, f) * sign;
+                            break;
+                        case ROOK:
+                            retVal += evalRook(board, f) * sign;
+                            break;
+                        case PAWN:
+                            if ((f.getPosition() + 0x10) <= 127 && f.getColor() == myColor)
+                                if (board.getFigures()[f.getPosition() + 0x10] != null &&
+                                        board.getFigures()[f.getPosition() + 0x10].getColor() == myColor &&
+                                        board.getFigures()[f.getPosition() + 0x10].getType() == Figure.FigureType.PAWN) {
+                                    doublePawn = true;
+                                }
+                            retVal += evalPawn(board, f) * sign;
+                            break;
+                    }
                 }
             }
         }

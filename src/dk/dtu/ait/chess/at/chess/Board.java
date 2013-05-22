@@ -453,7 +453,8 @@ public class Board {
         HashSet<Move> retVal = new HashSet<Move>(250);
         ArrayList<Move> firsMoves = new ArrayList<Move>(16);
         Figure[] figures = (color == Color.white) ? whiteFigures : blackFigures;
-        for (Figure f : figures) {
+        for (int i = 0; i < figures.length; i++) {
+            Figure f =   figures[i];
             if (f.getPosition() != -1) { //-1 indicates that the figure is not on the board anymore
 
                 if (!positionStack.isEmpty())
